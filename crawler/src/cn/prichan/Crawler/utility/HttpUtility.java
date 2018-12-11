@@ -14,10 +14,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class HttpUtility {
     public final String URL_PREFIX = "https://prichan.jp/items/";
+    public final String URL_RES_PREFIX = "https://prichan.jp";
     public final String ENTRY_URL = URL_PREFIX + "1st.html";
+    public final String JP_CATEGORY = "カテゴリー";
+    public final String JP_COLOR = "カラー";
     public HashSet<String> IGNORE_PAGES;
 
     /**
@@ -150,57 +154,113 @@ public class HttpUtility {
 
         // Parse
         Document doc = Jsoup.parse(htmlContent);
-        // Select all items
-        Elements categoryListElements = doc.select(
-                "div[class=mainAreaR]").select(
-                        "div[class=categoryDetailList]"
-        );
-        Elements allElements = categoryListElements.first().children();
 
-        // Iterate all children node to retrieve data
-        for (Element e:
-                allElements) {
+        // Get all subpages
+        HashSet<String> subpagesExisted = new HashSet<>(); // Only used for check existence
+        LinkedList<String> subpages = new LinkedList<>();
+        Elements coordinateLists = doc.select("div[class=coordinate-lists]");
+        Elements coordinateHyperLinks = coordinateLists.select("a");
 
-            Item localItem = new Item();
-            // Retrieve
-
-            // 1. Image
-            localItem.ItemImage = e.select("p[class=itemimg]").
-                    select("img").
-                    attr("src");
-
-            // 2. Name Data
-            Element itemNameElement = e.select("div[class=itemName]").first();
-            localItem.InternalID = itemNameElement.select("h2").select("span").text();
-            String rawItemName = itemNameElement.select("h2").text();
-            if (localItem.InternalID.length() == 0)
-            {
-                // InternalID does not exist
-                localItem.ItemName = rawItemName;
-
+        for (Element e: coordinateHyperLinks) {
+            String subpage = e.attr("href");
+            // Check duplicated
+            if (!subpagesExisted.contains(subpage)) {
+                // Add to "subpagesExisted" for duplication checking
+                subpagesExisted.add(subpage);
+                // Add to "subpages"
+                subpages.add(subpage);
             } else {
-                // InternalID is required to be removed
-                localItem.ItemName = rawItemName.substring(localItem.InternalID.length() + 1); // NOTE: +1 due to the redundant space
+                // ERROR: Duplicated subpage found
+                System.err.println(String.format(
+                        "Duplicated subpage: \"%s\" at \"%s\"",
+                        subpage, relativeUrl));
+                continue;
             }
 
-            // 3. Attributes
-            Elements itemAttributesRaw = e.select("table").select("tbody").first().children();
-            Elements itemAttribute1 = itemAttributesRaw.get(1).children(); // Category, Type, Brand
-            localItem.Category = itemAttribute1.get(0).text();
-            localItem.Type = itemAttribute1.get(1).text();
-            localItem.Brand = itemAttribute1.get(2).select("img").attr("src");
-            Elements itemAttribute2 = itemAttributesRaw.get(3).children(); // Rarity, Score, Color
-            localItem.Rarity = itemAttribute2.get(0).text();
-            localItem.Score = itemAttribute2.get(1).text();
-            localItem.Color = itemAttribute2.get(2).text();
-
-            // 4. Remarks
-            localItem.Remarks = e.select("div[class=read]").select("p").first().text();
-
-            // Insert
-            dataBase.Insert(localItem);
         }
 
+        // Download next page for details
+        for (String subpage: subpages)
+        {
+            String subpageUrlString = URL_PREFIX + subpage;
+            String subpageHtmlContent = GetHtmlContent(subpageUrlString);
+            // Parse
+            Document subpageDoc = Jsoup.parse(subpageHtmlContent);
+
+            // Get data area
+            Elements detailMainArea = subpageDoc.select("main");
+            detailMainArea = detailMainArea.select("div[class=the-item]");
+
+            // Retrieve
+            Item localItem = new Item();
+
+            // 1. Name
+            Element titleNode = detailMainArea.select("div[class=-title]").first();
+            localItem.ItemName = titleNode.text();
+
+            // Pick up 2 nodes in next layer
+            Elements thumbNode = detailMainArea.select("div[class=-inner]").select("div[class=-thumb]");
+            Elements rightNode = detailMainArea.select("div[class=-inner]").select("div[class=-right]");
+
+            // 2. Internal ID
+            localItem.InternalID = thumbNode.select("div[class=-id]").text();
+
+            // 3. Image
+            Element imageNode = thumbNode.select("img").first();
+            localItem.ItemImage = imageNode.attr("data-src");
+
+            // Populate 2 nodes of details
+            Elements detailNodes = rightNode.select("li[class=-detail]");
+            for (Element detailNode: detailNodes) {
+                Element detailNodeTitleNode = detailNode.select("div[class=-title]").first();
+                String detailNodeTitle = detailNodeTitleNode.text();
+                if (detailNodeTitle.equals(JP_CATEGORY)) {
+                    // 4. Category
+                    localItem.Category = detailNode.select("div[class=-value]").first().text();
+                } else if (detailNodeTitle.equals(JP_COLOR)) {
+                    // 5. Color
+                    localItem.Color = detailNode.select("div[class=-value]").first().text();
+                } else {
+                    // ERROR: Unknown type detail node
+                    System.err.println(String.format(
+                            "Detail Node with Unknown Type: \"%s\" at \"%s\" with type \"%s\"",
+                            subpage, relativeUrl, detailNodeTitle));
+                }
+            }
+
+            // 6. Brand
+            Element brandNode = rightNode.select("li[class=-detail -brand]").first();
+            localItem.Brand = brandNode.select("div[class=-value]")
+                    .select("img").first().attr("data-src");
+
+            // 7. Type
+            Element genreNode = rightNode.select("li[class=-detail -genre]").first();
+            localItem.Type = genreNode.select("div[class=-value]")
+                    .select("img").first().attr("data-src");
+
+            // Populate status
+            Elements statusNodes = rightNode.select("li[class=-detail -status]").select("div");
+            for (Element statusNode: statusNodes) {
+                String statusClassName = statusNode.className();
+                if (statusClassName.contains("rarity")) {
+                    // 8. Rarity
+                    localItem.Rarity = statusNode.text();
+                } else if (statusClassName.contains("like")) {
+                    // 9. Score
+                    localItem.Score = statusNode.text();
+                } else {
+                    // ERROR: Unknown type status node
+                    System.err.println(String.format(
+                            "Status Node with Unknown Type: \"%s\" at \"%s\" with type \"%s\"",
+                            subpage, relativeUrl, statusClassName));
+                }
+
+            }
+
+            // Insert
+            System.out.println(localItem.toString());
+            dataBase.Insert(localItem);
+        }
         return dataBase;
     }
 
@@ -229,7 +289,7 @@ public class HttpUtility {
             }
 
             // Download
-            URL URLObject = new URL(URL_PREFIX + relativeUrl);
+            URL URLObject = new URL(URL_RES_PREFIX + relativeUrl);
             FileUtils.copyURLToFile(URLObject, target);
 
         } catch (MalformedURLException ex) {

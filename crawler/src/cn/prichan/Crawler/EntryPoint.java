@@ -3,6 +3,10 @@ package cn.prichan.Crawler;
 import cn.prichan.Crawler.utility.FileUtility;
 import cn.prichan.Crawler.utility.HttpUtility;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 public class EntryPoint {
 
     public static void main(String[] args)
@@ -10,9 +14,7 @@ public class EntryPoint {
         HttpUtility httpUtility = new HttpUtility();
         FileUtility fileUtility = new FileUtility();
 
-        httpUtility.GetUrlDict(true);
-
-        //fileUtility.WriteAllMetaData(httpUtility, true);
+        fileUtility.WriteAllMetaData(httpUtility, true);
         //fileUtility.DownloadAllImages(httpUtility, true);
     }
 }

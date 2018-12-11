@@ -12,3 +12,6 @@
 *.iml
 *.xml
 .idea/
+
+# For resource
+crawler/src
