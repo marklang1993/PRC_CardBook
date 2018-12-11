@@ -10,6 +10,7 @@ public class FileUtility {
     private final String TOP_DIR = "data";
     private final String IMAGE_DIR = TOP_DIR + "/image/";
     private final String BRAND_DIR = TOP_DIR + "/brand/";
+    private final String TYPE_DIR = TOP_DIR + "/type/";
     private final String META_FILE = TOP_DIR + "/meta.txt";
 
     /**
@@ -76,6 +77,10 @@ public class FileUtility {
         try
         {
             String line = reader.readLine();
+            if (isPrint)
+            {
+                System.out.println(line);
+            }
             return line;
 
         } catch (IOException ex) {
@@ -114,11 +119,11 @@ public class FileUtility {
             Map.Entry<String, String> urlEntry = iterator.next();
             ++cursor;
             _writeLine(bufferedWriter,
-                    String.format("%d,%s,%s", cursor, urlEntry.getKey(), urlEntry.getValue()),
+                    String.format("%d,%s,%s", cursor, urlEntry.getValue(), urlEntry.getKey()),
                     isPrint
             );
 
-            DataBase dataBase = httpUtility.PopulateAllItems(urlEntry.getKey(), urlEntry.getValue());
+            DataBase dataBase = httpUtility.PopulateAllItems(urlEntry.getValue(), urlEntry.getKey());
             for (Item item:
                     dataBase) {
                 _writeLine(bufferedWriter,
@@ -151,7 +156,7 @@ public class FileUtility {
         try
         {
             DataBase dataBase = null;
-            String line = bufferedReader.readLine();
+            String line = _readLine(bufferedReader, isPrint);
             while(line != null)
             {
                 // Process
@@ -258,6 +263,8 @@ public class FileUtility {
                 _downloadImage(allImageNames, item.ItemImage, IMAGE_DIR, httpUtility, isPrint);
                 // Download BrandImage
                 _downloadImage(null, item.Brand, BRAND_DIR, httpUtility, isPrint);
+                // Download TypeImage
+                _downloadImage(null, item.Type, TYPE_DIR, httpUtility, isPrint);
                 // Print Procedure
                 if (isPrint)
                 {

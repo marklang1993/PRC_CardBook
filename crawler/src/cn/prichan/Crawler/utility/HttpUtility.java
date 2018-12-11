@@ -42,6 +42,7 @@ public class HttpUtility {
         // Init. IGNORE_PAGES
         IGNORE_PAGES = new HashSet<>();
         IGNORE_PAGES.add("index.html"); // Duplication
+        IGNORE_PAGES.add("promotion.html"); // Duplication
         IGNORE_PAGES.add("ticket.html"); // Follow ticket has different format
     }
 
@@ -77,7 +78,7 @@ public class HttpUtility {
             } else {
 
                 // Server Error
-                System.err.println(String.format("Sever Error with RC: %d", responseCode));
+                System.err.println(String.format("URL: %s\n Sever Error with RC: %d", URLString, responseCode));
                 return null;
             }
 
@@ -122,7 +123,7 @@ public class HttpUtility {
                 String text = spanRow.text();
 
                 // Filtering by IGNORE_PAGE
-                if (IGNORE_PAGES.contains(IGNORE_PAGES)) continue;
+                if (IGNORE_PAGES.contains(link)) continue;
                 // Check duplicated pages
                 if (urlTable.containsKey(link)) continue;
 
