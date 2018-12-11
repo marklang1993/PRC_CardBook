@@ -1,0 +1,14 @@
+# For latex
+*.aux
+*.log
+*.gz
+
+# For mac
+.DS_Store
+*/.DS_Store
+
+# For Java
+*.class
+*.iml
+*.xml
+
