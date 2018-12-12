@@ -198,16 +198,10 @@ public class FileUtility {
                     }
                 }
                 // Read Next Line
-                line = bufferedReader.readLine();
+                line = _readLine(bufferedReader, isPrint);
             }
-
-        } catch (IOException ex) {
-            System.err.println(String.format("Read META_FILE failed"));
-
         } catch (InvalidDataFormatException ex) {
-            System.err.println(String.format(String.format("Invalid Data Format: %s", ex.InvalidData)));
-            String[] tokens = ex.InvalidData.split(",");
-            System.out.println("End");
+            System.err.println(String.format("Invalid Data Format: %s", ex.InvalidData));
 
         } finally {
             _close(bufferedReader);

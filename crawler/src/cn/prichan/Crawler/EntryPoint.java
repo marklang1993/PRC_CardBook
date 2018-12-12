@@ -11,6 +11,6 @@ public class EntryPoint {
         FileUtility fileUtility = new FileUtility();
 
         //fileUtility.WriteAllMetaData(httpUtility, true);
-        fileUtility.DownloadAllImages(httpUtility, false);
+        fileUtility.DownloadAllImages(httpUtility, true);
     }
 }
