@@ -66,6 +66,11 @@ public class Database implements Iterable<Item> {
         return null;
     }
 
+    public String name()
+    {
+        return _name;
+    }
+
     public int size()
     {
         return _allItems.size();
