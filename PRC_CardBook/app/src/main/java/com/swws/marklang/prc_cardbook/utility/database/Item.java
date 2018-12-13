@@ -1,6 +1,9 @@
 package com.swws.marklang.prc_cardbook.utility.database;
 
-public class Item {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Item implements Parcelable {
 
     public String ItemImage;
 
@@ -66,4 +69,29 @@ public class Item {
 
         return sb.toString();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(toString());
+    }
+
+    public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>()
+    {
+        public Item createFromParcel(Parcel src)
+        {
+            Item restoredItem = new Item();
+            restoredItem.fromString(src.readString());
+            return restoredItem;
+        }
+
+        public Item[] newArray(int size)
+        {
+            return new Item[size];
+        }
+    };
 }

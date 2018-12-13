@@ -18,6 +18,8 @@ import com.swws.marklang.prc_cardbook.utility.database.Item;
 
 public class CardItemAdapter extends BaseAdapter {
 
+    private static final float SIZE_SP = 100.0f; // TODO: size
+
     private Context mContext;
     private LayoutInflater mInflater;
     private Database mDatabase;
@@ -65,11 +67,11 @@ public class CardItemAdapter extends BaseAdapter {
     private void setImageByScaling(ImageView iv, Item cardItem) {
         // Get card image
         FileUtility fileUtility = new FileUtility(mContext);
-        Bitmap cardImage = fileUtility.ReadCardImage(cardItem);
+        Bitmap cardImage = fileUtility.ReadCardImage(cardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE);
 
         // Scale and set image
         iv.setScaleType(ImageView.ScaleType.CENTER);
-        float side = 100.0f * mRes.getDisplayMetrics().scaledDensity; // TODO: size
+        float side = SIZE_SP * mRes.getDisplayMetrics().scaledDensity;
         iv.setImageBitmap(
                 Bitmap.createScaledBitmap(
                         cardImage,

@@ -25,6 +25,13 @@ public class FileUtility {
     private String internalPath;
 
     /**
+     * Type of the image
+     */
+    public enum IMAGE_TYPE {
+        IMAGE, BRAND, TYPE
+    }
+
+    /**
      * Invalid Data Format Exception
      */
     public static class InvalidDataFormatException extends Exception {
@@ -154,15 +161,35 @@ public class FileUtility {
 
     /**
      * Read a card image
-     * @param cardItem
+     * @param imagePathOnline
      * @return
      */
-    public Bitmap ReadCardImage(Item cardItem) {
+    public Bitmap ReadCardImage(String imagePathOnline, IMAGE_TYPE imageType) {
         // Get image path
-        String imagePathOnline = cardItem.ItemImage;
         String imageFileName = (new File(imagePathOnline)).getName();
         // TODO: Check local file
-        String imagePathLocal = internalPath + "/" + IMAGE_DIR + imageFileName;
+        String imagePathLocal = internalPath + "/";
+        switch (imageType)
+        {
+            case IMAGE:
+                imagePathLocal = imagePathLocal + IMAGE_DIR + imageFileName;
+                break;
+
+            case BRAND:
+                imagePathLocal = imagePathLocal + BRAND_DIR + imageFileName;
+                break;
+
+            case TYPE:
+                imagePathLocal = imagePathLocal + TYPE_DIR + imageFileName;
+                break;
+
+            default:
+                Log.e(
+                        getClass().getName(),
+                        String.format("IMAGE TYPE %s IS ILLEGAL", imageType.toString())
+                );
+                return null;
+        }
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
