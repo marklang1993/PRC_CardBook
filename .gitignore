@@ -3,15 +3,14 @@
 *.log
 *.gz
 
+# For java
+.idea/
+*.class
+*.iml
+
 # For mac
 .DS_Store
 */.DS_Store
-
-# For Java
-*.class
-*.iml
-*.xml
-.idea/
 
 # For resource
 crawler/data

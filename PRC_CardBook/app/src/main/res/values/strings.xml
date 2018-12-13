@@ -1,0 +1,18 @@
+<resources>
+    <string name="inventory_db_file_name">inventory.db</string>
+
+    <string name="app_name">プリチャンカード図鑑</string>
+    <string name="main_activity_name">シリーズ一覧</string>
+    <string name="card_activity_name">カード</string>
+    <string name="card_detail_activity_name">コーデ詳細</string>
+
+    <string name="card_detail_category">カテゴリー</string>
+    <string name="card_detail_color">カラー</string>
+    <string name="card_detail_brand">ブランド</string>
+    <string name="card_detail_type">タイプ</string>
+    <string name="card_detail_rarity">レアリティ</string>
+    <string name="card_detail_score">いいね</string>
+    <string name="card_detail_inventory_count">数量：</string>
+
+
+</resources>
