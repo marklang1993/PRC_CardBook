@@ -3,6 +3,10 @@ package com.swws.marklang.prc_cardbook.activity.card;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.inventory.Inventory;
 
 
 public class CardItemAdapter extends BaseAdapter {
@@ -68,24 +74,60 @@ public class CardItemAdapter extends BaseAdapter {
         // Get card image
         FileUtility fileUtility = new FileUtility(mContext);
         Bitmap cardImage = fileUtility.ReadImage(cardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE);
+        // Get the count of given card inventory
+        Inventory[] cardInventory = MainActivity.mInventoryDB.inventoryDAO().
+                queryInventoryByItemID(cardItem.getImageID());
+        int countCardInventory;
+        if (cardInventory.length != 0) {
+            countCardInventory = cardInventory[0].mInventoryItemCount;
+        } else {
+            countCardInventory = 0;
+        }
 
-        // Check is image NULL
+        // Check is cardImage NULL
         if (cardImage == null)
         {
             return;
         }
 
-        // Scale and set image
-        iv.setScaleType(ImageView.ScaleType.CENTER);
+        // Change image color by inventory count
+        if (countCardInventory == 0)
+        {
+            // If the user does not own this card, show the card image in greyscale
+            cardImage = bitmapToGreyscale(cardImage);
+        }
+
+        // Scale
         float side = SIZE_SP * mRes.getDisplayMetrics().scaledDensity;
-        iv.setImageBitmap(
-                Bitmap.createScaledBitmap(
-                        cardImage,
-                        (int)side,
-                        (int)side,
-                        false
-                )
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(cardImage, (int)side, (int)side, false);
+
+        // Display card image
+        iv.setScaleType(ImageView.ScaleType.CENTER);
+        iv.setImageBitmap(scaledBitmap);
+
+    }
+
+    /**
+     * Change a bitmap with color to a bitmap in greyscale
+     * @param srcBitmap
+     * @return
+     */
+    private Bitmap bitmapToGreyscale(Bitmap srcBitmap) {
+        // Create an blank grey bitmap
+        Bitmap dstBitmap = Bitmap.createBitmap(
+                srcBitmap.getWidth(),
+                srcBitmap.getHeight(),
+                Bitmap.Config.ARGB_8888 // NOTE: cannot use RGB565, otherwise we lose the Alpha channel
         );
 
+        Canvas canvas = new Canvas(dstBitmap);
+        Paint paint = new Paint();
+        ColorMatrix colorMatrix = new ColorMatrix();
+        colorMatrix.setSaturation(0);
+        ColorMatrixColorFilter colorMatrixFilter = new ColorMatrixColorFilter(colorMatrix);
+        paint.setColorFilter(colorMatrixFilter);
+        canvas.drawBitmap(srcBitmap, 0, 0, paint);
+
+        return dstBitmap;
     }
 }
