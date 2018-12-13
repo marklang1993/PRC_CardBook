@@ -15,11 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
-import com.swws.marklang.prc_cardbook.utility.inventory.Inventory;
+import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 
 public class CardItemAdapter extends BaseAdapter {
@@ -75,14 +74,7 @@ public class CardItemAdapter extends BaseAdapter {
         FileUtility fileUtility = new FileUtility(mContext);
         Bitmap cardImage = fileUtility.ReadImage(cardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE);
         // Get the count of given card inventory
-        Inventory[] cardInventory = MainActivity.mInventoryDB.inventoryDAO().
-                queryInventoryByItemID(cardItem.getImageID());
-        int countCardInventory;
-        if (cardInventory.length != 0) {
-            countCardInventory = cardInventory[0].mInventoryItemCount;
-        } else {
-            countCardInventory = 0;
-        }
+        int countCardInventory = InventoryUtility.getInventoryCount(cardItem);
 
         // Check is cardImage NULL
         if (cardImage == null)

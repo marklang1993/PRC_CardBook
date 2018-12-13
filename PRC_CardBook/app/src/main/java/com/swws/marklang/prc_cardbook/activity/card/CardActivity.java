@@ -20,6 +20,8 @@ public class CardActivity extends AppCompatActivity {
     private int mSeriesIndex = 0;
     private Database mDatabase = null;
 
+    private CardItemAdapter mCardItemAdapter = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,8 @@ public class CardActivity extends AppCompatActivity {
 
         // Set cardGridView
         GridView cardGridView = (GridView) findViewById(R.id.cardGridView);
-        cardGridView.setAdapter(new CardItemAdapter(getApplicationContext(), mDatabase, getResources()));
+        mCardItemAdapter = new CardItemAdapter(getApplicationContext(), mDatabase, getResources());
+        cardGridView.setAdapter(mCardItemAdapter);
 
         // Set onItemClickListener
         cardGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -57,9 +60,16 @@ public class CardActivity extends AppCompatActivity {
                 // Passing the item of the card
                 showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM, cardItem);
 
-                startActivity(showCardDetailActivity);
+                // Start the CardDetailActivity
+                startActivityForResult(showCardDetailActivity, 0);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Update "cardGridView" after "CardDetailActivity" closed.
+        mCardItemAdapter.notifyDataSetChanged();
     }
 
 }
