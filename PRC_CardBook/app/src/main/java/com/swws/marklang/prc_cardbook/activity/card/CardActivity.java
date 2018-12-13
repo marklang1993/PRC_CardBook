@@ -8,7 +8,6 @@ import android.widget.GridView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
-import com.swws.marklang.prc_cardbook.utility.Size;
 
 public class CardActivity extends AppCompatActivity {
 
@@ -45,7 +44,7 @@ public class CardActivity extends AppCompatActivity {
 
         // Set cardGridView
         GridView cardGridView = (GridView) findViewById(R.id.cardGridView);
-        cardGridView.setAdapter(new CardItemAdapter(getApplicationContext(), mDatabase));
+        cardGridView.setAdapter(new CardItemAdapter(getApplicationContext(), mDatabase, getResources()));
     }
 
 }
