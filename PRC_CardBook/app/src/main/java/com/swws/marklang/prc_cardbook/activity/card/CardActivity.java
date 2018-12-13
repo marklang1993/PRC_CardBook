@@ -17,10 +17,6 @@ public class CardActivity extends AppCompatActivity {
     public static final String KEY_SERIES_INDEX = "com.swws.marklang.prc_cardbook.SERIES_INDEX";
     public static final String KEY_DATABASE = "com.swws.marklang.prc_cardbook.DATABASE";
 
-    private static final int H_COUNT = 4; // count of cards displayed in horizontal direction
-    private static final int V_COUNT = 5; // count of cards displayed in vertical direction
-    private static final int OFFSET = 10; // offset between 2 cards
-
     private int mSeriesIndex = 0;
     private Database mDatabase = null;
 

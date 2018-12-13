@@ -28,7 +28,9 @@ public class FileUtility {
      * Type of the image
      */
     public enum IMAGE_TYPE {
-        IMAGE, BRAND, TYPE
+        IMAGE,
+        BRAND,
+        TYPE
     }
 
     /**
@@ -44,6 +46,10 @@ public class FileUtility {
         }
     }
 
+    /**
+     * Constructor
+     * @param context
+     */
     public FileUtility(Context context)
     {
         internalPath = context.getFilesDir().getPath();
@@ -158,15 +164,21 @@ public class FileUtility {
         return listDataBase;
     }
 
-
     /**
-     * Read a card image
+     * Read a image from database
      * @param imagePathOnline
      * @return
      */
-    public Bitmap ReadCardImage(String imagePathOnline, IMAGE_TYPE imageType) {
+    public Bitmap ReadImage(String imagePathOnline, IMAGE_TYPE imageType) {
         // Get image path
         String imageFileName = (new File(imagePathOnline)).getName();
+        // Check image file name is illegal
+        if (imageFileName.lastIndexOf('.') < 0)
+        {
+            // Not an image file
+            return null;
+        }
+
         // TODO: Check local file
         String imagePathLocal = internalPath + "/";
         switch (imageType)

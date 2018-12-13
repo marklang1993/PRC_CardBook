@@ -55,7 +55,7 @@ public class CardItemAdapter extends BaseAdapter {
         TextView cardIdTextView = (TextView) view.findViewById(R.id.cardIdTextView);
         cardIdTextView.setText(mDatabase.get(position).InternalID);
 
-        setImageByScaling(cardImageView, mDatabase.get(position));
+        setCardImageByScaling(cardImageView, mDatabase.get(position));
         return view;
     }
 
@@ -64,10 +64,16 @@ public class CardItemAdapter extends BaseAdapter {
      * @param iv
      * @param cardItem
      */
-    private void setImageByScaling(ImageView iv, Item cardItem) {
+    private void setCardImageByScaling(ImageView iv, Item cardItem) {
         // Get card image
         FileUtility fileUtility = new FileUtility(mContext);
-        Bitmap cardImage = fileUtility.ReadCardImage(cardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE);
+        Bitmap cardImage = fileUtility.ReadImage(cardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE);
+
+        // Check is image NULL
+        if (cardImage == null)
+        {
+            return;
+        }
 
         // Scale and set image
         iv.setScaleType(ImageView.ScaleType.CENTER);

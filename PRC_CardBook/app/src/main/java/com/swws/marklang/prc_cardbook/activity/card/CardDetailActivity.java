@@ -16,7 +16,7 @@ public class CardDetailActivity extends AppCompatActivity {
 
     public static final String KEY_ITEM = "com.swws.marklang.prc_cardbook.ITEM";
 
-    private static final float CARD_BIG_IMAGE_SIZE_SP = 200.0f; // TODO: size
+    private static final float CARD_BIG_IMAGE_SIZE_SP = 180.0f; // TODO: size
 
     private Item mCardItem = null;
 
@@ -33,9 +33,6 @@ public class CardDetailActivity extends AppCompatActivity {
             Log.e(this.getClass().getName(), KEY_ITEM + " NOT FOUND!");
             return;
         }
-
-        // Set title
-        setTitle(mCardItem.ItemName);
 
         // Load Card Details
         loadCard();
@@ -57,7 +54,7 @@ public class CardDetailActivity extends AppCompatActivity {
         setImageByScaling(typeContentImageView, mCardItem.Type, FileUtility.IMAGE_TYPE.TYPE,-1.0f);
 
         // Set values
-        cardNameTextView.setText(mCardItem.ItemName);
+        cardNameTextView.setText(mCardItem.ItemName.replace(' ', '\n'));
         categoryContentTextView.setText(mCardItem.Category);
         colorContentTextView.setText(mCardItem.Color);
         rarityContentTextView.setText(mCardItem.Rarity);
@@ -73,7 +70,13 @@ public class CardDetailActivity extends AppCompatActivity {
     private void setImageByScaling(ImageView iv, String imageOnlinePath, FileUtility.IMAGE_TYPE imageType, float targetSize) {
         // Get image
         FileUtility fileUtility = new FileUtility(getApplicationContext());
-        Bitmap image = fileUtility.ReadCardImage(imageOnlinePath, imageType);
+        Bitmap image = fileUtility.ReadImage(imageOnlinePath, imageType);
+
+        // Check is image NULL
+        if (image == null)
+        {
+            return;
+        }
 
         // Scale and set image
         iv.setScaleType(ImageView.ScaleType.CENTER);
@@ -92,8 +95,6 @@ public class CardDetailActivity extends AppCompatActivity {
             // NO need to Scale
             iv.setImageBitmap(image);
         }
-
-
     }
 
 }
