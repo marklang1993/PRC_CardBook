@@ -3,6 +3,8 @@ package com.swws.marklang.prc_cardbook.utility.database;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.File;
+
 public class Item implements Parcelable {
 
     public String ItemImage;
@@ -23,6 +25,18 @@ public class Item implements Parcelable {
 
     // Constants
     public final static int COUNT_ELEMENT = 10;
+
+
+    /**
+     * Get the id of the item image
+     * @return
+     */
+    public String getImageID() {
+        String imageFileName = (new File(ItemImage)).getName();
+        String imageID = imageFileName.substring(
+                0, imageFileName.lastIndexOf('.'));
+        return imageID;
+    }
 
     /**
      * Restore Item from a rawString

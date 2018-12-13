@@ -21,7 +21,10 @@ public class FileUtility {
     private final String IMAGE_DIR = TOP_DIR + "/image/";
     private final String BRAND_DIR = TOP_DIR + "/brand/";
     private final String TYPE_DIR = TOP_DIR + "/type/";
+
     private final String META_FILE = TOP_DIR + "/meta.txt";
+    private final String INVENTORY_FILE = TOP_DIR + "/inventory.txt";
+
     private String internalPath;
 
     /**

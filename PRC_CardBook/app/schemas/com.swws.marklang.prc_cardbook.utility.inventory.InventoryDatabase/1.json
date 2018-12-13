@@ -1,0 +1,39 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "359badffde642a3763715219493c6004",
+    "entities": [
+      {
+        "tableName": "inventory",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ItemID` TEXT NOT NULL, `ItemCount` INTEGER NOT NULL, PRIMARY KEY(`ItemID`))",
+        "fields": [
+          {
+            "fieldPath": "mInventoryItemID",
+            "columnName": "ItemID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mInventoryItemCount",
+            "columnName": "ItemCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ItemID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"359badffde642a3763715219493c6004\")"
+    ]
+  }
+}
