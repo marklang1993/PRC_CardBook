@@ -1,9 +1,12 @@
 package com.swws.marklang.prc_cardbook.utility.database;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Database implements Iterable<Item> {
+public class Database implements Iterable<Item>, Parcelable {
 
     private String _name;   // Name of this series
     private String _refUrl; // Referred URL
@@ -16,6 +19,23 @@ public class Database implements Iterable<Item> {
         _refUrl = refUrl;
 
         _allItems = new ArrayList<>();
+    }
+
+    public Database(Parcel src)
+    {
+        // Read basic info.
+        _name = src.readString();
+        _refUrl = src.readString();
+
+        // Read item info.
+        int databaseSize = src.readInt();
+        _allItems = new ArrayList<>();
+        for (int i = 0; i < databaseSize; ++i)
+        {
+            Item newItem = new Item();
+            newItem.fromString(src.readString());
+            _allItems.add(newItem);
+        }
     }
 
     public void Insert(Item item)
@@ -81,5 +101,34 @@ public class Database implements Iterable<Item> {
         return _allItems.iterator();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        // Write basic info.
+        dest.writeString(_name);
+        dest.writeString(_refUrl);
+
+        // Write item info.
+        dest.writeInt(_allItems.size());
+        for (Item item: _allItems) {
+            dest.writeString(item.toString());
+        }
+    }
+
+    public static final Parcelable.Creator<Database> CREATOR = new Parcelable.Creator<Database>()
+    {
+        public Database createFromParcel(Parcel src)
+        {
+            return new Database(src);
+        }
+
+        public Database[] newArray(int size)
+        {
+            return new Database[size];
+        }
+    };
 }

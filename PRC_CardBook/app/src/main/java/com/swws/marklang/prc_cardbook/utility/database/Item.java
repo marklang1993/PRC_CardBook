@@ -21,6 +21,25 @@ public class Item {
     // Constants
     public final static int COUNT_ELEMENT = 10;
 
+    /**
+     * Restore Item from a rawString
+     * @param rawString
+     */
+    public void fromString(String rawString) {
+        String tokens[] = rawString.split(",");
+        // Restore Item
+        ItemImage = tokens[0];
+        InternalID = tokens[1];
+        ItemName = tokens[2];
+        Category = tokens[3];
+        Type = tokens[4];
+        Brand = tokens[5];
+        Rarity = tokens[6];
+        Score = tokens[7];
+        Color = tokens[8];
+        Remarks = tokens[9];
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

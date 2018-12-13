@@ -1,6 +1,8 @@
 package com.swws.marklang.prc_cardbook.utility;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.utility.database.Database;
@@ -8,6 +10,7 @@ import com.swws.marklang.prc_cardbook.utility.database.Item;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -146,5 +149,23 @@ public class FileUtility {
         }
 
         return listDataBase;
+    }
+
+
+    /**
+     * Read a card image
+     * @param cardItem
+     * @return
+     */
+    public Bitmap ReadCardImage(Item cardItem) {
+        // Get image path
+        String imagePathOnline = cardItem.ItemImage;
+        String imageFileName = (new File(imagePathOnline)).getName();
+        // TODO: Check local file
+        String imagePathLocal = internalPath + "/" + IMAGE_DIR + imageFileName;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        return BitmapFactory.decodeFile(imagePathLocal, options);
     }
 }

@@ -4,14 +4,20 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.GridView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
+import com.swws.marklang.prc_cardbook.utility.Size;
 
 public class CardActivity extends AppCompatActivity {
 
     public static final String KEY_SERIES_INDEX = "com.swws.marklang.prc_cardbook.SERIES_INDEX";
     public static final String KEY_DATABASE = "com.swws.marklang.prc_cardbook.DATABASE";
+
+    private static final int H_COUNT = 4; // count of cards displayed in horizontal direction
+    private static final int V_COUNT = 5; // count of cards displayed in vertical direction
+    private static final int OFFSET = 10; // offset between 2 cards
 
     private int mSeriesIndex = 0;
     private Database mDatabase = null;
@@ -36,5 +42,10 @@ public class CardActivity extends AppCompatActivity {
 
         // Set title
         setTitle(mDatabase.name() + "  " + getString(R.string.card_activity_name));
+
+        // Set cardGridView
+        GridView cardGridView = (GridView) findViewById(R.id.cardGridView);
+        cardGridView.setAdapter(new CardItemAdapter(getApplicationContext(), mDatabase));
     }
+
 }
