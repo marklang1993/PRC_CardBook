@@ -2,6 +2,9 @@ package com.swws.marklang.prc_cardbook.activity.main;
 
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<Database> mDatabases = null;
     public static InventoryDatabase mInventoryDB = null;
 
+    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
 
     @Override
@@ -37,11 +41,10 @@ public class MainActivity extends AppCompatActivity {
         // Init. data
         initData();
 
-        // Init. views
+        // Init. UIs
         setListView();
-
-        // Init DrawerToggle
-        setDrawerToggle();
+        initDrawer();
+        initNavigationView();
     }
 
     /**
@@ -106,19 +109,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Set up drawerToggle
+     * Init. Drawer
      */
-    private void setDrawerToggle() {
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_main_activity);
+    private void initDrawer() {
+        // Init. DrawerLayout and DrawerToggle
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_main_activity);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
-                drawerLayout,
+                mDrawerLayout,
                 R.string.open,
                 R.string.close
         );
-        drawerLayout.addDrawerListener(mActionBarDrawerToggle);
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    /**
+     * Init. Navigation View
+     */
+    private void initNavigationView() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.mainNavigationView);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                boolean result;
+
+                switch (id)
+                {
+                    case R.id.cardbook_menu_item:
+                        result = true;
+                        break;
+
+                    case R.id.qrcode_menu_item:
+                        result = true;
+                        break;
+
+                    case R.id.setting_menu_item:
+                        result = true;
+                        break;
+
+                    case R.id.exit_menu_item:
+                        result = true;
+                        break;
+
+                    default:
+                        result = false;
+                        break;
+                }
+
+                // Shrink the navigation view
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerlayout_main_activity);
+                drawer.closeDrawer(GravityCompat.START);
+                return result;
+            }
+        });
     }
 
     @Override

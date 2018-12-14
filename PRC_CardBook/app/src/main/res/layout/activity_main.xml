@@ -6,7 +6,8 @@
     android:id="@+id/drawerlayout_main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.main.MainActivity">
+    tools:context=".activity.main.MainActivity"
+    tools:openDrawer="start">
 
     <ImageView
         android:layout_width="match_parent"
@@ -14,20 +15,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bg_prichan_menu_header"
         />
-
-    <android.support.design.widget.NavigationView
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:background="@color/white"
-        app:itemTextColor="@color/black"
-        app:itemIconTint="@color/black"
-
-        app:menu="@menu/navigation_menu"
-        app:headerLayout="@layout/navigation_menu_header"
-        android:layout_gravity="start"
-        >
-
-    </android.support.design.widget.NavigationView>
 
     <ListView
         android:id="@+id/seriesListView"
@@ -44,4 +31,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+
+    <!--WARNING: NavigationView MUST BE PLACED IN THE END!!!!-->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/mainNavigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        android:background="@color/white"
+        app:headerLayout="@layout/navigation_menu_header"
+        app:menu="@menu/navigation_menu" />
+
 </android.support.v4.widget.DrawerLayout>
