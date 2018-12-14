@@ -138,12 +138,9 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (id)
                 {
-                    case R.id.cardbook_menu_item:
-                        result = true;
-                        break;
-
                     case R.id.qrcode_menu_item:
                         result = true;
+
                         break;
 
                     case R.id.setting_menu_item:

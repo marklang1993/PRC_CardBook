@@ -3,13 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/cardbook_menu_item"
-            android:title="@string/navigation_menu_item_name_cardbook"
-            android:icon="@drawable/ic_function_cardbook">
-        </item>
-
+    <group>
         <item
             android:id="@+id/qrcode_menu_item"
             android:title="@string/navigation_menu_item_name_qrcode"
