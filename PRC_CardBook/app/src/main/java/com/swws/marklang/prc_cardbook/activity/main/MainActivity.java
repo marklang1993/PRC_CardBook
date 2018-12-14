@@ -2,8 +2,11 @@ package com.swws.marklang.prc_cardbook.activity.main;
 
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<Database> mDatabases = null;
     public static InventoryDatabase mInventoryDB = null;
 
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Init. views
         setListView();
+
+        // Init DrawerToggle
+        setDrawerToggle();
     }
 
     /**
@@ -96,6 +103,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(showCardActivity);
             }
         });
+    }
+
+    /**
+     * Set up drawerToggle
+     */
+    private void setDrawerToggle() {
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_main_activity);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.open,
+                R.string.close
+        );
+        drawerLayout.addDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (mActionBarDrawerToggle.onOptionsItemSelected(menuItem)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     /**

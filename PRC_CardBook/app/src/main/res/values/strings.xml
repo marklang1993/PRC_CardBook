@@ -13,6 +13,14 @@
     <string name="card_detail_rarity">レアリティ</string>
     <string name="card_detail_score">いいね</string>
     <string name="card_detail_inventory_count">数量：</string>
+    
+    <string name="navigation_menu_item_name_cardbook">カード図鑑</string>
+    <string name="navigation_menu_item_name_qrcode">QRコード</string>
+    <string name="navigation_menu_item_name_setting">設定</string>
+    <string name="navigation_menu_item_name_exit">終了</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
 
 </resources>

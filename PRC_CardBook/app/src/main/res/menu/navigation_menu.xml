@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/cardbook_menu_item"
+        android:title="@string/navigation_menu_item_name_cardbook"
+        android:icon="@drawable/ic_function_cardbook">
+    </item>
+
+    <item
+        android:id="@+id/qrcode_menu_item"
+        android:title="@string/navigation_menu_item_name_qrcode"
+        android:icon="@drawable/ic_function_qrcode">
+    </item>
+
+    <item
+        android:id="@+id/cardbook_menu_setting"
+        android:title="@string/navigation_menu_item_name_setting"
+        android:icon="@drawable/ic_function_setting">
+    </item>
+    <item
+        android:id="@+id/cardbook_menu_exit"
+        android:title="@string/navigation_menu_item_name_exit"
+        android:icon="@drawable/ic_function_exit">
+    </item>
+
+</menu>
