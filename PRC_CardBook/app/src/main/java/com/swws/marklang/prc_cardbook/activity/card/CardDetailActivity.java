@@ -19,10 +19,11 @@ import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 public class CardDetailActivity extends AppCompatActivity {
 
-    public static final String KEY_ITEM = "com.swws.marklang.prc_cardbook.ITEM";
+    public static final String KEY_ITEM_INDEX = "com.swws.marklang.prc_cardbook.ITEM_INDEX";
 
     private static final float CARD_BIG_IMAGE_SIZE_SP = 180.0f; // TODO: size
 
+    private int mCardItemIndex = 0;
     private Item mCardItem = null;
     private int mInventoryCount = 0; // the current count of this card in inventory
 
@@ -31,14 +32,15 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
 
-        // Get passed in CardItem
+        // Get param passed in
         Intent intent = getIntent();
-        if (intent.hasExtra(KEY_ITEM)) {
-            mCardItem = (Item) intent.getExtras().getParcelable(KEY_ITEM);
+        if (intent.hasExtra(KEY_ITEM_INDEX)) {
+            mCardItemIndex = intent.getExtras().getInt(KEY_ITEM_INDEX);
         } else {
-            Log.e(this.getClass().getName(), KEY_ITEM + " NOT FOUND!");
+            Log.e(this.getClass().getName(), KEY_ITEM_INDEX + " NOT FOUND!");
             return;
         }
+        mCardItem = CardActivity.getItemByIndex(mCardItemIndex);
 
         // Get the current count of this card in inventory
         mInventoryCount = InventoryUtility.getInventoryCount(mCardItem);

@@ -91,12 +91,18 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showCardActivity = new Intent(getApplicationContext(), CardActivity.class);
                 // Pass params to "CardActivity"
-                Database currentDatabase = mDatabases.get(position);
                 showCardActivity.putExtra(CardActivity.KEY_SERIES_INDEX, position);
-                showCardActivity.putExtra(CardActivity.KEY_DATABASE, currentDatabase);
                 // Start
                 startActivity(showCardActivity);
             }
         });
+    }
+
+    /**
+     * Get a single Database by index
+     * @param databaseIndex
+     */
+    public static Database getDatabaseByIndex(int databaseIndex) {
+        return mDatabases.get(databaseIndex);
     }
 }

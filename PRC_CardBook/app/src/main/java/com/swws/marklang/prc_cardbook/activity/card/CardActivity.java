@@ -9,16 +9,16 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 
 public class CardActivity extends AppCompatActivity {
 
     public static final String KEY_SERIES_INDEX = "com.swws.marklang.prc_cardbook.SERIES_INDEX";
-    public static final String KEY_DATABASE = "com.swws.marklang.prc_cardbook.DATABASE";
 
     private int mSeriesIndex = 0;
-    private Database mDatabase = null;
+    private static Database mDatabase = null;
 
     private CardItemAdapter mCardItemAdapter = null;
 
@@ -33,14 +33,11 @@ public class CardActivity extends AppCompatActivity {
             mSeriesIndex = intent.getExtras().getInt(KEY_SERIES_INDEX);
         } else {
             Log.e(this.getClass().getName(), KEY_SERIES_INDEX + " NOT FOUND!");
+            mDatabase = null;
             return;
         }
-        if (intent.hasExtra(KEY_DATABASE)) {
-            mDatabase = (Database) intent.getExtras().getParcelable(KEY_DATABASE);
-        } else {
-            Log.e(this.getClass().getName(), KEY_DATABASE + " NOT FOUND!");
-            return;
-        }
+        // Get corresponding database
+        mDatabase = MainActivity.getDatabaseByIndex(mSeriesIndex);
 
         // Set title
         setTitle(mDatabase.name());
@@ -55,10 +52,9 @@ public class CardActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showCardDetailActivity = new Intent(getApplicationContext(), CardDetailActivity.class);
-                Item cardItem = mDatabase.get(position);
 
-                // Passing the item of the card
-                showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM, cardItem);
+                // Passing the index of the card item
+                showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_INDEX, position);
 
                 // Start the CardDetailActivity
                 startActivityForResult(showCardDetailActivity, 0);
@@ -70,6 +66,15 @@ public class CardActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Update "cardGridView" after "CardDetailActivity" closed.
         mCardItemAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Get item by index
+     * @param itemIndex
+     * @return
+     */
+    public static Item getItemByIndex(int itemIndex) {
+        return mDatabase.get(itemIndex);
     }
 
 }
