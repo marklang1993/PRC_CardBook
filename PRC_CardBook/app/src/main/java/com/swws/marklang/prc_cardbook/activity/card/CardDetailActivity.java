@@ -53,6 +53,16 @@ public class CardDetailActivity extends AppCompatActivity {
     }
 
     /**
+     * Close this activity
+     * @return
+     */
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    /**
      * Load card details
      * @return
      */
@@ -87,6 +97,7 @@ public class CardDetailActivity extends AppCompatActivity {
      * Init. buttons
      */
     private void initButtons() {
+        // Increase Inventory Button
         Button inventoryIncreaseButton = (Button) findViewById(R.id.inventoryIncreaseButton);
         inventoryIncreaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +116,7 @@ public class CardDetailActivity extends AppCompatActivity {
             }
         });
 
+        // Decrease Inventory Button
         Button inventoryDecreaseButton = (Button) findViewById(R.id.inventoryDecreaseButton);
         inventoryDecreaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +136,9 @@ public class CardDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Back Button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Display this button: Enable
     }
 
     /**

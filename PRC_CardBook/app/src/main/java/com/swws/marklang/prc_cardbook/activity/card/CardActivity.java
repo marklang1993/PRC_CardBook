@@ -39,6 +39,37 @@ public class CardActivity extends AppCompatActivity {
         // Get corresponding database
         mDatabase = MainActivity.getDatabaseByIndex(mSeriesIndex);
 
+        // Initialize UI components
+        initUI();
+    }
+
+    /**
+     * Close this activity
+     * @return
+     */
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    /**
+     * Notify "cardGridView" to update once the CardDetailActivity finished.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Update "cardGridView" after "CardDetailActivity" closed.
+        mCardItemAdapter.notifyDataSetChanged();
+    }
+
+
+    /**
+     * Init. all UI components
+     */
+    private void initUI() {
         // Set title
         setTitle(mDatabase.name());
 
@@ -60,12 +91,9 @@ public class CardActivity extends AppCompatActivity {
                 startActivityForResult(showCardDetailActivity, 0);
             }
         });
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Update "cardGridView" after "CardDetailActivity" closed.
-        mCardItemAdapter.notifyDataSetChanged();
+        // Display Back Button
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     /**

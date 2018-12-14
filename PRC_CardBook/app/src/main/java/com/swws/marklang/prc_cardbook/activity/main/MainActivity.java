@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.exit_menu_item:
                         result = true;
+                        finishAndRemoveTask(); // MUST be used since API 21
                         break;
 
                     default:
