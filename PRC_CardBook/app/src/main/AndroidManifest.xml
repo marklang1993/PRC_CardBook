@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.swws.marklang.prc_cardbook">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -20,16 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.card.CardActivity"
-            android:label="@string/card_activity_name">
-        </activity>
-
+            android:label="@string/card_activity_name"></activity>
         <activity
             android:name=".activity.card.CardDetailActivity"
-            android:label="@string/card_detail_activity_name">
-        </activity>
+            android:label="@string/card_detail_activity_name"></activity>
+        <activity android:name=".activity.qrcode.ScannerActivity"></activity>
     </application>
 
 </manifest>

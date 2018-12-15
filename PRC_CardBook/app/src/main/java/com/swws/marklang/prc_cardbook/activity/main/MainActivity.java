@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
+import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
@@ -140,7 +141,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     case R.id.qrcode_menu_item:
                         result = true;
-
+                        // Start QRCode Scanner
+                        Intent scannerActivity = new Intent(getApplicationContext(), ScannerActivity.class);
+                        startActivity(scannerActivity);
                         break;
 
                     case R.id.setting_menu_item:

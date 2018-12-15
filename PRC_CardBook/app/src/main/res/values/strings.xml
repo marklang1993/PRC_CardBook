@@ -5,6 +5,7 @@
     <string name="main_activity_name">シリーズ一覧</string>
     <string name="card_activity_name">カード</string>
     <string name="card_detail_activity_name">コーデ詳細</string>
+    <string name="qr_scanner_activity_name">QRコード読み取り</string>
 
     <string name="card_detail_category">カテゴリー</string>
     <string name="card_detail_color">カラー</string>
@@ -17,6 +18,11 @@
     <string name="navigation_menu_item_name_qrcode">QRコード</string>
     <string name="navigation_menu_item_name_setting">設定</string>
     <string name="navigation_menu_item_name_exit">終了</string>
+
+    <string name="exception_no_camera_device">エラー：カメラを見つかりませんでした</string>
+    <string name="exception_configure_failed_camera_capture_session">エラー：読取りセッション初期化失敗</string>
+    <string name="exception_access_camera_failed">エラー：カメラをアクセスできません</string>
+    <string name="exception_get_camera_list_failed">エラー：カメラリストを取得できませんでした</string>
 
     <string name="open">Open</string>
     <string name="close">Close</string>
