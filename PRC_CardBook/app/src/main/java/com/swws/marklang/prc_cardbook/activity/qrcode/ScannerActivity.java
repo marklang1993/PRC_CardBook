@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -41,24 +42,27 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+
 public class ScannerActivity extends AppCompatActivity {
 
     private TextureView mQRCodeTextureView;
+    private QRCodeAreaPreviewView mQRCodeAreaPreviewView;
 
-    private String mCameraId;
     private CameraDevice mCameraDevice;
     private CaptureRequest.Builder mCaptureRequestBuilderSurfaceTexture;
     private CaptureRequest.Builder mCaptureRequestBuilderQRCodeReader;
     private ImageReader mImageReader;
     private Size mImageSize;
     private Handler mBackgroundHandler;
-
     private ArrayList<Surface> mSurfaces;
-
     private Semaphore mCapturePictureSemaphore = new Semaphore(1);
+    private Rect mCropAreaQRCode;
 
-    private static final int CAMERA_INDEX = 0;
+    // Some constants
+    private static final int CAMERA_INDEX = 0;      // Back camera index
     private static final int REQUEST_CAMERA_PERMISSION = 200;
+    private static final int QR_CODE_SIDE = 250;    // Side length of QR code image (square) in pixel
+
 
 
     @Override
@@ -80,7 +84,7 @@ public class ScannerActivity extends AppCompatActivity {
         }
 
         // Init. mQRCodeTextureView
-        mQRCodeTextureView = findViewById(R.id.qrcodeTextureView);
+        mQRCodeTextureView = (TextureView) findViewById(R.id.qrcodeTextureView);
         mQRCodeTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -100,9 +104,11 @@ public class ScannerActivity extends AppCompatActivity {
 
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
             }
         });
+
+        // Init. mQRCodeAreaPreviewView
+        mQRCodeAreaPreviewView = (QRCodeAreaPreviewView) findViewById(R.id.qrcodeImageView);
     }
 
     /**
@@ -297,13 +303,18 @@ public class ScannerActivity extends AppCompatActivity {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             // Enumerate all camera devices & Get the size of video stream
-            mCameraId = cameraManager.getCameraIdList()[CAMERA_INDEX];
-            CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(mCameraId);
+            String cameraId = cameraManager.getCameraIdList()[CAMERA_INDEX];
+            CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap streamConfigurationMap = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             Size[] availableImageSizes = streamConfigurationMap.getOutputSizes(SurfaceTexture.class);
-            mImageSize = availableImageSizes[0];  // Choose the highest resolution
+            mImageSize = availableImageSizes[4];  // Choose the highest resolution
+            mCropAreaQRCode = getCropArea(mImageSize);
 
-            // Init. ImageReader (JPEG format, maximum 1 image)
+            // Init. mQRCodeAreaPreviewView
+            mQRCodeAreaPreviewView.setCropAreaSize(new Size(QR_CODE_SIDE, QR_CODE_SIDE));
+            mQRCodeAreaPreviewView.setPreviewImageSize(mImageSize);
+
+            // Init. ImageReader (YUV420 format, maximum 1 image)
             mImageReader = ImageReader.newInstance(mImageSize.getWidth(), mImageSize.getHeight(), ImageFormat.YUV_420_888, 1);
             mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
                 @Override
@@ -324,7 +335,7 @@ public class ScannerActivity extends AppCompatActivity {
                     // Convert the image (cropping should be done here)
                     PlanarYUVLuminanceSource luminanceSource = new PlanarYUVLuminanceSource(
                             previewBytes, imageWidth, imageHeight,  // image data
-                            0, 0, imageWidth, imageHeight, // crop area
+                            mCropAreaQRCode.left, mCropAreaQRCode.top, mCropAreaQRCode.width(), mCropAreaQRCode.height(), // crop area
                             false);
                     BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
                     Reader qrReader = new MultiFormatReader();
@@ -357,7 +368,7 @@ public class ScannerActivity extends AppCompatActivity {
             }
 
             // Open Camera Device
-            cameraManager.openCamera(mCameraId, stateCallback, null);
+            cameraManager.openCamera(cameraId, stateCallback, null);
 
         } catch (CameraAccessException ex) {
             // Failed to access camera
@@ -373,6 +384,40 @@ public class ScannerActivity extends AppCompatActivity {
             mCameraDevice.close();
             mCameraDevice = null;
         }
+    }
+
+
+    /**
+     * Calculate the crop area for QRCode
+     * @param previewSize
+     * @return
+     */
+    private Rect getCropArea(Size previewSize) {
+        int shorterSide;
+        int finalSide;
+        Rect cropArea = new Rect();
+
+        // Find the shorter side
+        if (previewSize.getWidth() < previewSize.getHeight()) {
+            shorterSide = previewSize.getWidth();
+        } else {
+            shorterSide = previewSize.getHeight();
+        }
+
+        // Decode the final side (the shortest one)
+        if (shorterSide < QR_CODE_SIDE) {
+            finalSide = shorterSide;
+        } else {
+            finalSide = QR_CODE_SIDE;
+        }
+
+        // Set crop area
+        cropArea.left = (int)((previewSize.getWidth() - finalSide) / 2.0f);
+        cropArea.top = (int)((previewSize.getHeight() - finalSide) / 2.0f);
+        cropArea.right = cropArea.left + finalSide;
+        cropArea.bottom = cropArea.top + finalSide;
+
+        return cropArea;
     }
 }
 
