@@ -55,7 +55,7 @@ public class ScannerActivity extends AppCompatActivity {
 
     private ArrayList<Surface> mSurfaces;
 
-    private Semaphore mCapturePicture = new Semaphore(1);
+    private Semaphore mCapturePictureSemaphore = new Semaphore(1);
 
     private static final int CAMERA_INDEX = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
@@ -207,7 +207,7 @@ public class ScannerActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Start from updating preview
+                    // Entry Point: Start capturing images from updating preview
                     updatePreview(session);
                 }
 
@@ -241,7 +241,12 @@ public class ScannerActivity extends AppCompatActivity {
                         public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                             // Once finished, try to update QRCode reader
                             try {
-                                if (mCapturePicture.tryAcquire()) {
+                                if (mCapturePictureSemaphore.tryAcquire()) {
+                                    /**
+                                     * If QRCode processing is finished (semaphore is released),
+                                     * 1. Stop generating preview by capturing images from camera;
+                                     * 2. Start generate image for QRCode Reader
+                                     */
                                     session.stopRepeating();
                                     updateQRCodeReader(session);
                                 }
@@ -295,25 +300,31 @@ public class ScannerActivity extends AppCompatActivity {
             mCameraId = cameraManager.getCameraIdList()[CAMERA_INDEX];
             CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(mCameraId);
             StreamConfigurationMap streamConfigurationMap = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            mImageSize = streamConfigurationMap.getOutputSizes(SurfaceTexture.class)[0];
+            Size[] availableImageSizes = streamConfigurationMap.getOutputSizes(SurfaceTexture.class);
+            mImageSize = availableImageSizes[0];  // Choose the highest resolution
 
             // Init. ImageReader (JPEG format, maximum 1 image)
             mImageReader = ImageReader.newInstance(mImageSize.getWidth(), mImageSize.getHeight(), ImageFormat.YUV_420_888, 1);
             mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
+                    // When an image is available, use zxing to decode this image
                     Image previewImage = imageReader.acquireLatestImage();
                     ByteBuffer previewByteBuffer = previewImage.getPlanes()[0].getBuffer();
                     byte[] previewBytes = new byte[previewByteBuffer.capacity()];
                     previewByteBuffer.get(previewBytes);
 
+                    // Get the image size
                     int imageWidth = previewImage.getWidth();
                     int imageHeight = previewImage.getHeight();
+
+                    // Must release the image after all data are achieved
                     previewImage.close();
 
+                    // Convert the image (cropping should be done here)
                     PlanarYUVLuminanceSource luminanceSource = new PlanarYUVLuminanceSource(
-                            previewBytes, imageWidth, imageHeight,
-                            0, 0, imageWidth, imageHeight,
+                            previewBytes, imageWidth, imageHeight,  // image data
+                            0, 0, imageWidth, imageHeight, // crop area
                             false);
                     BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
                     Reader qrReader = new MultiFormatReader();
@@ -331,7 +342,8 @@ public class ScannerActivity extends AppCompatActivity {
                         Log.e(getClass().getName(), "NotFoundException");
                     }
 
-                    mCapturePicture.release();
+                    // Release the semaphore
+                    mCapturePictureSemaphore.release();
                 }
             }, mBackgroundHandler);
 
