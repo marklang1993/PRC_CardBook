@@ -14,7 +14,6 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.Image;
 import android.media.ImageReader;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -27,18 +26,8 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
 
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.FormatException;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.PlanarYUVLuminanceSource;
-import com.google.zxing.Reader;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
 import com.swws.marklang.prc_cardbook.R;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -307,7 +296,7 @@ public class ScannerActivity extends AppCompatActivity {
             CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap streamConfigurationMap = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             Size[] availableImageSizes = streamConfigurationMap.getOutputSizes(SurfaceTexture.class);
-            mImageSize = availableImageSizes[4];  // Choose the highest resolution
+            mImageSize = availableImageSizes[0];  // Choose the highest resolution
             mCropAreaQRCode = getCropArea(mImageSize);
 
             // Init. mQRCodeAreaPreviewView
@@ -319,42 +308,9 @@ public class ScannerActivity extends AppCompatActivity {
             mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader imageReader) {
-                    // When an image is available, use zxing to decode this image
-                    Image previewImage = imageReader.acquireLatestImage();
-                    ByteBuffer previewByteBuffer = previewImage.getPlanes()[0].getBuffer();
-                    byte[] previewBytes = new byte[previewByteBuffer.capacity()];
-                    previewByteBuffer.get(previewBytes);
-
-                    // Get the image size
-                    int imageWidth = previewImage.getWidth();
-                    int imageHeight = previewImage.getHeight();
-
-                    // Must release the image after all data are achieved
-                    previewImage.close();
-
-                    // Convert the image (cropping should be done here)
-                    PlanarYUVLuminanceSource luminanceSource = new PlanarYUVLuminanceSource(
-                            previewBytes, imageWidth, imageHeight,  // image data
-                            mCropAreaQRCode.left, mCropAreaQRCode.top, mCropAreaQRCode.width(), mCropAreaQRCode.height(), // crop area
-                            false);
-                    BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
-                    Reader qrReader = new MultiFormatReader();
-                    try {
-                        Result result = qrReader.decode(binaryBitmap);
-                        Log.i(getClass().getName(), "Decoded: " + result.getText());
-
-                    } catch (FormatException e) {
-                        Log.e(getClass().getName(), "FormatException");
-
-                    } catch (ChecksumException e) {
-                        Log.e(getClass().getName(), "ChecksumException");
-
-                    } catch (NotFoundException e) {
-                        Log.e(getClass().getName(), "NotFoundException");
-                    }
-
-                    // Release the semaphore
-                    mCapturePictureSemaphore.release();
+                    // Start another thread to decode QRCode
+                    QRCodeDecoder decoderThread = new QRCodeDecoder(imageReader, mCapturePictureSemaphore, mCropAreaQRCode);
+                    decoderThread.run();
                 }
             }, mBackgroundHandler);
 
@@ -385,8 +341,7 @@ public class ScannerActivity extends AppCompatActivity {
             mCameraDevice = null;
         }
     }
-
-
+    
     /**
      * Calculate the crop area for QRCode
      * @param previewSize
