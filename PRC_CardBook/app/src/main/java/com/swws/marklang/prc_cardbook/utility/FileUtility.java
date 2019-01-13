@@ -9,11 +9,18 @@ import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class FileUtility {
 
@@ -24,7 +31,8 @@ public class FileUtility {
 
     private final String META_FILE = TOP_DIR + "/meta.txt";
 
-    private String internalPath;
+    private String mInternalPath;
+    private Context mContext;
 
     /**
      * Type of the image
@@ -54,7 +62,15 @@ public class FileUtility {
      */
     public FileUtility(Context context)
     {
-        internalPath = context.getFilesDir().getPath();
+        mContext = context;
+        mInternalPath = mContext.getFilesDir().getPath();
+
+        // Check the existence of TOP_DIR
+        File topDir = new File(mInternalPath + "/" + TOP_DIR);
+        if (!topDir.exists()) {
+            // Create TOP_DIR
+            topDir.mkdir();
+        }
     }
 
     /**
@@ -66,7 +82,7 @@ public class FileUtility {
     {
         try
         {
-            FileReader fileReader = new FileReader(internalPath + "/" + fileName);
+            FileReader fileReader = new FileReader(mInternalPath + "/" + fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             return bufferedReader;
@@ -91,7 +107,7 @@ public class FileUtility {
             {
                 if (line != null)
                 {
-                    Log.i(this.getClass().getSimpleName(), line);
+                    Log.i(this.getClass().getSimpleName(), "Reader: " + line);
                 }
             }
             return line;
@@ -100,6 +116,49 @@ public class FileUtility {
 
             Log.e(this.getClass().getSimpleName(), String.format("Read line failed"));
             return null;
+        }
+    }
+
+    /**
+     * Get BufferedWriter (For text file) with mode of APPEND
+     * @param fileName relative path w.r.t "internalPath"
+     * @return
+     */
+    private BufferedWriter _getAppendWriter(String fileName)
+    {
+        try
+        {
+            FileWriter fileWriter = new FileWriter(mInternalPath + "/" + fileName, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            return bufferedWriter;
+        }
+        catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /**
+     * Read one line text from BufferedReader
+     * @param writer
+     * @param line One line text
+     * @param isPrint Output to Log.i() ?
+     * @return
+     */
+    private void _writeLine(BufferedWriter writer, String line, Boolean isPrint)
+    {
+        try
+        {
+            writer.write(line, 0, line.length());
+            writer.write('\n');
+            if (isPrint)
+            {
+                Log.i(this.getClass().getSimpleName(), "Writer: " + line);
+            }
+
+        } catch (IOException ex)
+        {
+            Log.e(this.getClass().getSimpleName(), String.format("Write line failed: %s", line));
         }
     }
 
@@ -182,6 +241,49 @@ public class FileUtility {
     }
 
     /**
+     * Write new meta data
+     * @param startIndex
+     * @param databases
+     * @param isPrint
+     */
+    public void WriteNewMetaData(int startIndex, LinkedList<Database> databases, Boolean isPrint)
+    {
+        BufferedWriter bufferedWriter = _getAppendWriter(META_FILE);
+        Iterator<Database> iterator = databases.iterator();
+        int cursor = startIndex;
+        while (iterator.hasNext())
+        {
+            // Get current database
+            Database database = iterator.next();
+            ++cursor;
+
+            // Write the name and url of the database
+            _writeLine(bufferedWriter,
+                    String.format("%d,%s,%s", cursor, database.name(), database.url()),
+                    isPrint
+            );
+
+            // Write all items
+            for (Item item:
+                    database) {
+                _writeLine(bufferedWriter,
+                        item.toString(),
+                        isPrint
+                );
+            }
+
+            // Write one more line as separator
+            _writeLine(bufferedWriter,
+                    "",
+                    isPrint
+            );
+        }
+
+        // Close the writer
+        _close(bufferedWriter);
+    }
+
+    /**
      * Read a image from database
      * @param imagePathOnline
      * @return
@@ -197,7 +299,7 @@ public class FileUtility {
         }
 
         // TODO: Check local file
-        String imagePathLocal = internalPath + "/";
+        String imagePathLocal = mInternalPath + "/";
         switch (imageType)
         {
             case IMAGE:
@@ -223,5 +325,67 @@ public class FileUtility {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         return BitmapFactory.decodeFile(imagePathLocal, options);
+    }
+
+    /**
+     * Download 1 image
+     * @param allImageNames
+     * @param relativeUrl
+     * @param imageType
+     * @param httpUtility
+     * @param isPrint
+     */
+    public void DownloadImage(
+            HashSet<String> allImageNames,
+            String relativeUrl,
+            IMAGE_TYPE imageType,
+            HttpUtility httpUtility,
+            Boolean isPrint
+    )
+            throws HttpUtility.DirCreateException, IOException
+    {
+        // Validate relative Url
+        if (!relativeUrl.equals(""))
+        {
+            // "relativeUrl" must be NOT empty
+            String fileName = (new File(relativeUrl)).getName();
+
+            // Check is the given file name an image file
+            if (!fileName.contains(".")) {
+                // This is not an image file - no extension
+                Log.e(this.getClass().getSimpleName(), String.format("Not an Image File: %s", fileName));
+                return;
+            }
+
+            /* For debug purpose */
+            if (allImageNames != null) {
+                if (allImageNames.contains(fileName))
+                {
+                    Log.e(this.getClass().getSimpleName(), String.format("Exist: %s", fileName));
+
+                } else {
+                    allImageNames.add(fileName);
+                }
+            }
+
+            // Download the image
+            String directory;
+            switch (imageType)
+            {
+                case IMAGE:
+                    directory = mInternalPath + "/" + IMAGE_DIR;
+                    break;
+
+                case BRAND:
+                    directory = mInternalPath + "/" + BRAND_DIR;
+                    break;
+
+                default:
+                    // TYPE
+                    directory = mInternalPath + "/" + TYPE_DIR;
+                    break;
+            }
+            httpUtility.Download(relativeUrl, directory, isPrint);
+        }
     }
 }

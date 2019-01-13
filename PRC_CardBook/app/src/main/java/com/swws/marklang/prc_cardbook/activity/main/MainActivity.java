@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         if (mDatabases == null)
         {
             FileUtility fileUtility = new FileUtility(getApplicationContext());
-            mDatabases = fileUtility.ReadAllMetaData(true);
+            mDatabases = fileUtility.ReadAllMetaData(false);
         }
 
         // Get access to Inventory DB
@@ -190,5 +190,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public static Database getDatabaseByIndex(int databaseIndex) {
         return mDatabases.get(databaseIndex);
+    }
+
+    /**
+     * Get all Databases
+     * @return
+     */
+    public static ArrayList<Database> getAllDatabases() {
+        return mDatabases;
     }
 }

@@ -54,9 +54,10 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
                 TextView databaseUpdateStatusTextView = (TextView) findViewById(R.id.databaseUpdateStatusTextView);
                 // Create and Start update the database
                 mDatabaseUpdateDownloadTask = new DatabaseUpdateDownloadTask(
-                    databaseUpdateStartButton,
-                    databaseUpdateProgressBar,
-                    databaseUpdateStatusTextView
+                        getApplicationContext(),
+                        databaseUpdateStartButton,
+                        databaseUpdateProgressBar,
+                        databaseUpdateStatusTextView
                 );
                 mDatabaseUpdateDownloadTask.execute();
             }

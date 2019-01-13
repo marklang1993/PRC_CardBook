@@ -91,6 +91,8 @@ public class Database implements Iterable<Item>, Parcelable {
         return _name;
     }
 
+    public String url() {return _refUrl; }
+
     public int size()
     {
         return _allItems.size();

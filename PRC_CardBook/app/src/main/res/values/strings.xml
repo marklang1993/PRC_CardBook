@@ -26,15 +26,26 @@
     <string name="button_start_text">開始</string>
     <string name="button_stop_text">中止</string>
 
+    <string name="http_utility_url_prefix">https://prichan.jp/items/</string>
+    <string name="http_utility_resource_prefix">https://prichan.jp</string>
+    <string name="http_utility_entry_page">1st.html</string>
+    <string name="http_utility_jp_keyword_category">カテゴリー</string>
+    <string name="http_utility_jp_keyword_color">カラー</string>
 
     <string name="info_download_no_wifi_title">WIFI接続</string>
     <string name="info_download_no_wifi_message">WIFIに接続していないので、データベースを更新しますか。</string>
-    <string name="info_download_no_internet">ネットワークを接続していないので、データベースを更新できません。</string>
+    <string name="info_download_error_no_internet">エラー：ネットワーク接続できませんでした！</string>
+    <string name="info_download_error_app_update_required">エラー：URLエラー！アプリ更新してください！</string>
+    <string name="info_download_error_official_server_malfunction">エラー：サバーエラー！しばらくもう一度試してください！</string>
+    <string name="info_download_error_directory_creation_failed">エラー：ディレクトリ作成できませんでした！権限を確認してください！</string>
+
     <string name="info_download_progress">進捗：</string>
     <string name="info_download_standby">待機中</string>
     <string name="info_download_pages_list">シリーズリスト取得中</string>
     <string name="info_download_coordinates">コーデ取得中</string>
     <string name="info_download_coordinate_images">コーデ画像取得中</string>
+    <string name="info_download_write_meta_file">データ保存中</string>
+    <string name="info_download_complete">更新完了</string>
 
     <string name="exception_no_camera_device">エラー：カメラを見つかりませんでした</string>
     <string name="exception_configure_failed_camera_capture_session">エラー：読取りセッション初期化失敗</string>
