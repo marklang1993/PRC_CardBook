@@ -155,7 +155,7 @@ public class ScannerActivity extends AppCompatActivity {
     }
 
     /**
-     * Callback function fur init. surfaces and
+     * Callback function for initializing surfaces and setting image capture session
      */
     private CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override

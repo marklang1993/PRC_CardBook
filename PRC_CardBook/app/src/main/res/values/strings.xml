@@ -6,6 +6,7 @@
     <string name="card_activity_name">カード</string>
     <string name="card_detail_activity_name">コーデ詳細</string>
     <string name="qr_scanner_activity_name">QRコード読み取り</string>
+    <string name="database_update_activity_name">データベース更新</string>
 
     <string name="card_detail_category">カテゴリー</string>
     <string name="card_detail_color">カラー</string>
@@ -17,7 +18,23 @@
 
     <string name="navigation_menu_item_name_qrcode">QRコード</string>
     <string name="navigation_menu_item_name_setting">設定</string>
+    <string name="navigation_menu_item_name_update">データベース更新</string>
     <string name="navigation_menu_item_name_exit">終了</string>
+
+    <string name="button_yes_text">はい</string>
+    <string name="button_no_text">いいえ</string>
+    <string name="button_start_text">開始</string>
+    <string name="button_stop_text">中止</string>
+
+
+    <string name="info_download_no_wifi_title">WIFI接続</string>
+    <string name="info_download_no_wifi_message">WIFIに接続していないので、データベースを更新しますか。</string>
+    <string name="info_download_no_internet">ネットワークを接続していないので、データベースを更新できません。</string>
+    <string name="info_download_progress">進捗：</string>
+    <string name="info_download_standby">待機中</string>
+    <string name="info_download_pages_list">シリーズリスト取得中</string>
+    <string name="info_download_coordinates">コーデ取得中</string>
+    <string name="info_download_coordinate_images">コーデ画像取得中</string>
 
     <string name="exception_no_camera_device">エラー：カメラを見つかりませんでした</string>
     <string name="exception_configure_failed_camera_capture_session">エラー：読取りセッション初期化失敗</string>

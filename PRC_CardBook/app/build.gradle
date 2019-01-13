@@ -39,6 +39,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // Zxing libraries
     implementation 'com.google.zxing:core:3.2.0'
+    // jsoup HTML parser library @ https://jsoup.org/
+    implementation 'org.jsoup:jsoup:1.11.3'
 }
 
 configurations.all {
@@ -49,5 +51,12 @@ configurations.all {
                 details.useVersion '26.0.0'
             }
         }
+    }
+}
+
+// Debug options
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
 }

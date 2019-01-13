@@ -23,7 +23,6 @@ public class FileUtility {
     private final String TYPE_DIR = TOP_DIR + "/type/";
 
     private final String META_FILE = TOP_DIR + "/meta.txt";
-    private final String INVENTORY_FILE = TOP_DIR + "/inventory.txt";
 
     private String internalPath;
 
@@ -58,6 +57,11 @@ public class FileUtility {
         internalPath = context.getFilesDir().getPath();
     }
 
+    /**
+     * Get BufferedReader (For text file)
+     * @param fileName relative path w.r.t "internalPath"
+     * @return
+     */
     private BufferedReader _getReader(String fileName)
     {
         try
@@ -72,6 +76,12 @@ public class FileUtility {
         }
     }
 
+    /**
+     * Read one line text from BufferedReader
+     * @param reader
+     * @param isPrint Output to Log.i() ?
+     * @return
+     */
     private String _readLine(BufferedReader reader, Boolean isPrint)
     {
         try
@@ -93,6 +103,10 @@ public class FileUtility {
         }
     }
 
+    /**
+     * Close a BufferedReader or BufferedWriter
+     * @param operator
+     */
     private void _close(Closeable operator)
     {
         try {
@@ -122,7 +136,7 @@ public class FileUtility {
             while(line != null) {
                 // Process
                 if (database == null) {
-                    // New DataBase is reqired to be created
+                    // New DataBase is required to be created
                     String[] tokens = line.split(",");
                     database = new Database(tokens[1], tokens[2]);
                 } else {

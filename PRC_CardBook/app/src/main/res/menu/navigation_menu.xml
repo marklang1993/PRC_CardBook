@@ -15,6 +15,13 @@
             android:title="@string/navigation_menu_item_name_setting"
             android:icon="@drawable/ic_function_setting">
         </item>
+
+        <item
+            android:id="@+id/update_menu_item"
+            android:title="@string/navigation_menu_item_name_update"
+            android:icon="@drawable/ic_function_update">
+        </item>
+
         <item
             android:id="@+id/exit_menu_item"
             android:title="@string/navigation_menu_item_name_exit"

@@ -6,15 +6,16 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light"
-        android:screenOrientation="portrait">
-
+        android:theme="@style/Theme.AppCompat.Light">
         <activity
             android:name=".activity.main.MainActivity"
             android:label="@string/app_name">
@@ -26,11 +27,12 @@
         </activity>
         <activity
             android:name=".activity.card.CardActivity"
-            android:label="@string/card_activity_name"></activity>
+            android:label="@string/card_activity_name" />
         <activity
             android:name=".activity.card.CardDetailActivity"
-            android:label="@string/card_detail_activity_name"></activity>
-        <activity android:name=".activity.qrcode.ScannerActivity"></activity>
+            android:label="@string/card_detail_activity_name" />
+        <activity android:name=".activity.qrcode.ScannerActivity" />
+        <activity android:name=".activity.update.DatabaseUpdateActivity"></activity>
     </application>
 
 </manifest>

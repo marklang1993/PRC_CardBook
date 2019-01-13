@@ -17,6 +17,7 @@ import android.widget.ListView;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
+import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // Get access to Inventory DB
         if (mInventoryDB == null)
         {
-            // TODO: use thread-safe way to create thsi singleton
+            // TODO: use thread-safe way to create this singleton
             // TODO: use background thread to access DB --- remove allowMainThreadQueries()
             mInventoryDB = Room.databaseBuilder(getApplicationContext(),
                     InventoryDatabase.class,
@@ -142,12 +143,19 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.qrcode_menu_item:
                         result = true;
                         // Start QRCode Scanner
-                        Intent scannerActivity = new Intent(getApplicationContext(), ScannerActivity.class);
-                        startActivity(scannerActivity);
+                        Intent scannerActivityIntent = new Intent(getApplicationContext(), ScannerActivity.class);
+                        startActivity(scannerActivityIntent);
                         break;
 
                     case R.id.setting_menu_item:
                         result = true;
+                        break;
+
+                    case R.id.update_menu_item:
+                        result = true;
+                        // Start the "local database update" activity
+                        Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
+                        startActivity(databaseUpdateActivityIntent);
                         break;
 
                     case R.id.exit_menu_item:
