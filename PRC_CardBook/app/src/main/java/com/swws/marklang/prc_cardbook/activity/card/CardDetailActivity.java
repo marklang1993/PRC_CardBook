@@ -112,7 +112,7 @@ public class CardDetailActivity extends AppCompatActivity {
                 // Update inventory value
                 updateInventoryValue();
                 // Set result to notify "CardActivity"
-                setResult(0);
+                setResult(RESULT_OK);
             }
         });
 
@@ -132,7 +132,7 @@ public class CardDetailActivity extends AppCompatActivity {
                     // Update inventory value
                     updateInventoryValue();
                     // Set result to notify "CardActivity"
-                    setResult(0);
+                    setResult(RESULT_OK);
                 }
             }
         });

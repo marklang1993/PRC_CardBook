@@ -20,13 +20,7 @@ public class SeriesItemAdapter extends BaseAdapter {
 
     public SeriesItemAdapter(Context context, ArrayList<Database> databases)
     {
-        // Init. seriesNames
-        mSeriesNames = new ArrayList<>(databases.size());
-        for (Database d : databases)
-        {
-            mSeriesNames.add(d.name());
-        }
-
+        initSeriesNames(databases);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -53,5 +47,34 @@ public class SeriesItemAdapter extends BaseAdapter {
         seriesNameTextView.setText(mSeriesNames.get(position));
 
         return view;
+    }
+
+    /**
+     * Update the Adapter and UI components
+     * @param newDatabases
+     */
+    public void notifyDataSetChanged(ArrayList<Database> newDatabases) {
+        // Update internal databases
+        initSeriesNames(newDatabases);
+
+        // Go to update
+        super.notifyDataSetChanged();
+    }
+
+    /**
+     * Init. seriesNames
+     */
+    private void initSeriesNames(ArrayList<Database> databases) {
+        // Init. seriesNames
+        if (databases != null) {
+            mSeriesNames = new ArrayList<>(databases.size());
+            for (Database d : databases)
+            {
+                mSeriesNames.add(d.name());
+            }
+
+        } else {
+            mSeriesNames = new ArrayList<>();
+        }
     }
 }

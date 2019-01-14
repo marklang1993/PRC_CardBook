@@ -1,5 +1,6 @@
 package com.swws.marklang.prc_cardbook.activity.update;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,10 +27,13 @@ import java.util.Map;
 
 public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean> {
 
+    private DatabaseUpdateActivity mParentActivity;
     private Context mContext;
     private Button mDatabaseUpdateStartButton;
     private ProgressBar mDatabaseUpdateProgressBar;
     private TextView mDatabaseUpdateStatusTextView;
+
+    private int mStartOption; // 0: Start by user, 1: Start by app (in the first launching).
 
     private HttpUtility mHttpUtility;
     private FileUtility mFileUtility;
@@ -47,13 +51,19 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
     private final boolean mIsPrintDebug = true;
 
     public DatabaseUpdateDownloadTask(
-            Context context,
+            DatabaseUpdateActivity parentActivity,
             Button databaseUpdateStartButton,
             ProgressBar databaseUpdateProgressBar,
-            TextView databaseUpdateStatusTextView
+            TextView databaseUpdateStatusTextView,
+            int startOption
     ) {
+        // Get parent activity
+        mParentActivity = parentActivity;
         // Get Context
-        mContext = context;
+        mContext = mParentActivity.getApplicationContext();
+        // Get StartOption
+        mStartOption = startOption;
+
         // Init.
         mHttpUtility = new HttpUtility(mContext);
         mFileUtility = new FileUtility(mContext);
@@ -79,6 +89,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             // Check is up-to-date
             if (urlDict.size() != 0)
             {
+                // TODO: handle isCancel()
                 // Get databases of all series
                 LinkedList<Database> databases = getDatabaseLinkedList(urlDict);
 
@@ -93,6 +104,11 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             publishProgress(getProgressMsg(mProgressValues[4],
                     mContext.getString(R.string.info_download_complete))
             );
+
+            // Delay for a while
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) { }
 
         } catch (HttpUtility.ServerErrorException e) {
             // Server Error
@@ -121,7 +137,6 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
                     mContext.getString(R.string.info_download_error_no_internet))
             );
             return false;
-
         }
 
         return true;
@@ -146,8 +161,11 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
 
         // Generate a set of existed keys
         HashSet<String> existedKeys = new HashSet<>();
-        for (Database oldDatabase: oldDatabases) {
-            existedKeys.add(oldDatabase.url());
+        if (oldDatabases != null) {
+            // If the oldDatabases is presented
+            for (Database oldDatabase: oldDatabases) {
+                existedKeys.add(oldDatabase.url());
+            }
         }
 
         // Generate the final dictionary by removing the existed series that are in the local database
@@ -297,7 +315,6 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         mFileUtility.WriteAllMetaData(newDatabases, mIsPrintDebug);
     }
 
-
     /**
      * Calculate the value of current progress
      * @param currentActual current value of actual value
@@ -365,8 +382,17 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 
-        // Show the "Start" Button
-        mDatabaseUpdateStartButton.setVisibility(View.VISIBLE);
+        if (result) {
+            // Successfully completed -> close this activity and refresh
+            mParentActivity.finishAndRefresh();
+
+        } else {
+            // Failed
+            if (mStartOption == 0) {
+                // Show the "Start" button again
+                mDatabaseUpdateStartButton.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     /**

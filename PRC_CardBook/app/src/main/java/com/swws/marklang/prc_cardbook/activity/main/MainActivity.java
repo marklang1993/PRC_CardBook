@@ -32,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
     private static ArrayList<Database> mDatabases = null;
     public static InventoryDatabase mInventoryDB = null;
 
+    // Used for "startActivityForResult()"
+    private static final int REQUEST_UPDATE_RESULT_USER = 1;
+    private static final int REQUEST_UPDATE_RESULT_APP = 2;
+
+    private FileUtility mFileUtility;
+    private SeriesItemAdapter mSeriesItemAdapter;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
 
@@ -40,8 +46,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Init. data
-        initData();
+        // Check is metadata presented
+        mFileUtility = new FileUtility(getApplicationContext());
+        if (!mFileUtility.IsMetadataFilePresented()) {
+            // Forcely start "local database update" activity
+            Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
+            databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 1); // "1" means it is started by app.
+            startActivityForResult(databaseUpdateActivityIntent, REQUEST_UPDATE_RESULT_APP);
+
+        } else {
+            // Init. data
+            initData();
+        }
 
         // Init. UIs
         setListView();
@@ -56,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
         // Read meta data
         if (mDatabases == null)
         {
-            FileUtility fileUtility = new FileUtility(getApplicationContext());
-            mDatabases = fileUtility.ReadAllMetaData(false);
+            mDatabases = mFileUtility.ReadAllMetaData(false);
         }
 
         // Get access to Inventory DB
@@ -94,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
     private void setListView() {
         // Init. seriesListView
         ListView seriesListView = (ListView) findViewById(R.id.seriesListView);
-        SeriesItemAdapter seriesItemAdapter = new SeriesItemAdapter(
+        mSeriesItemAdapter = new SeriesItemAdapter(
                 getApplicationContext(), mDatabases
         );
-        seriesListView.setAdapter(seriesItemAdapter);
+        seriesListView.setAdapter(mSeriesItemAdapter);
         seriesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -155,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
                         result = true;
                         // Start the "local database update" activity
                         Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
-                        startActivity(databaseUpdateActivityIntent);
+                        databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 0); // "0" means it is started by user
+                        startActivityForResult(databaseUpdateActivityIntent, REQUEST_UPDATE_RESULT_USER);
                         break;
 
                     case R.id.exit_menu_item:
@@ -182,6 +198,43 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    /**
+     * Notify "seriesListView" to update once the database updating is finished.
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+       switch (requestCode) {
+           case REQUEST_UPDATE_RESULT_USER:
+               // Check is database updating successful
+               if (resultCode == RESULT_OK) {
+                   // Reload database
+                   mDatabases = null;
+                   initData();
+                   // Update seriesListView
+                   mSeriesItemAdapter.notifyDataSetChanged(mDatabases);
+               }
+            break;
+
+           case REQUEST_UPDATE_RESULT_APP:
+               // Check is database updating successful
+               if (resultCode == RESULT_OK) {
+                   // Reload database
+                   mDatabases = null;
+                   initData();
+                   // Update seriesListView
+                   mSeriesItemAdapter.notifyDataSetChanged(mDatabases);
+
+               } else {
+                   // Update failed - Terminate the app.
+                   finishAndRemoveTask(); // MUST be used since API 21
+               }
+        }
     }
 
     /**

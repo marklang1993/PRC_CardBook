@@ -60,7 +60,7 @@ public class CardActivity extends AppCompatActivity {
      * @param data
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Update "cardGridView" after "CardDetailActivity" closed.
         mCardItemAdapter.notifyDataSetChanged();
     }

@@ -7,6 +7,7 @@
     <string name="card_detail_activity_name">コーデ詳細</string>
     <string name="qr_scanner_activity_name">QRコード読み取り</string>
     <string name="database_update_activity_name">データベース更新</string>
+    <string name="first_database_update_activity_name">最初データのダウンロード</string>
 
     <string name="card_detail_category">カテゴリー</string>
     <string name="card_detail_color">カラー</string>
@@ -34,6 +35,8 @@
 
     <string name="info_download_no_wifi_title">WIFI接続</string>
     <string name="info_download_no_wifi_message">WIFIに接続していないので、データベースを更新しますか。</string>
+    <string name="info_download_first_time_download_database_title">ダウンロード</string>
+    <string name="info_download_first_time_download_database_message">最初データのダウンロードしますか。</string>
     <string name="info_download_no_internet_connection_title">ネットワーク接続</string>
     <string name="info_download_no_internet_connection_message">ネットワーク接続していません。</string>
     <string name="info_download_error_no_internet">エラー：ネットワーク接続できませんでした！</string>

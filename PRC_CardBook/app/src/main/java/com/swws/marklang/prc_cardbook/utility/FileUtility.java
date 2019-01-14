@@ -178,6 +178,22 @@ public class FileUtility {
     }
 
     /**
+     * Check is metadata file presented
+     * @return
+     */
+    public boolean IsMetadataFilePresented() {
+        BufferedReader bufferedReader = _getReader(META_FILE);
+
+        if (bufferedReader == null) {
+            // Metadata file is not presented OR not accessible.
+            return false;
+        }
+
+        _close(bufferedReader);
+        return true;
+    }
+
+    /**
      * Read all meta data from META_FILE
      * @param isPrint
      * @return
