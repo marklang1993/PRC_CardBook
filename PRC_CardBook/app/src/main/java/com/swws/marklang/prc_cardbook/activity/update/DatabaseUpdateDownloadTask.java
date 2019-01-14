@@ -279,16 +279,22 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
     /**
      * 4th Step: Write new metadata
      * @param oldDatabases
-     * @param databases
+     * @param newDatabases
      */
-    private void writeNewMetaData(ArrayList<Database> oldDatabases, LinkedList<Database> databases)
+    private void writeNewMetaData(ArrayList<Database> oldDatabases, LinkedList<Database> newDatabases)
     {
         // Update the initial value of the progress bar
         publishProgress(getProgressMsg(mProgressValues[3],
                 mContext.getString(R.string.info_download_write_meta_file))
         );
 
-        mFileUtility.WriteNewMetaData(oldDatabases.size(), databases, mIsPrintDebug);
+        // Move all databases from "oldDatabases" to newDatabases
+        for (Database oldDatabase: oldDatabases) {
+            newDatabases.add(oldDatabase);
+        }
+
+        // Go to write metadata
+        mFileUtility.WriteAllMetaData(newDatabases, mIsPrintDebug);
     }
 
 

@@ -24,11 +24,20 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_update);
 
-        // Check WIFI connection
-        if (!isWifiConnected()) {
-            // No WIFI connection - Pop up an alert
-            AlertDialog noWifiAlertDialog = createWIFIAlertDialog();
-            noWifiAlertDialog.show();
+        // NOTE: The AlertDialog will only be shown after onCreate() finishes
+        // Check Network connection
+        if (!isNetworkConnected()) {
+            // No Network connection
+            AlertDialog noNetworkAlertDialog = createNoNetworkAlertDialog();
+            noNetworkAlertDialog.show();
+
+        } else {
+            // Check WIFI connection
+            if (!isWifiConnected()) {
+                // No WIFI connection - Pop up an alert
+                AlertDialog noWifiAlertDialog = createWIFIAlertDialog();
+                noWifiAlertDialog.show();
+            }
         }
 
         // Init.
@@ -83,14 +92,46 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
     }
 
     /**
-     * Check connection status: WIFI / Mobile / No Connection
-     * @return Connection status
+     * Check is network connected
+     * @return
+     */
+    private boolean isNetworkConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null;
+    }
+
+    /**
+     * Check is WIFI connected
+     * @return
      */
     private boolean isWifiConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    /**
+     * Create no network connection alert dialog
+     * @return
+     */
+    private AlertDialog createNoNetworkAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.info_download_no_internet_connection_message)
+                .setTitle(R.string.info_download_no_internet_connection_title);
+
+        // Add button
+        builder.setPositiveButton(R.string.button_yes_text, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Click Yes Button - Terminate this activity
+                finish();
+            }
+        });
+
+        // Create this dialog
+        return builder.create();
     }
 
     /**

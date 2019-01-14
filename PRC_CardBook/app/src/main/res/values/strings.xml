@@ -34,6 +34,8 @@
 
     <string name="info_download_no_wifi_title">WIFI接続</string>
     <string name="info_download_no_wifi_message">WIFIに接続していないので、データベースを更新しますか。</string>
+    <string name="info_download_no_internet_connection_title">ネットワーク接続</string>
+    <string name="info_download_no_internet_connection_message">ネットワーク接続していません。</string>
     <string name="info_download_error_no_internet">エラー：ネットワーク接続できませんでした！</string>
     <string name="info_download_error_app_update_required">エラー：URLエラー！アプリ更新してください！</string>
     <string name="info_download_error_official_server_malfunction">エラー：サバーエラー！しばらくもう一度試してください！</string>

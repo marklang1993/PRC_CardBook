@@ -120,15 +120,15 @@ public class FileUtility {
     }
 
     /**
-     * Get BufferedWriter (For text file) with mode of APPEND
+     * Get BufferedWriter (For text file)
      * @param fileName relative path w.r.t "internalPath"
      * @return
      */
-    private BufferedWriter _getAppendWriter(String fileName)
+    private BufferedWriter _getWriter(String fileName)
     {
         try
         {
-            FileWriter fileWriter = new FileWriter(mInternalPath + "/" + fileName, true);
+            FileWriter fileWriter = new FileWriter(mInternalPath + "/" + fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             return bufferedWriter;
@@ -242,15 +242,14 @@ public class FileUtility {
 
     /**
      * Write new meta data
-     * @param startIndex
      * @param databases
      * @param isPrint
      */
-    public void WriteNewMetaData(int startIndex, LinkedList<Database> databases, Boolean isPrint)
+    public void WriteAllMetaData(LinkedList<Database> databases, Boolean isPrint)
     {
-        BufferedWriter bufferedWriter = _getAppendWriter(META_FILE);
+        BufferedWriter bufferedWriter = _getWriter(META_FILE);
         Iterator<Database> iterator = databases.iterator();
-        int cursor = startIndex;
+        int cursor = 0;
         while (iterator.hasNext())
         {
             // Get current database
