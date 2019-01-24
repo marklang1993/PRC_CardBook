@@ -1,6 +1,5 @@
 package com.swws.marklang.prc_cardbook.activity.update;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -84,19 +83,18 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
 
         ArrayList<Database> oldDatabases = MainActivity.getAllDatabases();
         try {
-            // Get the directory of all urls
+            // 1. Get the directory of all urls
             LinkedHashMap<String, String> urlDict = getUrlDict(oldDatabases);
             // Check is up-to-date
             if (urlDict.size() != 0)
             {
-                // TODO: handle isCancel()
-                // Get databases of all series
+                // 2. Get databases of all series
                 LinkedList<Database> databases = getDatabaseLinkedList(urlDict);
 
-                // Get new item images
+                // 3. Get new item images
                 getItemImages(databases);
 
-                // Write new metadata
+                // 4. Write new metadata
                 writeNewMetaData(oldDatabases, databases);
             }
 

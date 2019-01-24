@@ -15,7 +15,9 @@ import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.security.MessageDigest;
 import java.util.concurrent.Semaphore;
 
 public class QRCodeDecoder extends Thread {
@@ -61,6 +63,21 @@ public class QRCodeDecoder extends Thread {
         Reader qrReader = new MultiFormatReader();
         try {
             Result result = qrReader.decode(binaryBitmap);
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-1");
+                md.update(result.getRawBytes());
+                byte[] digest = md.digest();
+                BigInteger bigInt = new BigInteger(1,digest);
+                String hashtext = bigInt.toString(16);
+                // Now we need to zero pad it if you actually want the full 32 chars.
+                while(hashtext.length() < 32 ){
+                    hashtext = "0" + hashtext;
+                }
+                Log.i(getClass().getName(), "SHA-1: " + hashtext);
+            } catch (Exception ex)
+            {
+                ;
+            }
             Log.i(getClass().getName(), "Decoded: " + result.getText());
 
         } catch (FormatException e) {
