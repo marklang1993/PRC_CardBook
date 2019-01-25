@@ -166,16 +166,15 @@ public class HttpUtility {
     }
 
     /**
-     * Populate all items from a given URL
-     * @param name
-     * @param relativeUrl
-     * @param isPrint enable printing?
+     * Get a list of urls of all items in the given series
+     * @param seriesRelativeUrl
      * @return
+     * @throws ServerErrorException
+     * @throws IOException
      */
-    public Database PopulateAllItems(String name, String relativeUrl, boolean isPrint) throws ServerErrorException, IOException
+    public LinkedList<String> GetAllItemSubpageUrls(String seriesRelativeUrl) throws ServerErrorException, IOException
     {
-        Database dataBase = new Database(name, relativeUrl);
-        String urlString = mContext.getString(R.string.http_utility_url_prefix) + relativeUrl;
+        String urlString = mContext.getString(R.string.http_utility_url_prefix) + seriesRelativeUrl;
         String htmlContent = GetHtmlContent(urlString);
 
         // Parse
@@ -199,100 +198,110 @@ public class HttpUtility {
                 // ERROR: Duplicated subpage found
                 Log.e(this.getClass().getSimpleName(), String.format(
                         "Duplicated subpage: \"%s\" at \"%s\"",
-                        subpage, relativeUrl));
+                        subpage, seriesRelativeUrl)
+                );
                 continue;
             }
 
         }
+        return subpages;
+    }
 
-        // Download next page for details
-        for (String subpage: subpages)
-        {
-            // Get "detail page"
-            String subpageUrlString = mContext.getString(R.string.http_utility_url_prefix) + subpage;
-            String subpageHtmlContent = GetHtmlContent(subpageUrlString);
-            // Parse
-            Document subpageDoc = Jsoup.parse(subpageHtmlContent);
+    /**
+     * Populate 1 item data from a given URL
+     * @param seriesRelativeUrl
+     * @param itemSubpageUrl
+     * @param isPrint enable printing?
+     * @return
+     */
+    public Item PopulateItems(
+            String seriesRelativeUrl, String itemSubpageUrl, boolean isPrint)
+            throws ServerErrorException, IOException
+    {
+        // Get "detail page"
+        String subpageUrlString = mContext.getString(R.string.http_utility_url_prefix) + itemSubpageUrl;
+        String subpageHtmlContent = GetHtmlContent(subpageUrlString);
+        // Parse
+        Document subpageDoc = Jsoup.parse(subpageHtmlContent);
 
-            // Get data area
-            Elements detailMainArea = subpageDoc.select("main");
-            detailMainArea = detailMainArea.select("div[class=the-item]");
+        // Get data area
+        Elements detailMainArea = subpageDoc.select("main");
+        detailMainArea = detailMainArea.select("div[class=the-item]");
 
-            // Retrieve
-            Item localItem = new Item();
+        // Retrieve
+        Item localItem = new Item();
 
-            // 1. Name
-            Element titleNode = detailMainArea.select("div[class=-title]").first();
-            localItem.ItemName = titleNode.text();
+        // 1. Name
+        Element titleNode = detailMainArea.select("div[class=-title]").first();
+        localItem.ItemName = titleNode.text();
 
-            // Pick up 2 nodes in next layer
-            Elements thumbNode = detailMainArea.select("div[class=-inner]").select("div[class=-thumb]");
-            Elements rightNode = detailMainArea.select("div[class=-inner]").select("div[class=-right]");
+        // Pick up 2 nodes in next layer
+        Elements thumbNode = detailMainArea.select("div[class=-inner]").select("div[class=-thumb]");
+        Elements rightNode = detailMainArea.select("div[class=-inner]").select("div[class=-right]");
 
-            // 2. Internal ID
-            localItem.InternalID = thumbNode.select("div[class=-id]").text();
+        // 2. Internal ID
+        localItem.InternalID = thumbNode.select("div[class=-id]").text();
 
-            // 3. Image
-            Element imageNode = thumbNode.select("img").first();
-            localItem.ItemImage = imageNode.attr("data-src");
+        // 3. Image
+        Element imageNode = thumbNode.select("img").first();
+        localItem.ItemImage = imageNode.attr("data-src");
 
-            // Populate 2 nodes of details
-            Elements detailNodes = rightNode.select("li[class=-detail]");
-            for (Element detailNode: detailNodes) {
-                Element detailNodeTitleNode = detailNode.select("div[class=-title]").first();
-                String detailNodeTitle = detailNodeTitleNode.text();
-                if (detailNodeTitle.equals(mContext.getString(R.string.http_utility_jp_keyword_category))) {
-                    // 4. Category
-                    localItem.Category = detailNode.select("div[class=-value]").first().text();
-                } else if (detailNodeTitle.equals(mContext.getString(R.string.http_utility_jp_keyword_color))) {
-                    // 5. Color
-                    localItem.Color = detailNode.select("div[class=-value]").first().text();
-                } else {
-                    // ERROR: Unknown type detail node
-                    Log.e(this.getClass().getSimpleName(), String.format(
-                            "Detail Node with Unknown Type: \"%s\" at \"%s\" with type \"%s\"",
-                            subpage, relativeUrl, detailNodeTitle));
-                }
+        // Populate 2 nodes of details
+        Elements detailNodes = rightNode.select("li[class=-detail]");
+        for (Element detailNode: detailNodes) {
+            Element detailNodeTitleNode = detailNode.select("div[class=-title]").first();
+            String detailNodeTitle = detailNodeTitleNode.text();
+            if (detailNodeTitle.equals(mContext.getString(R.string.http_utility_jp_keyword_category))) {
+                // 4. Category
+                localItem.Category = detailNode.select("div[class=-value]").first().text();
+            } else if (detailNodeTitle.equals(mContext.getString(R.string.http_utility_jp_keyword_color))) {
+                // 5. Color
+                localItem.Color = detailNode.select("div[class=-value]").first().text();
+            } else {
+                // ERROR: Unknown type detail node
+                Log.e(this.getClass().getSimpleName(), String.format(
+                        "Detail Node with Unknown Type: \"%s\" at \"%s\" with type \"%s\"",
+                        itemSubpageUrl, seriesRelativeUrl, detailNodeTitle));
             }
-
-            // 6. Brand
-            Element brandNode = rightNode.select("li[class=-detail -brand]").first();
-            localItem.Brand = brandNode.select("div[class=-value]")
-                    .select("img").first().attr("data-src");
-
-            // 7. Type
-            Element genreNode = rightNode.select("li[class=-detail -genre]").first();
-            localItem.Type = genreNode.select("div[class=-value]")
-                    .select("img").first().attr("data-src");
-
-            // Populate status
-            Elements statusNodes = rightNode.select("li[class=-detail -status]").select("div");
-            for (Element statusNode: statusNodes) {
-                String statusClassName = statusNode.className();
-                if (statusClassName.contains("rarity")) {
-                    // 8. Rarity
-                    localItem.Rarity = statusNode.text();
-                } else if (statusClassName.contains("like")) {
-                    // 9. Score
-                    localItem.Score = statusNode.text();
-                } else {
-                    // ERROR: Unknown type status node
-                    Log.e(
-                            this.getClass().getSimpleName(),
-                            String.format("Status Node with Unknown Type: \"%s\" at \"%s\" with type \"%s\"",
-                            subpage, relativeUrl, statusClassName)
-                    );
-                }
-
-            }
-
-            // Insert
-            if (isPrint) {
-                Log.i(this.getClass().getSimpleName(), localItem.toString());
-            }
-            dataBase.Insert(localItem);
         }
-        return dataBase;
+
+        // 6. Brand
+        Element brandNode = rightNode.select("li[class=-detail -brand]").first();
+        localItem.Brand = brandNode.select("div[class=-value]")
+                .select("img").first().attr("data-src");
+
+        // 7. Type
+        Element genreNode = rightNode.select("li[class=-detail -genre]").first();
+        localItem.Type = genreNode.select("div[class=-value]")
+                .select("img").first().attr("data-src");
+
+        // Populate status
+        Elements statusNodes = rightNode.select("li[class=-detail -status]").select("div");
+        for (Element statusNode: statusNodes) {
+            String statusClassName = statusNode.className();
+            if (statusClassName.contains("rarity")) {
+                // 8. Rarity
+                localItem.Rarity = statusNode.text();
+            } else if (statusClassName.contains("like")) {
+                // 9. Score
+                localItem.Score = statusNode.text();
+            } else {
+                // ERROR: Unknown type status node
+                Log.e(
+                        this.getClass().getSimpleName(),
+                        String.format("Status Node with Unknown Type: \"%s\" at \"%s\" with type \"%s\"",
+                                itemSubpageUrl, seriesRelativeUrl, statusClassName)
+                );
+            }
+
+        }
+
+        // Output debug info.
+        if (isPrint) {
+            Log.i(this.getClass().getSimpleName(), localItem.toString());
+        }
+
+        return localItem;
     }
 
     /**

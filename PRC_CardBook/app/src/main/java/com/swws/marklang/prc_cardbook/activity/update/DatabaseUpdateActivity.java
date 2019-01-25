@@ -152,6 +152,12 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         // Check is the background downloading thread terminated
         if (mDatabaseUpdateDownloadTask != null) {
             mDatabaseUpdateDownloadTask.cancel(true);
+            // Wait until the download task is exited
+            try {
+                mDatabaseUpdateDownloadTask.get();
+            } catch (Exception ex) {
+                ;
+            }
         }
 
         // Close this activity
@@ -167,6 +173,12 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         // Check is the background downloading thread terminated
         if (mDatabaseUpdateDownloadTask != null) {
             mDatabaseUpdateDownloadTask.cancel(true);
+            // Wait until the download task is exited
+            try {
+                mDatabaseUpdateDownloadTask.get();
+            } catch (Exception ex) {
+                ;
+            }
         }
 
         // Close this activity

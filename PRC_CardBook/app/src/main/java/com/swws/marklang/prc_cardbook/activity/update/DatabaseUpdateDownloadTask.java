@@ -85,14 +85,36 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         try {
             // 1. Get the directory of all urls
             LinkedHashMap<String, String> urlDict = getUrlDict(oldDatabases);
-            // Check is up-to-date
+            // Check is local database up-to-date by checking the count of series.
             if (urlDict.size() != 0)
             {
+                /**
+                 * NOTE: isCancel() will be checked here and inside functions of:
+                 * 1. getDatabaseLinkedList();
+                 * 2. getItemImages();
+                 */
+                // ## Check whether this task is cancelled.
+                if (isCancelled()) {
+                    return false;
+                }
+
                 // 2. Get databases of all series
                 LinkedList<Database> databases = getDatabaseLinkedList(urlDict);
+                // ## Check whether this task is cancelled inside the function.
+                if (databases == null) {
+                    return false;
+                }
+                // ## Check whether this task is cancelled.
+                if (isCancelled()) {
+                    return false;
+                }
 
                 // 3. Get new item images
-                getItemImages(databases);
+                boolean isFinished = getItemImages(databases);
+                // ## Check whether this task is cancelled inside the function.
+                if (!isFinished) {
+                    return false;
+                }
 
                 // 4. Write new metadata
                 writeNewMetaData(oldDatabases, databases);
@@ -103,7 +125,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
                     mContext.getString(R.string.info_download_complete))
             );
 
-            // Delay for a while
+            // Delay for a while, and then terminate this thread
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) { }
@@ -203,23 +225,40 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         Iterator<Map.Entry<String, String>> iterator = urlDict.entrySet().iterator();
         for (int i = 0; i < countDatabases; ++i)
         {
+            // ## Check whether this task is cancelled.
+            if (isCancelled()) {
+                return null;
+            }
+
+            // Get the current entry for retrieving the url of the series page.
             Map.Entry<String, String> urlEntry = iterator.next();
+            String seriesName = urlEntry.getValue();
+            String seriesRelativeUrl = urlEntry.getKey();
 
             // Update the value of the progress bar
-            int curretProgress = calculateCurrentProgressValue(
+            int currentProgress = calculateCurrentProgressValue(
                     i, 0, countDatabases, mProgressValues[1], mProgressValues[2] - 1
             );
-            publishProgress(getProgressMsg(curretProgress,
-                    mContext.getString(R.string.info_download_coordinates) + " - " + urlEntry.getValue()
+            publishProgress(getProgressMsg(currentProgress,
+                    mContext.getString(R.string.info_download_coordinates) + " - " + seriesName
                     )
             );
 
-            // Get the database along with its all items
-            Database dataBase = mHttpUtility.PopulateAllItems(
-                    urlEntry.getValue(),
-                    urlEntry.getKey(),
-                    mIsPrintDebug
-            );
+            // Get the urls of the subpage of all items
+            LinkedList<String> itemSubpageUrls = mHttpUtility.GetAllItemSubpageUrls(seriesRelativeUrl);
+
+            // Generate the Database for the current series
+            Database dataBase = new Database(seriesName, seriesRelativeUrl);
+            for (String itemSubpageUrl: itemSubpageUrls) {
+                // ## Check whether this task is cancelled.
+                if (isCancelled()) {
+                    return null;
+                }
+
+                // Get 1 item of this series
+                Item item = mHttpUtility.PopulateItems(seriesRelativeUrl, itemSubpageUrl, mIsPrintDebug);
+                dataBase.Insert(item);
+            }
 
             // Add this Database
             databases.add(dataBase);
@@ -230,8 +269,9 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
     /**
      * 3rd Step: Get all item images
      * @param databases
+     * @return isFinished
      */
-    private void getItemImages(LinkedList<Database> databases)
+    private boolean getItemImages(LinkedList<Database> databases)
             throws HttpUtility.DirCreateException, IOException
     {
         HashSet<String> allImageNames = new HashSet<>(); // For debug purpose
@@ -254,6 +294,11 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             // Populate all items
             int cursorDataBase = 0;
             for (Item item: database) {
+
+                // ## Check whether this task is cancelled.
+                if (isCancelled()) {
+                    return false;
+                }
 
                 // Update the value of the progress bar
                 int currentProgress = calculateCurrentProgressValue(
@@ -290,6 +335,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         }
 
         Log.e(this.getClass().getSimpleName(), String.format("Total Images Count: %d", allImageNames.size()));
+        return true;
     }
 
     /**
