@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +31,21 @@ public class CardItemAdapter extends BaseAdapter {
     private Database mDatabase;
     private Resources mRes;
 
+    // Colors from R
+    private int mColorRed;
+    private int mColorGreen;
+    private int mColorBlue;
+
     public CardItemAdapter(Context context, Database database, Resources res) {
         mDatabase = database;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
         mRes = res;
+
+        // Init. colors
+        mColorRed = ContextCompat.getColor(mContext, R.color.red);
+        mColorGreen = ContextCompat.getColor(mContext, R.color.green);
+        mColorBlue = ContextCompat.getColor(mContext, R.color.blue);
     }
 
     @Override
@@ -56,12 +67,46 @@ public class CardItemAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = mInflater.inflate(R.layout.card_gridview, null);
 
+        // Retrieve the UI objects
         ImageView cardImageView = (ImageView) view.findViewById(R.id.cardImageView);
         TextView cardIdTextView = (TextView) view.findViewById(R.id.cardIdTextView);
-        cardIdTextView.setText(mDatabase.get(position).InternalID);
+        TextView inventoryCountTextView = (TextView) view.findViewById(R.id.inventoryCountTextView);
 
+        // Set the UI objects
+        cardIdTextView.setText(mDatabase.get(position).InternalID);
         setCardImageByScaling(cardImageView, mDatabase.get(position));
+        setCardInventoryCount(inventoryCountTextView, mDatabase.get(position));
+
         return view;
+    }
+
+
+    /**
+     * Set the inventory count of an item
+     * @param tv
+     * @param cardItem
+     */
+    private void setCardInventoryCount(TextView tv, Item cardItem) {
+        // Get the count of given card inventory
+        int countCardInventory = InventoryUtility.getInventoryCount(cardItem);
+
+        // Set text color
+        if (countCardInventory == 0)
+        {
+            // No inventory - RED
+            tv.setTextColor(mColorRed);
+
+        } else if (countCardInventory == 1) {
+            // Only 1 - GREEN
+            tv.setTextColor(mColorGreen);
+
+        } else {
+            // More than 1 - BLUE
+            tv.setTextColor(mColorBlue);
+        }
+
+        // Set text of inventory count
+        tv.setText(String.valueOf(countCardInventory));
     }
 
     /**
