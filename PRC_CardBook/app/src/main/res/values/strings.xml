@@ -27,7 +27,7 @@
     <string name="button_start_text">開始</string>
     <string name="button_stop_text">中止</string>
 
-    <string name="http_utility_url_prefix">https://prichan.jp/items/</string>
+    <string name="http_utility_url_prefix">https://prichan.jp/season1/items/</string>
     <string name="http_utility_resource_prefix">https://prichan.jp</string>
     <string name="http_utility_entry_page">1st.html</string>
     <string name="http_utility_jp_keyword_category">カテゴリー</string>
