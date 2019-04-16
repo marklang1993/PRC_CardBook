@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 
 import org.apache.commons.io.FileUtils;

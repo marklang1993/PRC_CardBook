@@ -179,29 +179,34 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         // Retrieve the raw dictionary from the official website
         LinkedHashMap<String, String> rawUrlDict = mHttpUtility.GetUrlDict(mIsPrintDebug);
 
-        // Generate a set of existed keys
-        HashSet<String> existedKeys = new HashSet<>();
-        if (oldDatabases != null) {
-            // If the oldDatabases is presented
-            for (Database oldDatabase: oldDatabases) {
-                existedKeys.add(oldDatabase.url());
-            }
-        }
-
-        // Generate the final dictionary by removing the existed series that are in the local database
-        LinkedHashMap<String, String> urlDict = new LinkedHashMap<>();
-        int countEntries = rawUrlDict.size();
-        Iterator<Map.Entry<String, String>> iterator = rawUrlDict.entrySet().iterator();
-        for (int i = 0; i < countEntries; ++i)
+        /**
+         * Iterate all entries in the "oldDatabases" and check
+         * (Weak) Assert: this entry is in the rawUrlDict
+         * NOTE: Even though this entry is not in the rawUrlDict, the following
+         *       operations will not be affected. That's why I use "If" here.
+         *
+         * Algorithm:
+         * If this entry has the same item size as the entry in the rawUrlDict,
+         * then remove this entry from the rawUrlDict.
+         */
+        Iterator<Database> oldDatabasesIterator = oldDatabases.iterator();
+        while (oldDatabasesIterator.hasNext())
         {
-            Map.Entry<String, String> rawUrlEntry = iterator.next();
-            if (!existedKeys.contains(rawUrlEntry.getKey())) {
-                // A new series is found
-                urlDict.put(rawUrlEntry.getKey(), rawUrlEntry.getValue());
+            Database oldEntry = oldDatabasesIterator.next();
+            String correspondingUrl = oldEntry.url();
+
+            if (rawUrlDict.containsKey(correspondingUrl)) { // This entry is in the rawUrlDict
+                // Get the up-to-date item size of this entry
+                LinkedList<String> allItemSubpageUrls = mHttpUtility.GetAllItemSubpageUrls(correspondingUrl);
+                int newSize = allItemSubpageUrls.size();
+                int oldSize = oldEntry.size();
+                if (newSize == oldSize) { // This entry does not change at all
+                    // Remove this entry from the update list
+                    rawUrlDict.remove(correspondingUrl);
+                }
             }
         }
-
-        return urlDict;
+        return rawUrlDict;
     }
 
     /**
