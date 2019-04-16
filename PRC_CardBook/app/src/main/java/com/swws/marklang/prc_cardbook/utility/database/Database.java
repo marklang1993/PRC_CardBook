@@ -2,6 +2,9 @@ package com.swws.marklang.prc_cardbook.utility.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.swws.marklang.prc_cardbook.utility.FileUtility;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +12,7 @@ import java.util.Iterator;
 public class Database implements Iterable<Item>, Parcelable {
 
     private String _name;   // Name of this series
-    private String _refUrl; // Referred URL
+    private String _refUrl; // Referred URL (Key of this database)
     private ArrayList<Item> _allItems; // All items
 
     public Database(String name, String refUrl)
@@ -32,51 +35,42 @@ public class Database implements Iterable<Item>, Parcelable {
         _allItems = new ArrayList<>();
         for (int i = 0; i < databaseSize; ++i)
         {
-            Item newItem = new Item();
-            newItem.fromString(src.readString());
+            Item newItem = null;
+            try {
+                newItem = new Item(src.readString());
+
+            } catch (FileUtility.InvalidDataFormatException ex) {
+                Log.e(this.getClass().getSimpleName(), String.format("Invalid Data Format: %s", ex.InvalidData));
+            }
             _allItems.add(newItem);
         }
     }
 
+    /**
+     * Add an item
+     * @param item
+     */
     public void Insert(Item item)
     {
         _allItems.add(item);
     }
 
-    public void Insert(
-            String image,
-            String id,
-            String name,
-            String category,
-            String type,
-            String brand,
-            String rarity,
-            String score,
-            String color,
-            String remarks
-    )
-    {
+    /**
+     * Add an item by using an item string that contains 10 attributes
+     * @param itemString
+     */
+    public void Insert(String itemString) throws FileUtility.InvalidDataFormatException {
         // Prepare
-        Item item = new Item();
-
-        item.ItemImage = image;
-
-        item.InternalID = id;
-        item.ItemName = name;
-
-        item.Category = category;
-        item.Type = type;
-        item.Brand = brand;
-        item.Rarity = rarity;
-        item.Score = score;
-        item.Color = color;
-
-        item.Remarks = remarks;
-
+        Item item = new Item(itemString);
         // Insert
         Insert(item);
     }
 
+    /**
+     * Get an item of this database by its index
+     * @param index
+     * @return
+     */
     public Item get(int index)
     {
         if (index >=0 && index < _allItems.size())
@@ -91,8 +85,16 @@ public class Database implements Iterable<Item>, Parcelable {
         return _name;
     }
 
+    /**
+     * Get the corresponding URL of this database (aka. key of this database)
+     * @return
+     */
     public String url() {return _refUrl; }
 
+    /**
+     * Get the count of all items
+     * @return
+     */
     public int size()
     {
         return _allItems.size();

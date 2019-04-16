@@ -2,6 +2,9 @@ package com.swws.marklang.prc_cardbook.utility.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.swws.marklang.prc_cardbook.utility.FileUtility;
 
 import java.io.File;
 
@@ -24,27 +27,37 @@ public class Item implements Parcelable {
     public String Remarks;
 
     // Constants
-    public final static int COUNT_ELEMENT = 10;
-
+    private final static int COUNT_ATTRIBUTES = 10;
 
     /**
-     * Get the id of the item image
-     * @return
+     * Construct an empty item
      */
-    public String getImageID() {
-        String imageFileName = (new File(ItemImage)).getName();
-        String imageID = imageFileName.substring(
-                0, imageFileName.lastIndexOf('.'));
-        return imageID;
+    public Item() {
+        // Init. all attributes with null
+        ItemImage = null;
+        InternalID = null;
+        ItemName = null;
+        Category = null;
+        Type = null;
+        Brand = null;
+        Rarity = null;
+        Score = null;
+        Color = null;
+        Remarks = null;
     }
 
     /**
-     * Restore Item from a rawString
-     * @param rawString
+     * Construct this item by using an item string that contains 10 attributes
+     * @param itemString
      */
-    public void fromString(String rawString) {
-        String tokens[] = rawString.split(",");
-        // Restore Item
+    public Item(String itemString) throws FileUtility.InvalidDataFormatException {
+
+        String[] tokens = itemString.split(",");
+        if (tokens.length != Item.COUNT_ATTRIBUTES) {
+            throw new FileUtility.InvalidDataFormatException(itemString);
+        }
+
+        // Init. all attributes
         ItemImage = tokens[0];
         InternalID = tokens[1];
         ItemName = tokens[2];
@@ -55,6 +68,17 @@ public class Item implements Parcelable {
         Score = tokens[7];
         Color = tokens[8];
         Remarks = tokens[9];
+    }
+
+    /**
+     * Get the id of the item image
+     * @return
+     */
+    public String getImageID() {
+        String imageFileName = (new File(ItemImage)).getName();
+        String imageID = imageFileName.substring(
+                0, imageFileName.lastIndexOf('.'));
+        return imageID;
     }
 
     @Override
@@ -98,8 +122,13 @@ public class Item implements Parcelable {
     {
         public Item createFromParcel(Parcel src)
         {
-            Item restoredItem = new Item();
-            restoredItem.fromString(src.readString());
+            Item restoredItem = null;
+            try {
+                restoredItem = new Item(src.readString());
+            } catch (FileUtility.InvalidDataFormatException ex) {
+                Log.e(this.getClass().getSimpleName(), String.format("Invalid Data Format: %s", ex.InvalidData));
+            }
+
             return restoredItem;
         }
 

@@ -222,24 +222,8 @@ public class FileUtility {
                         database = null;
 
                     } else {
-                        // Process 1 item data
-                        String[] tokens = line.split(",", Item.COUNT_ELEMENT);
-                        if (tokens.length != Item.COUNT_ELEMENT) {
-                            throw new InvalidDataFormatException(line);
-                        }
-
-                        database.Insert(
-                                tokens[0],
-                                tokens[1],
-                                tokens[2],
-                                tokens[3],
-                                tokens[4],
-                                tokens[5],
-                                tokens[6],
-                                tokens[7],
-                                tokens[8],
-                                tokens[9]
-                        );
+                        // Process 1 item data and add it to the current database
+                        database.Insert(line);
                     }
                 }
                 // Read Next Line
