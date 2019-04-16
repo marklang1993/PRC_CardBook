@@ -99,6 +99,14 @@ public class Database implements Iterable<Item>, Parcelable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        Database otherDatabase = (Database) obj;
+
+        // Compare based on the _refUrl
+        return otherDatabase._refUrl.equals(this._refUrl);
+    }
+
+    @Override
     public Iterator<Item> iterator() {
         return _allItems.iterator();
     }

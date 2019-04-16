@@ -355,10 +355,17 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
                 mContext.getString(R.string.info_download_write_meta_file))
         );
 
-        // Move all databases from "oldDatabases" to newDatabases
+        // Move all databases from "oldDatabases" to inheritDatabases
+        LinkedList<Database> inheritDatabases = new LinkedList<>();
         for (Database oldDatabase: oldDatabases) {
-            newDatabases.add(oldDatabase);
+            // Check is there any entry with same key in both "oldDatabases" and "newDatabases"
+            if (!newDatabases.contains(oldDatabase)) {
+                inheritDatabases.add(oldDatabase);
+            } // If True, discard the current entry in the oldDatabases.
         }
+
+        // Merge inheritDatabases and newDatabases
+        newDatabases.addAll(inheritDatabases);
 
         // Go to write metadata
         mFileUtility.WriteAllMetaData(newDatabases, mIsPrintDebug);
