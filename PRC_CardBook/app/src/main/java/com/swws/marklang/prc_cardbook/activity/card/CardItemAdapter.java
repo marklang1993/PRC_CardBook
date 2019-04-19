@@ -120,7 +120,11 @@ public class CardItemAdapter extends BaseAdapter {
     private void setCardImageByScaling(ImageView iv, SeasonID seasonID, Item cardItem) {
         // Get card image
         FileUtility fileUtility = new FileUtility(mContext);
-        Bitmap cardImage = fileUtility.ReadImage(cardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE);
+        Bitmap cardImage = fileUtility.ReadImage(
+                cardItem.ItemImage,
+                FileUtility.IMAGE_TYPE.IMAGE,
+                seasonID
+        );
         // Get the count of given card inventory
         int countCardInventory = InventoryUtility.getInventoryCount(seasonID, cardItem);
 

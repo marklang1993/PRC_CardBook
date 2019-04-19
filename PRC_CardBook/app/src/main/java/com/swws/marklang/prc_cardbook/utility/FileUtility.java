@@ -301,12 +301,43 @@ public class FileUtility {
         _close(bufferedWriter);
     }
 
+
+    /**
+     * Get image path from its type
+     * @param imageType
+     * @return
+     */
+    private String getImagePath(IMAGE_TYPE imageType, SeasonID seasonID) {
+        String directory;
+        String seasonDir = "" + seasonID.ordinal();
+
+        switch (imageType)
+        {
+            case IMAGE:
+                directory = mInternalPath + "/" + IMAGE_DIR + seasonDir + "/";
+                break;
+
+            case BRAND:
+                directory = mInternalPath + "/" + BRAND_DIR + seasonDir + "/";
+                break;
+
+            default:
+                // TYPE
+                directory = mInternalPath + "/" + TYPE_DIR + seasonDir + "/";
+                break;
+        }
+
+        return directory;
+    }
+
     /**
      * Read a image from database
      * @param imagePathOnline
+     * @param imageType
+     * @param seasonID
      * @return
      */
-    public Bitmap ReadImage(String imagePathOnline, IMAGE_TYPE imageType) {
+    public Bitmap ReadImage(String imagePathOnline, IMAGE_TYPE imageType, SeasonID seasonID) {
         // Get image path
         String imageFileName = (new File(imagePathOnline)).getName();
         // Check image file name is illegal
@@ -316,33 +347,11 @@ public class FileUtility {
             return null;
         }
 
-        // TODO: Check local file
-        String imagePathLocal = mInternalPath + "/";
-        switch (imageType)
-        {
-            case IMAGE:
-                imagePathLocal = imagePathLocal + IMAGE_DIR + imageFileName;
-                break;
-
-            case BRAND:
-                imagePathLocal = imagePathLocal + BRAND_DIR + imageFileName;
-                break;
-
-            case TYPE:
-                imagePathLocal = imagePathLocal + TYPE_DIR + imageFileName;
-                break;
-
-            default:
-                Log.e(
-                        getClass().getName(),
-                        String.format("IMAGE TYPE %s IS ILLEGAL", imageType.toString())
-                );
-                return null;
-        }
-
+        // Read image file
+        String imagePath = getImagePath(imageType, seasonID) + imageFileName;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        return BitmapFactory.decodeFile(imagePathLocal, options);
+        return BitmapFactory.decodeFile(imagePath, options);
     }
 
     /**
@@ -350,6 +359,7 @@ public class FileUtility {
      * @param allImageNames
      * @param relativeUrl
      * @param imageType
+     * @param seasonID
      * @param httpUtility
      * @param isPrint
      */
@@ -357,6 +367,7 @@ public class FileUtility {
             HashSet<String> allImageNames,
             String relativeUrl,
             IMAGE_TYPE imageType,
+            SeasonID seasonID,
             HttpUtility httpUtility,
             Boolean isPrint
     )
@@ -387,23 +398,8 @@ public class FileUtility {
             }
 
             // Download the image
-            String directory;
-            switch (imageType)
-            {
-                case IMAGE:
-                    directory = mInternalPath + "/" + IMAGE_DIR;
-                    break;
-
-                case BRAND:
-                    directory = mInternalPath + "/" + BRAND_DIR;
-                    break;
-
-                default:
-                    // TYPE
-                    directory = mInternalPath + "/" + TYPE_DIR;
-                    break;
-            }
-            httpUtility.Download(relativeUrl, directory, isPrint);
+            String path = getImagePath(imageType, seasonID);
+            httpUtility.Download(relativeUrl, path, isPrint);
         }
     }
 }

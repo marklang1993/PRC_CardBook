@@ -11,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
-import com.swws.marklang.prc_cardbook.utility.inventory.Inventory;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 public class CardDetailActivity extends AppCompatActivity {
@@ -168,7 +166,7 @@ public class CardDetailActivity extends AppCompatActivity {
     private void setImageByScaling(ImageView iv, String imageOnlinePath, FileUtility.IMAGE_TYPE imageType, float targetSize) {
         // Get image
         FileUtility fileUtility = new FileUtility(getApplicationContext());
-        Bitmap image = fileUtility.ReadImage(imageOnlinePath, imageType);
+        Bitmap image = fileUtility.ReadImage(imageOnlinePath, imageType, mSeasonID);
 
         // Check is image NULL
         if (image == null)
