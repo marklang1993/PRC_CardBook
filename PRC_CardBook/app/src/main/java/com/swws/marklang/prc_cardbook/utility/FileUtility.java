@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
 
 public class FileUtility {
@@ -33,6 +35,9 @@ public class FileUtility {
 
     private String mInternalPath;
     private Context mContext;
+
+    // Constants
+    private final int LENGTH_DATABASE_LINE_HEADER = 4;
 
     /**
      * Type of the image
@@ -213,7 +218,17 @@ public class FileUtility {
                 if (database == null) {
                     // New DataBase is required to be created
                     String[] tokens = line.split(",");
-                    database = new Database(tokens[1], tokens[2]);
+
+                    // Read the header of Database line
+                    if (tokens.length == LENGTH_DATABASE_LINE_HEADER) {
+                        // Create a new Database
+                        database = new Database(tokens[1], tokens[2], SeasonID.valueOf(tokens[3]));
+
+                    } else {
+                        // Wrong format
+                        throw new InvalidDataFormatException(line);
+                    }
+
                 } else {
                     // Use old database
                     if (line.equals("")) {
@@ -258,7 +273,11 @@ public class FileUtility {
 
             // Write the name and url of the database
             _writeLine(bufferedWriter,
-                    String.format("%d,%s,%s", cursor, database.name(), database.url()),
+                    String.format(Locale.JAPAN, "%d,%s,%s,%s",
+                            cursor,
+                            database.name(),
+                            database.url(),
+                            database.seasonId().toString()),
                     isPrint
             );
 

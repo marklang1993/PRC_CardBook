@@ -11,28 +11,38 @@ import java.util.Iterator;
 
 public class Database implements Iterable<Item>, Parcelable {
 
-    private String _name;   // Name of this series
-    private String _refUrl; // Referred URL (Key of this database)
-    private ArrayList<Item> _allItems; // All items
+    private String mName;       // Name of this series
+    private String mRefUrl;     // Referred URL (Key of this database)
+    private SeasonID mSeasonID; // Season ID
 
-    public Database(String name, String refUrl)
+    private ArrayList<Item> mAllItems; // All items
+
+    /**
+     * Constructor
+     * @param name Name of this series
+     * @param refUrl Referred URL (Key of this database)
+     * @param seasonID Season ID
+     */
+    public Database(String name, String refUrl, SeasonID seasonID)
     {
         // Init.
-        _name = name;
-        _refUrl = refUrl;
+        mName = name;
+        mRefUrl = refUrl;
+        mSeasonID = seasonID;
 
-        _allItems = new ArrayList<>();
+        mAllItems = new ArrayList<>();
     }
 
     public Database(Parcel src)
     {
         // Read basic info.
-        _name = src.readString();
-        _refUrl = src.readString();
+        mName = src.readString();
+        mRefUrl = src.readString();
+        mSeasonID = SeasonID.valueOf(src.readString());
 
         // Read item info.
         int databaseSize = src.readInt();
-        _allItems = new ArrayList<>();
+        mAllItems = new ArrayList<>();
         for (int i = 0; i < databaseSize; ++i)
         {
             Item newItem = null;
@@ -42,7 +52,7 @@ public class Database implements Iterable<Item>, Parcelable {
             } catch (FileUtility.InvalidDataFormatException ex) {
                 Log.e(this.getClass().getSimpleName(), String.format("Invalid Data Format: %s", ex.InvalidData));
             }
-            _allItems.add(newItem);
+            mAllItems.add(newItem);
         }
     }
 
@@ -52,7 +62,7 @@ public class Database implements Iterable<Item>, Parcelable {
      */
     public void Insert(Item item)
     {
-        _allItems.add(item);
+        mAllItems.add(item);
     }
 
     /**
@@ -73,23 +83,26 @@ public class Database implements Iterable<Item>, Parcelable {
      */
     public Item get(int index)
     {
-        if (index >=0 && index < _allItems.size())
+        if (index >=0 && index < mAllItems.size())
         {
-            return _allItems.get(index);
+            return mAllItems.get(index);
         }
         return null;
     }
 
-    public String name()
-    {
-        return _name;
-    }
+    public String name() { return mName; }
 
     /**
      * Get the corresponding URL of this database (aka. key of this database)
      * @return
      */
-    public String url() {return _refUrl; }
+    public String url() { return mRefUrl; }
+
+    /**
+     * Get season ID of this database
+     * @return
+     */
+    public SeasonID seasonId() { return mSeasonID; }
 
     /**
      * Get the count of all items
@@ -97,20 +110,23 @@ public class Database implements Iterable<Item>, Parcelable {
      */
     public int size()
     {
-        return _allItems.size();
+        return mAllItems.size();
     }
 
     @Override
     public boolean equals(Object obj) {
         Database otherDatabase = (Database) obj;
 
-        // Compare based on the _refUrl
-        return otherDatabase._refUrl.equals(this._refUrl);
+        // Compare based on the mRefUrl and mSeasonID
+        boolean isSameRefUrl = otherDatabase.mRefUrl.equals(this.mRefUrl);
+        boolean isSameSeasonID = otherDatabase.mSeasonID.equals(this.mSeasonID);
+
+        return isSameRefUrl && isSameSeasonID;
     }
 
     @Override
     public Iterator<Item> iterator() {
-        return _allItems.iterator();
+        return mAllItems.iterator();
     }
 
     @Override
@@ -121,12 +137,13 @@ public class Database implements Iterable<Item>, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         // Write basic info.
-        dest.writeString(_name);
-        dest.writeString(_refUrl);
+        dest.writeString(mName);
+        dest.writeString(mRefUrl);
+        dest.writeString(mSeasonID.toString());
 
         // Write item info.
-        dest.writeInt(_allItems.size());
-        for (Item item: _allItems) {
+        dest.writeInt(mAllItems.size());
+        for (Item item: mAllItems) {
             dest.writeString(item.toString());
         }
     }

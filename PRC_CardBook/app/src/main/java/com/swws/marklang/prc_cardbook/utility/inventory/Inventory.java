@@ -15,4 +15,12 @@ public class Inventory {
 
     @ColumnInfo(name = "ItemCount")
     public int mInventoryItemCount;
+
+    /**
+     * SeasonID
+     * 0: 1st Season
+     * 1: 2nd Season
+     */
+    @ColumnInfo(name = "SeasonID")
+    public int mSeasonID;
 }

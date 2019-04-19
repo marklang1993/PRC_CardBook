@@ -14,6 +14,7 @@ import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -253,7 +254,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             LinkedList<String> itemSubpageUrls = mHttpUtility.GetAllItemSubpageUrls(seriesRelativeUrl);
 
             // Generate the Database for the current series
-            Database dataBase = new Database(seriesName, seriesRelativeUrl);
+            Database dataBase = new Database(seriesName, seriesRelativeUrl, SeasonID.SEASON_1ST);
             for (String itemSubpageUrl: itemSubpageUrls) {
                 // ## Check whether this task is cancelled.
                 if (isCancelled()) {
@@ -370,6 +371,10 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         // Go to write metadata
         mFileUtility.WriteAllMetaData(newDatabases, mIsPrintDebug);
     }
+
+
+
+
 
     /**
      * Calculate the value of current progress

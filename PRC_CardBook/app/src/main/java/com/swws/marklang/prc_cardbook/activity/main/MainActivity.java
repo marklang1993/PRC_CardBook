@@ -1,6 +1,8 @@
 package com.swws.marklang.prc_cardbook.activity.main;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -82,7 +84,17 @@ public class MainActivity extends AppCompatActivity {
             // TODO: use background thread to access DB --- remove allowMainThreadQueries()
             mInventoryDB = Room.databaseBuilder(getApplicationContext(),
                     InventoryDatabase.class,
-                    getString(R.string.inventory_db_file_name)).allowMainThreadQueries().build();
+                    getString(R.string.inventory_db_file_name)).allowMainThreadQueries().addMigrations(new Migration(1, 2) {
+                @Override
+                public void migrate(@NonNull SupportSQLiteDatabase database) {
+                    /**
+                     * Mirgrate the database from version 1 to version 2
+                     * All rows in version 1 has the SeasonID = 0
+                     */
+                    database.execSQL("ALTER TABLE inventory "
+                            + "ADD COLUMN SeasonID INTEGER NOT NULL DEFAULT(0)");
+                }
+            }).build();
         }
 
         // Init. the content of Inventory DB
