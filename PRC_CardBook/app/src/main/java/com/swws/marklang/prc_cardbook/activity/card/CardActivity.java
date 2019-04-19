@@ -12,6 +12,7 @@ import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 public class CardActivity extends AppCompatActivity {
 
@@ -65,7 +66,6 @@ public class CardActivity extends AppCompatActivity {
         mCardItemAdapter.notifyDataSetChanged();
     }
 
-
     /**
      * Init. all UI components
      */
@@ -98,11 +98,17 @@ public class CardActivity extends AppCompatActivity {
 
     /**
      * Get item by index
-     * @param itemIndex
-     * @return
+     * @param itemIndex Item index
+     * @return Item with specified index
      */
     public static Item getItemByIndex(int itemIndex) {
         return mDatabase.get(itemIndex);
     }
+
+    /**
+     * Get current Season ID
+     * @return Season ID
+     */
+    public static SeasonID getSeasonID() { return mDatabase.seasonId(); }
 
 }

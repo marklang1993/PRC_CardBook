@@ -19,6 +19,7 @@ import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 
@@ -74,8 +75,8 @@ public class CardItemAdapter extends BaseAdapter {
 
         // Set the UI objects
         cardIdTextView.setText(mDatabase.get(position).InternalID);
-        setCardImageByScaling(cardImageView, mDatabase.get(position));
-        setCardInventoryCount(inventoryCountTextView, mDatabase.get(position));
+        setCardImageByScaling(cardImageView, mDatabase.seasonId(), mDatabase.get(position));
+        setCardInventoryCount(inventoryCountTextView, mDatabase.seasonId(), mDatabase.get(position));
 
         return view;
     }
@@ -84,11 +85,12 @@ public class CardItemAdapter extends BaseAdapter {
     /**
      * Set the inventory count of an item
      * @param tv
+     * @param seasonID
      * @param cardItem
      */
-    private void setCardInventoryCount(TextView tv, Item cardItem) {
+    private void setCardInventoryCount(TextView tv, SeasonID seasonID, Item cardItem) {
         // Get the count of given card inventory
-        int countCardInventory = InventoryUtility.getInventoryCount(cardItem);
+        int countCardInventory = InventoryUtility.getInventoryCount(seasonID, cardItem);
 
         // Set text color
         if (countCardInventory == 0)
@@ -112,14 +114,15 @@ public class CardItemAdapter extends BaseAdapter {
     /**
      * Scale the image and load it to ImageView iv
      * @param iv
+     * @param seasonID
      * @param cardItem
      */
-    private void setCardImageByScaling(ImageView iv, Item cardItem) {
+    private void setCardImageByScaling(ImageView iv, SeasonID seasonID, Item cardItem) {
         // Get card image
         FileUtility fileUtility = new FileUtility(mContext);
         Bitmap cardImage = fileUtility.ReadImage(cardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE);
         // Get the count of given card inventory
-        int countCardInventory = InventoryUtility.getInventoryCount(cardItem);
+        int countCardInventory = InventoryUtility.getInventoryCount(seasonID, cardItem);
 
         // Check is cardImage NULL
         if (cardImage == null)

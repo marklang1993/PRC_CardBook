@@ -23,8 +23,10 @@ import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.Inventory;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryDatabase;
+import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 import java.util.ArrayList;
 
@@ -99,17 +101,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Init. the content of Inventory DB
         for (Database database: mDatabases) {
+            SeasonID dbSeasonId = database.seasonId();
+
             for (Item item: database) {
-                // Check is this item registered in the inventory map
                 String itemImageId = item.getImageID();
-                Inventory[] inventories = mInventoryDB.inventoryDAO().queryInventoryByItemID(itemImageId);
-                if (inventories.length == 0)
+
+                // Check is this item registered in the inventory database
+                int inventoryCount = InventoryUtility.getInventoryCount(dbSeasonId, item);
+                if (inventoryCount < 0)
                 {
                     // If not, insert a new record
-                    Inventory newInventory = new Inventory();
-                    newInventory.mInventoryItemID = itemImageId;
-                    newInventory.mInventoryItemCount = 0;
-                    mInventoryDB.inventoryDAO().insertInventory(newInventory);
+                    InventoryUtility.insertInventoryItem(itemImageId, dbSeasonId);
                 }
             }
         }

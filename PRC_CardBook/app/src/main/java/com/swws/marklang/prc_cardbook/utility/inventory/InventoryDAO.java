@@ -11,8 +11,8 @@ public interface InventoryDAO {
     @Query("SELECT * FROM inventory")
     Inventory[] queryAllInventories();
 
-    @Query("SELECT * FROM inventory WHERE ItemID = :queryItemID")
-    Inventory[] queryInventoryByItemID(String queryItemID);
+    @Query("SELECT * FROM inventory WHERE ItemID = :queryItemID AND SeasonID = :querySeasonId")
+    Inventory[] queryInventoryByItemID(int querySeasonId, String queryItemID);
 
     @Insert
     void insertInventory(Inventory newInventory);

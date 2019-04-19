@@ -14,6 +14,7 @@ import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.Inventory;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
@@ -25,6 +26,7 @@ public class CardDetailActivity extends AppCompatActivity {
 
     private int mCardItemIndex = 0;
     private Item mCardItem = null;
+    private SeasonID mSeasonID = null;
     private int mInventoryCount = 0; // the current count of this card in inventory
 
     @Override
@@ -40,10 +42,18 @@ public class CardDetailActivity extends AppCompatActivity {
             Log.e(this.getClass().getName(), KEY_ITEM_INDEX + " NOT FOUND!");
             return;
         }
+
+        // Get season id and card item
+        mSeasonID = CardActivity.getSeasonID();
         mCardItem = CardActivity.getItemByIndex(mCardItemIndex);
 
+
         // Get the current count of this card in inventory
-        mInventoryCount = InventoryUtility.getInventoryCount(mCardItem);
+        mInventoryCount = InventoryUtility.getInventoryCount(mSeasonID, mCardItem);
+        if (mInventoryCount < 0) {
+            Log.e(this.getClass().getName(), "Inventory item does not found in DB.");
+            return;
+        }
 
         // Load Card Details
         loadCard();
@@ -104,12 +114,12 @@ public class CardDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Increase inventory
                 ++mInventoryCount;
-                // Update database
-                Inventory newInventory = new Inventory();
-                newInventory.mInventoryItemID = mCardItem.getImageID();
-                newInventory.mInventoryItemCount = mInventoryCount;
-                MainActivity.mInventoryDB.inventoryDAO().updateInventory(newInventory);
-                // Update inventory value
+                // Update inventory count in the Database
+                InventoryUtility.updateInventoryItem(
+                        mCardItem.getImageID(),
+                        mInventoryCount,
+                        mSeasonID);
+                // Update inventory value display
                 updateInventoryValue();
                 // Set result to notify "CardActivity"
                 setResult(RESULT_OK);
@@ -124,12 +134,12 @@ public class CardDetailActivity extends AppCompatActivity {
                 if (mInventoryCount > 0) {
                     // Decrease inventory
                     --mInventoryCount;
-                    // Update database
-                    Inventory newInventory = new Inventory();
-                    newInventory.mInventoryItemID = mCardItem.getImageID();
-                    newInventory.mInventoryItemCount = mInventoryCount;
-                    MainActivity.mInventoryDB.inventoryDAO().updateInventory(newInventory);
-                    // Update inventory value
+                    // Update inventory count in the Database
+                    InventoryUtility.updateInventoryItem(
+                            mCardItem.getImageID(),
+                            mInventoryCount,
+                            mSeasonID);
+                    // Update inventory value display
                     updateInventoryValue();
                     // Set result to notify "CardActivity"
                     setResult(RESULT_OK);
