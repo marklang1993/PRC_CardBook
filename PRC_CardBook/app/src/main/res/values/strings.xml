@@ -1,6 +1,7 @@
 <resources>
     <string name="inventory_db_file_name">inventory.db</string>
 
+
     <string name="app_name">プリチャンカード図鑑</string>
     <string name="main_activity_name">シリーズ一覧</string>
     <string name="card_activity_name">カード</string>
@@ -8,6 +9,7 @@
     <string name="qr_scanner_activity_name">QRコード読み取り</string>
     <string name="database_update_activity_name">データベース更新</string>
     <string name="first_database_update_activity_name">最初データのダウンロード</string>
+
 
     <string name="card_detail_category">カテゴリー</string>
     <string name="card_detail_color">カラー</string>
@@ -17,21 +19,41 @@
     <string name="card_detail_score">いいね</string>
     <string name="card_detail_inventory_count">数量：</string>
 
+
     <string name="navigation_menu_item_name_qrcode">QRコード</string>
     <string name="navigation_menu_item_name_setting">設定</string>
     <string name="navigation_menu_item_name_update">データベース更新</string>
     <string name="navigation_menu_item_name_exit">終了</string>
+
 
     <string name="button_yes_text">はい</string>
     <string name="button_no_text">いいえ</string>
     <string name="button_start_text">開始</string>
     <string name="button_stop_text">中止</string>
 
+
     <string name="database_updater1_url_prefix">https://prichan.jp/season1/items/</string>
     <string name="database_updater1_resource_prefix">https://prichan.jp</string>
     <string name="database_updater1_entry_page">1st.html</string>
     <string name="database_updater1_jp_keyword_category">カテゴリー</string>
     <string name="database_updater1_jp_keyword_color">カラー</string>
+
+
+    <string name="database_updater2_url_prefix">https://prichan.jp/item/J01/</string>
+    <string name="database_updater2_resource_prefix">https://prichan.jp/item/J01/</string>
+    <string name="database_updater2_entry_page">index.html</string>
+    <string name="database_updater2_jp_keyword_color">カラー</string>
+    <string name="database_updater2_jp_keyword_brand">ブランド</string>
+    <string name="database_updater2_jp_keyword_type">タイプ</string>
+    <string name="database_updater2_jp_keyword_rarity">レアリティ</string>
+    <string name="database_updater2_jp_keyword_score">いいね☆</string>
+
+    <string name="database_updater2_jp_category_hair_accessory">ヘアアクセ</string>
+    <string name="database_updater2_jp_category_tops">トップス</string>
+    <string name="database_updater2_jp_category_skirt">スカート</string>
+    <string name="database_updater2_jp_category_shoes">シューズ</string>
+    <string name="database_updater2_jp_category_one_piece">ワンピ</string>
+
 
     <string name="info_download_no_wifi_title">WIFI接続</string>
     <string name="info_download_no_wifi_message">WIFIに接続していないので、データベースを更新しますか。</string>
@@ -44,6 +66,7 @@
     <string name="info_download_error_official_server_malfunction">エラー：サバーエラー！しばらくもう一度試してください！</string>
     <string name="info_download_error_directory_creation_failed">エラー：ディレクトリ作成できませんでした！権限を確認してください！</string>
 
+
     <string name="info_download_progress">進捗：</string>
     <string name="info_download_standby">待機中</string>
     <string name="info_download_pages_list">シリーズリスト取得中</string>
@@ -52,10 +75,12 @@
     <string name="info_download_write_meta_file">データ保存中</string>
     <string name="info_download_complete">更新完了</string>
 
+
     <string name="exception_no_camera_device">エラー：カメラを見つかりませんでした</string>
     <string name="exception_configure_failed_camera_capture_session">エラー：読取りセッション初期化失敗</string>
     <string name="exception_access_camera_failed">エラー：カメラをアクセスできません</string>
     <string name="exception_get_camera_list_failed">エラー：カメラリストを取得できませんでした</string>
+
 
     <string name="open">Open</string>
     <string name="close">Close</string>

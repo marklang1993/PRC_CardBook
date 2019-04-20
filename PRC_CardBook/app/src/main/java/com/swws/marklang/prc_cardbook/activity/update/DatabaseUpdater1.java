@@ -73,16 +73,21 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
         Iterator<Database> oldDatabasesIterator = oldDatabases.iterator();
         while (oldDatabasesIterator.hasNext()) {
             Database oldEntry = oldDatabasesIterator.next();
-            String correspondingUrl = oldEntry.url();
 
-            if (rawUrlDict.containsKey(correspondingUrl)) { // This entry is in the rawUrlDict
-                // Get the up-to-date item size of this entry
-                LinkedList<String> allItemSubpageUrls = _getAllItemSubpageUrls(correspondingUrl);
-                int newSize = allItemSubpageUrls.size();
-                int oldSize = oldEntry.size();
-                if (newSize == oldSize) { // This entry does not change at all
-                    // Remove this entry from the update list
-                    rawUrlDict.remove(correspondingUrl);
+            // If this entry belongs to 1ST SEASON
+            if (oldEntry.seasonId() == SeasonID.SEASON_1ST) {
+                // Get Corresponding URL
+                String correspondingUrl = oldEntry.url();
+
+                if (rawUrlDict.containsKey(correspondingUrl)) { // This entry is in the rawUrlDict
+                    // Get the up-to-date item size of this entry
+                    LinkedList<String> allItemSubpageUrls = _getAllItemSubpageUrls(correspondingUrl);
+                    int newSize = allItemSubpageUrls.size();
+                    int oldSize = oldEntry.size();
+                    if (newSize == oldSize) { // This entry does not change at all
+                        // Remove this entry from the update list
+                        rawUrlDict.remove(correspondingUrl);
+                    }
                 }
             }
         }
