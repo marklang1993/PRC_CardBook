@@ -76,8 +76,8 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
 
         // Init. All Updaters
         mUpdaterList = new ArrayList<IDatabaseUpdater>();
-        mUpdaterList.add(new DatabaseUpdater1(this));   // Season 1
-        //mUpdaterList.add(new DatabaseUpdater2(this));   // Season 2
+        //mUpdaterList.add(new DatabaseUpdater1(this));   // Season 1
+        mUpdaterList.add(new DatabaseUpdater2(this));   // Season 2
     }
 
     /**

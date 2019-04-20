@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
@@ -356,7 +357,8 @@ public class FileUtility {
 
     /**
      * Download 1 image
-     * @param allImageNames
+     * @param allImageNames A Hashset that is used to save all image names for DEBUG
+     * @param urlPrefix
      * @param relativeUrl
      * @param imageType
      * @param seasonID
@@ -365,6 +367,7 @@ public class FileUtility {
      */
     public void DownloadImage(
             HashSet<String> allImageNames,
+            String urlPrefix,
             String relativeUrl,
             IMAGE_TYPE imageType,
             SeasonID seasonID,
@@ -386,7 +389,7 @@ public class FileUtility {
                 return;
             }
 
-            /* For debug purpose */
+            /* For DEBUG purpose */
             if (allImageNames != null) {
                 if (allImageNames.contains(fileName))
                 {
@@ -399,7 +402,7 @@ public class FileUtility {
 
             // Download the image
             String path = getImagePath(imageType, seasonID);
-            httpUtility.Download(relativeUrl, path, isPrint);
+            httpUtility.Download(urlPrefix, relativeUrl, path, isPrint);
         }
     }
 }

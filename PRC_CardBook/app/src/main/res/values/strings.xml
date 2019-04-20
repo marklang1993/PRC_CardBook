@@ -27,11 +27,11 @@
     <string name="button_start_text">開始</string>
     <string name="button_stop_text">中止</string>
 
-    <string name="http_utility_url_prefix">https://prichan.jp/season1/items/</string>
-    <string name="http_utility_resource_prefix">https://prichan.jp</string>
-    <string name="http_utility_entry_page">1st.html</string>
-    <string name="http_utility_jp_keyword_category">カテゴリー</string>
-    <string name="http_utility_jp_keyword_color">カラー</string>
+    <string name="database_updater1_url_prefix">https://prichan.jp/season1/items/</string>
+    <string name="database_updater1_resource_prefix">https://prichan.jp</string>
+    <string name="database_updater1_entry_page">1st.html</string>
+    <string name="database_updater1_jp_keyword_category">カテゴリー</string>
+    <string name="database_updater1_jp_keyword_color">カラー</string>
 
     <string name="info_download_no_wifi_title">WIFI接続</string>
     <string name="info_download_no_wifi_message">WIFIに接続していないので、データベースを更新しますか。</string>

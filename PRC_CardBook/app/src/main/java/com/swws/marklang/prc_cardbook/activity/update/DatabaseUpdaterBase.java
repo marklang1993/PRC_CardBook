@@ -33,7 +33,7 @@ public class DatabaseUpdaterBase {
         mContext = downloadTask.GetContext();
 
         // Init. IO Utilities
-        mHttpUtility = new HttpUtility(mContext);
+        mHttpUtility = new HttpUtility();
         mFileUtility = new FileUtility(mContext);
     }
 
