@@ -159,7 +159,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
     }
 
     /**
-     *
+     * Get all images of all items in Season 1
      * @param databases
      * @return
      * @throws HttpUtility.DirCreateException
@@ -169,93 +169,10 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
     public boolean GetItemImages(LinkedList<Database> databases)
             throws HttpUtility.DirCreateException, IOException
     {
-        HashSet<String> allImageNames = new HashSet<>(); // For debug purpose
         String urlPrefix = mContext.getString(R.string.database_updater1_resource_prefix);
 
-        // Update the initial value of the progress bar
-        mDownLoadTask.PublishProgress(mDownLoadTask.GetProgressMsg(mProgressValues[2],
-                mContext.getString(R.string.info_download_coordinate_images))
-        );
-
-        // Calculate the total count of images
-        int totalCount = 0;
-        for (Database database : databases) {
-            totalCount += database.size();
-        }
-
-        // Populate all databases
-        int cursorItem = 0;
-        int cursorList = 0;
-        for (Database database : databases) {
-            // Populate all items
-            int cursorDataBase = 0;
-            for (Item item: database) {
-
-                // ## Check whether this task is cancelled.
-                if (mDownLoadTask.GetCancelStatus()) {
-                    return false;
-                }
-
-                // Update the value of the progress bar
-                int currentProgress = calculateCurrentProgressValue(
-                        cursorItem, 0, totalCount, mProgressValues[2], mProgressValues[3] - 1
-                );
-                mDownLoadTask.PublishProgress(mDownLoadTask.GetProgressMsg(currentProgress,
-                        mContext.getString(R.string.info_download_coordinate_images) + "\n" + item.ItemName
-                        )
-                );
-
-                // Download ItemImage
-                mFileUtility.DownloadImage(
-                        allImageNames,
-                        urlPrefix,
-                        item.ItemImage,
-                        FileUtility.IMAGE_TYPE.IMAGE,
-                        SeasonID.SEASON_1ST,
-                        mHttpUtility,
-                        mIsPrintDebug
-                );
-                // Download BrandImage
-                mFileUtility.DownloadImage(
-                        null,
-                        urlPrefix,
-                        item.Brand,
-                        FileUtility.IMAGE_TYPE.BRAND,
-                        SeasonID.SEASON_1ST,
-                        mHttpUtility,
-                        mIsPrintDebug
-                );
-                // Download TypeImage
-                mFileUtility.DownloadImage(
-                        null,
-                        urlPrefix,
-                        item.Type,
-                        FileUtility.IMAGE_TYPE.TYPE,
-                        SeasonID.SEASON_1ST,
-                        mHttpUtility,
-                        mIsPrintDebug
-                );
-
-                // Print current progress
-                if (mIsPrintDebug)
-                {
-                    Log.i(this.getClass().getSimpleName(),
-                            String.format("DataBase: %d / %d; Items: %d / %d",
-                                    cursorList + 1, databases.size(),
-                                    cursorDataBase + 1, database.size())
-                    );
-                }
-                ++cursorItem;
-                ++cursorDataBase;
-            }
-            ++cursorList;
-        }
-
-        // Print total progress
-        Log.e(this.getClass().getSimpleName(), String.format("Total Images Count: %d", allImageNames.size()));
-        return true;
+        return getItemImages(urlPrefix, SeasonID.SEASON_1ST, databases);
     }
-
 
     /**
      * Retrieve the urls of all series

@@ -377,6 +377,10 @@ public class FileUtility {
             throws HttpUtility.DirCreateException, IOException
     {
         // Validate relative Url
+        if (relativeUrl == null) {
+            return;
+        }
+
         if (!relativeUrl.equals(""))
         {
             // "relativeUrl" must be NOT empty

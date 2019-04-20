@@ -29,9 +29,9 @@ public class InventoryUtility {
             // No such item is found
             countCardInventory = -1;
             Log.w("InventoryUtility",
-                    String.format("DAO Query Failed with ImageID: %s, SeasonID: %d",
+                    String.format("DAO Query Failed with ImageID: %s, SeasonID: %s",
                             imageID,
-                            seasonID)
+                            seasonID.toString())
             );
         }
         return countCardInventory;

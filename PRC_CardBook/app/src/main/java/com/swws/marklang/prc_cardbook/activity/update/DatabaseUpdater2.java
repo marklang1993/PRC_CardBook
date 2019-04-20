@@ -101,10 +101,20 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
         return databases;
     }
 
+    /**
+     * Get all images of all items in Season 2
+     * @param databases
+     * @return
+     * @throws HttpUtility.DirCreateException
+     * @throws IOException
+     */
     @Override
     public boolean GetItemImages(LinkedList<Database> databases)
-            throws HttpUtility.DirCreateException, IOException {
-        return false;
+            throws HttpUtility.DirCreateException, IOException
+    {
+        String urlPrefix = mContext.getString(R.string.database_updater2_resource_prefix);
+
+        return getItemImages(urlPrefix, SeasonID.SEASON_2ND, databases);
     }
 
 
@@ -159,7 +169,13 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                 } else if (nodeAttrName.contains(
                         mContext.getString(R.string.database_updater2_jp_keyword_brand))) {
                     // 5. Brand
-                    item.Brand = otherAttr.selectFirst("img").attr("src");
+                    if (otherAttr.selectFirst("img") != null) {
+                        // Brand is displayed by image
+                        item.Brand = otherAttr.selectFirst("img").attr("src");
+                    } else {
+                        // Brand is displayed by text
+                        item.Brand = otherAttr.selectFirst("td").text();
+                    }
 
                 } else if (nodeAttrName.contains(
                         mContext.getString(R.string.database_updater2_jp_keyword_type))) {
