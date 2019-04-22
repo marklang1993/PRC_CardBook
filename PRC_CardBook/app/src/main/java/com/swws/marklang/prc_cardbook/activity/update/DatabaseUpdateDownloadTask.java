@@ -226,8 +226,8 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
 
     /**
      * 4th Step: Write new metadata
-     * @param oldDatabases
-     * @param newDatabases
+     * @param oldDatabases old local Databases
+     * @param newDatabases new Databases retrieved from official website
      */
     private void writeNewMetaData(ArrayList<Database> oldDatabases, LinkedList<Database> newDatabases) {
         // Update the initial value of the progress bar
@@ -235,22 +235,24 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
                 mContext.getString(R.string.info_download_write_meta_file))
         );
 
-        // Move all databases from "oldDatabases" to inheritDatabases
-        LinkedList<Database> inheritDatabases = new LinkedList<>();
-        for (Database oldDatabase: oldDatabases) {
-            // Check is there any entry with same key in both "oldDatabases" and "newDatabases"
-            if (!newDatabases.contains(oldDatabase)) {
-                inheritDatabases.add(oldDatabase);
-            } // If True, discard the current entry in the oldDatabases.
-        }
+        // Inherit old data from "oldDatabases"
+        if (oldDatabases != null) {
+            // Move all databases from "oldDatabases" to inheritDatabases
+            LinkedList<Database> inheritDatabases = new LinkedList<>();
+            for (Database oldDatabase : oldDatabases) {
+                // Check is there any entry with same key in both "oldDatabases" and "newDatabases"
+                if (!newDatabases.contains(oldDatabase)) {
+                    inheritDatabases.add(oldDatabase);
+                } // If True, discard the current entry in the oldDatabases.
+            }
 
-        // Merge inheritDatabases and newDatabases
-        newDatabases.addAll(inheritDatabases);
+            // Merge inheritDatabases and newDatabases
+            newDatabases.addAll(inheritDatabases);
+        }
 
         // Go to write metadata
         mFileUtility.WriteAllMetaData(newDatabases, mIsPrintDebug);
     }
-
 
     /**
      * Operations will be done before downloading task

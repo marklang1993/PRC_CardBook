@@ -39,16 +39,19 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
         LinkedHashMap<String, String> rawUrlDict = new LinkedHashMap<>();
         rawUrlDict.put("index.html", "アイテム（ジュエル1弾）");
 
-        Iterator<Database> oldDatabasesIterator = oldDatabases.iterator();
-        while (oldDatabasesIterator.hasNext()) {
-            Database oldEntry = oldDatabasesIterator.next();
+        // Filter out the duplicated url based on the "oldDatabases".
+        if (oldDatabases != null) {
+            Iterator<Database> oldDatabasesIterator = oldDatabases.iterator();
+            while (oldDatabasesIterator.hasNext()) {
+                Database oldEntry = oldDatabasesIterator.next();
 
-            // If this entry belongs to 2ND SEASON
-            if (oldEntry.seasonId() == SeasonID.SEASON_2ND) {
-                // Get Corresponding URL
-                String correspondingUrl = oldEntry.url();
-                if (rawUrlDict.containsKey(correspondingUrl)) { // This entry is in the rawUrlDict
-                    rawUrlDict.remove(correspondingUrl);
+                // If this entry belongs to 2ND SEASON
+                if (oldEntry.seasonId() == SeasonID.SEASON_2ND) {
+                    // Get Corresponding URL
+                    String correspondingUrl = oldEntry.url();
+                    if (rawUrlDict.containsKey(correspondingUrl)) { // This entry is in the rawUrlDict
+                        rawUrlDict.remove(correspondingUrl);
+                    }
                 }
             }
         }
