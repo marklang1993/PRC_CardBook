@@ -53,10 +53,9 @@ public class CardDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Load Card Details
+        // Init. UIs
+        setTitle(getString(R.string.card_detail_activity_name));
         loadCard();
-
-        // Init. buttons
         initButtons();
     }
 

@@ -58,6 +58,8 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             TextView databaseUpdateStatusTextView,
             int startOption
     ) {
+        super();
+
         // Get parent activity
         mParentActivity = parentActivity;
         // Get Context

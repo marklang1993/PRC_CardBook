@@ -5,6 +5,7 @@ import android.util.Log;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
+import com.swws.marklang.prc_cardbook.utility.MathUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
@@ -128,7 +129,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
             String seriesName = urlEntry.getValue();
 
             // Update the value of the progress bar
-            int currentProgress = calculateCurrentProgressValue(
+            int currentProgress = MathUtility.calculateCurrentProgressValue(
                     i, 0, countDatabases, mProgressValues[1], mProgressValues[2] - 1
             );
             mDownLoadTask.PublishProgress(mDownLoadTask.GetProgressMsg(currentProgress,

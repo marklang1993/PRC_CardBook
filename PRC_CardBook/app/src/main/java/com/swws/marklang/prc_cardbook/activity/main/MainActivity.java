@@ -1,8 +1,5 @@
 package com.swws.marklang.prc_cardbook.activity.main;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,30 +14,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
-import com.swws.marklang.prc_cardbook.utility.database.Item;
-import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
-import com.swws.marklang.prc_cardbook.utility.inventory.Inventory;
-import com.swws.marklang.prc_cardbook.utility.inventory.InventoryDatabase;
-import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static ArrayList<Database> mDatabases = null;
-    public static InventoryDatabase mInventoryDB = null;
+    private static ArrayList<Database> mDatabases;
 
-    // Used for "startActivityForResult()"
-    private static final int REQUEST_UPDATE_RESULT_USER = 1;
-    private static final int REQUEST_UPDATE_RESULT_APP = 2;
-
-    private FileUtility mFileUtility;
     private SeriesItemAdapter mSeriesItemAdapter;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -50,71 +36,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Check is metadata presented
-        mFileUtility = new FileUtility(getApplicationContext());
-        if (!mFileUtility.IsMetadataFilePresented()) {
-            // Forcely start "local database update" activity
-            Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
-            databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 1); // "1" means it is started by app.
-            startActivityForResult(databaseUpdateActivityIntent, REQUEST_UPDATE_RESULT_APP);
-
-        } else {
-            // Init. data
-            initData();
-        }
-
         // Init. UIs
+        setTitle(getString(R.string.main_activity_name));
         setListView();
         initDrawer();
         initNavigationView();
-    }
-
-    /**
-     * Init. MetaData and InventoryDB
-     */
-    private void initData() {
-        // Read meta data
-        if (mDatabases == null)
-        {
-            mDatabases = mFileUtility.ReadAllMetaData(false);
-        }
-
-        // Get access to Inventory DB
-        if (mInventoryDB == null)
-        {
-            // TODO: use thread-safe way to create this singleton
-            // TODO: use background thread to access DB --- remove allowMainThreadQueries()
-            mInventoryDB = Room.databaseBuilder(getApplicationContext(),
-                    InventoryDatabase.class,
-                    getString(R.string.inventory_db_file_name)).allowMainThreadQueries().addMigrations(new Migration(1, 2) {
-                @Override
-                public void migrate(@NonNull SupportSQLiteDatabase database) {
-                    /**
-                     * Mirgrate the database from version 1 to version 2
-                     * All rows in version 1 has the SeasonID = 0
-                     */
-                    database.execSQL("ALTER TABLE inventory "
-                            + "ADD COLUMN SeasonID INTEGER NOT NULL DEFAULT(0)");
-                }
-            }).build();
-        }
-
-        // Init. the content of Inventory DB
-        for (Database database: mDatabases) {
-            SeasonID dbSeasonId = database.seasonId();
-
-            for (Item item: database) {
-                String itemImageId = item.getImageID();
-
-                // Check is this item registered in the inventory database
-                int inventoryCount = InventoryUtility.getInventoryCount(dbSeasonId, item);
-                if (inventoryCount < 0)
-                {
-                    // If not, insert a new record
-                    InventoryUtility.insertInventoryItem(itemImageId, dbSeasonId);
-                }
-            }
-        }
     }
 
     /**
@@ -185,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         // Start the "local database update" activity
                         Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
                         databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 0); // "0" means it is started by user
-                        startActivityForResult(databaseUpdateActivityIntent, REQUEST_UPDATE_RESULT_USER);
+                        startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_UPDATE_RESULT_USER);
                         break;
 
                     case R.id.exit_menu_item:
@@ -215,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Notify "seriesListView" to update once the database updating is finished.
+     * Receive the Result from "DatabaseUpdateActivity"
      * @param requestCode
      * @param resultCode
      * @param data
@@ -223,36 +149,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-       switch (requestCode) {
-           case REQUEST_UPDATE_RESULT_USER:
-               // Check is database updating successful
-               if (resultCode == RESULT_OK) {
-                   // Reload database
-                   mDatabases = null;
-                   initData();
-                   // Update seriesListView
-                   mSeriesItemAdapter.notifyDataSetChanged(mDatabases);
-               }
-            break;
+        if (requestCode == Constants.REQUEST_UPDATE_RESULT_USER) {
+           // Check is database updating successful
+           if (resultCode == RESULT_OK) {
+               // Start MainLoadActivity
+               Intent startMainLoadActivityIntent = new Intent(
+                       getApplicationContext(), MainLoadActivity.class
+               );
+               startMainLoadActivityIntent.putExtra(MainLoadActivity.KEY_INIT_DB_OPTION, true);
+               startActivityForResult(startMainLoadActivityIntent, Constants.REQUEST_LOAD_RESULT);
+           }
 
-           case REQUEST_UPDATE_RESULT_APP:
-               // Check is database updating successful
-               if (resultCode == RESULT_OK) {
-                   // Reload database
-                   mDatabases = null;
-                   initData();
-                   // Update seriesListView
-                   mSeriesItemAdapter.notifyDataSetChanged(mDatabases);
-
-               } else {
-                   // Update failed - Terminate the app.
-                   finishAndRemoveTask(); // MUST be used since API 21
-               }
+        } else if (requestCode == Constants.REQUEST_LOAD_RESULT) {
+            // Notify "seriesListView" to update
+            mSeriesItemAdapter.notifyDataSetChanged(mDatabases);
         }
     }
 
     /**
-     * Get a single Database by index
+     * Get a Database entry by index
      * @param databaseIndex
      */
     public static Database getDatabaseByIndex(int databaseIndex) {
@@ -266,4 +181,10 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Database> getAllDatabases() {
         return mDatabases;
     }
+
+    /**
+     * Set all Databases
+     * @param newDatabases new Databases
+     */
+    public static void setAllDatabases(ArrayList<Database> newDatabases) { mDatabases = newDatabases; }
 }

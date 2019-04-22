@@ -1,12 +1,51 @@
 package com.swws.marklang.prc_cardbook.utility.inventory;
 
+import android.app.Activity;
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.migration.Migration;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 public class InventoryUtility {
+
+    private static InventoryDatabase mInventoryDB = null;
+
+    /**
+     * Initialize mInventoryDB
+     * @param activity The caller activity
+     * @return
+     */
+    public static boolean initDB(Activity activity) {
+        // Get access to Inventory DB
+        if (mInventoryDB == null) {
+            // TODO: use thread-safe way to create this singleton
+            // TODO: use background thread to access DB --- remove allowMainThreadQueries()
+            mInventoryDB = Room.databaseBuilder(activity.getApplicationContext(),
+                    InventoryDatabase.class,
+                    activity.getString(R.string.inventory_db_file_name)).allowMainThreadQueries().
+                            addMigrations(new Migration(1, 2) {
+                @Override
+                public void migrate(@NonNull SupportSQLiteDatabase database) {
+                    /**
+                     * Mirgrate the database from version 1 to version 2
+                     * All rows in version 1 has the SeasonID = 0
+                     */
+                    database.execSQL("ALTER TABLE inventory "
+                            + "ADD COLUMN SeasonID INTEGER NOT NULL DEFAULT(0)");
+                }
+            }).build();
+
+            return true;
+       }
+       return false;
+    }
 
     /**
      * Get the count of given card inventory
@@ -16,10 +55,18 @@ public class InventoryUtility {
      */
     public static int getInventoryCount(SeasonID seasonID, Item cardItem){
         String imageID = cardItem.getImageID();
-        // Execute query
-        Inventory[] cardInventory = MainActivity.mInventoryDB.inventoryDAO().
-                queryInventoryByItemID(seasonID.ordinal(), imageID);
 
+        // Execute query
+        Inventory[] cardInventory;
+        if (mInventoryDB != null) {
+            cardInventory = mInventoryDB.inventoryDAO().
+                    queryInventoryByItemID(seasonID.ordinal(), imageID);
+        } else {
+            // mInventoryDB is not initialized.
+            return -1;
+        }
+
+        // Get count
         int countCardInventory;
         if (cardInventory.length != 0) {
             // Item found
@@ -34,6 +81,7 @@ public class InventoryUtility {
                             seasonID.toString())
             );
         }
+
         return countCardInventory;
     }
 
@@ -50,7 +98,9 @@ public class InventoryUtility {
         newInventory.mInventoryItemCount = 0;  // By default, the count is 0
         newInventory.mSeasonID = seasonID.ordinal();
         // Execute
-        MainActivity.mInventoryDB.inventoryDAO().insertInventory(newInventory);
+        if (mInventoryDB != null) {
+            mInventoryDB.inventoryDAO().insertInventory(newInventory);
+        }
     }
 
     /**
@@ -66,6 +116,8 @@ public class InventoryUtility {
         newInventory.mInventoryItemCount = itemCount;
         newInventory.mSeasonID = seasonID.ordinal();
         // Execute
-        MainActivity.mInventoryDB.inventoryDAO().updateInventory(newInventory);
+        if (mInventoryDB != null) {
+            mInventoryDB.inventoryDAO().updateInventory(newInventory);
+        }
     }
 }

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.swws.marklang.prc_cardbook">
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
@@ -17,24 +18,44 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light">
+        android:theme="@style/Theme.AppCompat.Light"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <!--#1-->
         <activity
-            android:name=".activity.main.MainActivity"
-            android:label="@string/app_name">
+            android:name=".activity.main.MainLoadActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--#2-->
         <activity
-            android:name=".activity.card.CardActivity"
-            android:label="@string/card_activity_name" />
+            android:name=".activity.main.MainActivity">
+        </activity>
+
+        <!--#3-->
         <activity
-            android:name=".activity.card.CardDetailActivity"
-            android:label="@string/card_detail_activity_name" />
-        <activity android:name=".activity.qrcode.ScannerActivity" />
-        <activity android:name=".activity.update.DatabaseUpdateActivity"></activity>
+            android:name=".activity.card.CardActivity">
+        </activity>
+
+        <!--#4-->
+        <activity
+            android:name=".activity.card.CardDetailActivity">
+        </activity>
+
+        <!--#5-->
+        <activity
+            android:name=".activity.qrcode.ScannerActivity">
+        </activity>
+
+        <!--#6-->
+        <activity
+            android:name=".activity.update.DatabaseUpdateActivity">
+        </activity>
+
     </application>
 
 </manifest>

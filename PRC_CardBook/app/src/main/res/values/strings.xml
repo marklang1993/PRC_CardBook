@@ -9,6 +9,10 @@
     <string name="qr_scanner_activity_name">QRコード読み取り</string>
     <string name="database_update_activity_name">データベース更新</string>
     <string name="first_database_update_activity_name">最初データのダウンロード</string>
+    <string name="main_load_activity_name">読込み中</string>
+
+
+    <string name="main_load_title">読込み中．．．</string>
 
 
     <string name="card_detail_category">カテゴリー</string>

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
+import com.swws.marklang.prc_cardbook.utility.MathUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
@@ -85,7 +86,7 @@ public class DatabaseUpdaterBase {
                 }
 
                 // Update the value of the progress bar
-                int currentProgress = calculateCurrentProgressValue(
+                int currentProgress = MathUtility.calculateCurrentProgressValue(
                         cursorItem, 0, totalCount, mProgressValues[2], mProgressValues[3] - 1
                 );
                 mDownLoadTask.PublishProgress(mDownLoadTask.GetProgressMsg(currentProgress,
@@ -142,31 +143,5 @@ public class DatabaseUpdaterBase {
         // Print total progress
         Log.e(this.getClass().getSimpleName(), String.format("Total Images Count: %d", allImageNames.size()));
         return true;
-    }
-
-
-    /**
-     * Calculate the value of current progress
-     * @param currentActual current value of actual value
-     * @param minActual minimal value of actual value
-     * @param maxActual maximal value of actual value
-     * @param minProgress minimal value of the value used by ProgressBar
-     * @param maxProgress maximal value of the value used by ProgressBar
-     * @return
-     */
-    protected int calculateCurrentProgressValue(
-            int currentActual,
-            int minActual,
-            int maxActual,
-            int minProgress,
-            int maxProgress
-    ) {
-        int rangeActual = maxActual - minActual;
-        int deltaActual = currentActual - minActual;
-        int rangeProgress = maxProgress - minProgress;
-
-        double percentageActual = (double)deltaActual / (double)rangeActual;
-
-        return (int)(rangeProgress * percentageActual) + minProgress;
     }
 }
