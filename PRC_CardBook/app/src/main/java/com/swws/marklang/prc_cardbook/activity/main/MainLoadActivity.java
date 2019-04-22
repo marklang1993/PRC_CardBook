@@ -92,6 +92,26 @@ public class MainLoadActivity extends AppCompatActivity {
     }
 
     /**
+     * Back Button is Pressed
+     */
+    @Override
+    public void onBackPressed() {
+        // Check is the background loading thread terminated
+        if (mMainLoadTask != null) {
+            // Wait until the download task is exited
+            try {
+                mMainLoadTask.get();
+            } catch (Exception ex) {
+                ;
+            }
+        }
+
+        // Terminate the app.
+        Log.e(this.getClass().getName(), "Loading Data is Terminated by User!");
+        finishAndRemoveTask(); // MUST be used since API 21
+    }
+
+    /**
      * Receive the Result from "DatabaseUpdateActivity"
      * @param requestCode
      * @param resultCode
