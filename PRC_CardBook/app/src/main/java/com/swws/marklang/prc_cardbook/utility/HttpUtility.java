@@ -109,15 +109,15 @@ public class HttpUtility {
 
         try
         {
-            // Check the existence of the directory TODO: Can create the directory iteratively?
+            // Check the existence of the directory
             File dirFile = new File(directory);
             if (!dirFile.exists()) {
                 // Directory does NOT exist
                 Log.w(this.getClass().getSimpleName(),
                         String.format("Directory %s does not exist.", dirFile.getName()));
 
-                // Create a new directory
-                if (dirFile.mkdir()) {
+                // Create the directory iteratively by using mkdirs(), NOT mkdir()
+                if (dirFile.mkdirs()) {
                     Log.w(this.getClass().getSimpleName(),
                             String.format("Directory %s created.", dirFile.getName()));
 
