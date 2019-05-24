@@ -208,6 +208,23 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
     }
 
     /**
+     * Set the given AlertDialog cannot be cancelled.
+     * @param builder
+     * @return
+     */
+    private AlertDialog setAlertDialogNonCancellable(AlertDialog.Builder builder) {
+
+        // Create this dialog
+        AlertDialog alertDialog = builder.create();
+
+        // Set this dialog cannot be cancelled.
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
+
+        return alertDialog;
+    }
+
+    /**
      * Create no network connection alert dialog
      * @return
      */
@@ -224,8 +241,7 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
             }
         });
 
-        // Create this dialog
-        return builder.create();
+        return setAlertDialogNonCancellable(builder);
     }
 
     /**
@@ -254,8 +270,7 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
             }
         });
 
-        // Create this dialog
-        return builder.create();
+        return setAlertDialogNonCancellable(builder);
     }
 
     /**
@@ -281,7 +296,6 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
             }
         });
 
-        // Create this dialog
-        return builder.create();
+        return setAlertDialogNonCancellable(builder);
     }
 }
