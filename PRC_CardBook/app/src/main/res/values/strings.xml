@@ -2,38 +2,38 @@
     <string name="inventory_db_file_name">inventory.db</string>
 
 
-    <string name="app_name">プリチャンカード図鑑</string>
-    <string name="main_activity_name">シリーズ一覧</string>
-    <string name="card_activity_name">カード</string>
-    <string name="card_detail_activity_name">コーデ詳細</string>
-    <string name="qr_scanner_activity_name">QRコード読み取り</string>
-    <string name="database_update_activity_name">データベース更新</string>
-    <string name="first_database_update_activity_name">最初データのダウンロード</string>
-    <string name="main_load_activity_name">読込み中</string>
+    <string name="app_name">PRC CardBook</string>
+    <string name="main_activity_name">Series</string>
+    <string name="card_activity_name">Cards</string>
+    <string name="card_detail_activity_name">Details</string>
+    <string name="qr_scanner_activity_name">Scan</string>
+    <string name="database_update_activity_name">Update</string>
+    <string name="first_database_update_activity_name">Download Initial Data</string>
+    <string name="main_load_activity_name">Load</string>
 
 
-    <string name="main_load_title">読込み中．．．</string>
+    <string name="main_load_title">Loading...</string>
 
 
-    <string name="card_detail_category">カテゴリー</string>
-    <string name="card_detail_color">カラー</string>
-    <string name="card_detail_brand">ブランド</string>
-    <string name="card_detail_type">タイプ</string>
-    <string name="card_detail_rarity">レアリティ</string>
-    <string name="card_detail_score">いいね</string>
-    <string name="card_detail_inventory_count">数量：</string>
+    <string name="card_detail_category">Category</string>
+    <string name="card_detail_color">Color</string>
+    <string name="card_detail_brand">Brand</string>
+    <string name="card_detail_type">Type</string>
+    <string name="card_detail_rarity">Rarity</string>
+    <string name="card_detail_score">Score</string>
+    <string name="card_detail_inventory_count">Amount:</string>
 
 
-    <string name="navigation_menu_item_name_qrcode">QRコード</string>
-    <string name="navigation_menu_item_name_setting">設定</string>
-    <string name="navigation_menu_item_name_update">データベース更新</string>
-    <string name="navigation_menu_item_name_exit">終了</string>
+    <string name="navigation_menu_item_name_qrcode">QR Code</string>
+    <string name="navigation_menu_item_name_setting">Setting</string>
+    <string name="navigation_menu_item_name_update">Update</string>
+    <string name="navigation_menu_item_name_exit">Exit</string>
 
 
-    <string name="button_yes_text">はい</string>
-    <string name="button_no_text">いいえ</string>
-    <string name="button_start_text">開始</string>
-    <string name="button_stop_text">中止</string>
+    <string name="button_yes_text">Yes</string>
+    <string name="button_no_text">No</string>
+    <string name="button_start_text">Start</string>
+    <string name="button_stop_text">Stop</string>
 
 
     <string name="database_updater1_url_prefix">https://prichan.jp/season1/items/</string>
@@ -59,31 +59,31 @@
     <string name="database_updater2_jp_category_one_piece">ワンピ</string>
 
 
-    <string name="info_download_no_wifi_title">WIFI接続</string>
-    <string name="info_download_no_wifi_message">WIFIに接続していないので、データベースを更新しますか。</string>
-    <string name="info_download_first_time_download_database_title">ダウンロード</string>
-    <string name="info_download_first_time_download_database_message">最初データのダウンロードしますか。</string>
-    <string name="info_download_no_internet_connection_title">ネットワーク接続</string>
-    <string name="info_download_no_internet_connection_message">ネットワーク接続していません。</string>
-    <string name="info_download_error_no_internet">エラー：ネットワーク接続できませんでした！</string>
-    <string name="info_download_error_app_update_required">エラー：URLエラー！アプリ更新してください！</string>
-    <string name="info_download_error_official_server_malfunction">エラー：サバーエラー！しばらくもう一度試してください！</string>
-    <string name="info_download_error_directory_creation_failed">エラー：ディレクトリ作成できませんでした！権限を確認してください！</string>
+    <string name="info_download_no_wifi_title">WIFI Connection</string>
+    <string name="info_download_no_wifi_message">No WIFI connection is detected. Continue?</string>
+    <string name="info_download_first_time_download_database_title">Download</string>
+    <string name="info_download_first_time_download_database_message">Do you want to download the initial data?</string>
+    <string name="info_download_no_internet_connection_title">Network Connection</string>
+    <string name="info_download_no_internet_connection_message">No network connection</string>
+    <string name="info_download_error_no_internet">Error: Cannot connect to network.</string>
+    <string name="info_download_error_app_update_required">Error: Incorrect URL. Please update the app.</string>
+    <string name="info_download_error_official_server_malfunction">Error: Server error. Please try again later.</string>
+    <string name="info_download_error_directory_creation_failed">Error: Cannot create directory. Please check the permission.</string>
 
 
-    <string name="info_download_progress">進捗：</string>
-    <string name="info_download_standby">待機中</string>
-    <string name="info_download_pages_list">シリーズリスト取得中</string>
-    <string name="info_download_coordinates">コーデ取得中</string>
-    <string name="info_download_coordinate_images">コーデ画像取得中</string>
-    <string name="info_download_write_meta_file">データ保存中</string>
-    <string name="info_download_complete">更新完了</string>
+    <string name="info_download_progress">Progress:</string>
+    <string name="info_download_standby">Standby</string>
+    <string name="info_download_pages_list">Retrieving series list</string>
+    <string name="info_download_coordinates">Retrieving items</string>
+    <string name="info_download_coordinate_images">Retrieving item images</string>
+    <string name="info_download_write_meta_file">Saving data</string>
+    <string name="info_download_complete">Finish</string>
 
 
-    <string name="exception_no_camera_device">エラー：カメラを見つかりませんでした</string>
-    <string name="exception_configure_failed_camera_capture_session">エラー：読取りセッション初期化失敗</string>
-    <string name="exception_access_camera_failed">エラー：カメラをアクセスできません</string>
-    <string name="exception_get_camera_list_failed">エラー：カメラリストを取得できませんでした</string>
+    <string name="exception_no_camera_device">Error: Cannot find camera.</string>
+    <string name="exception_configure_failed_camera_capture_session">Error: Failed to initialize the capture session.</string>
+    <string name="exception_access_camera_failed">Error: Cannot access to the camera.</string>
+    <string name="exception_get_camera_list_failed">Error: Cannot get the camera list.</string>
 
 
     <string name="open">Open</string>
