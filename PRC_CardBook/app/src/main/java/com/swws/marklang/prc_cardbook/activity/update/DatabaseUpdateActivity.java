@@ -11,10 +11,14 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
+
+import java.util.ArrayList;
 
 
 public class DatabaseUpdateActivity extends AppCompatActivity {
@@ -23,6 +27,9 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
 
     private int mStartOption; // 0: Start by user, 1: Start by app (in the first launching).
     private DatabaseUpdateDownloadTask mDatabaseUpdateDownloadTask = null;
+
+    // List of all CheckBox
+    private ArrayList<CheckBox> mCheckBoxArrayList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,28 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         // Get the "Start" button
         Button databaseUpdateStartButton = (Button) findViewById(R.id.databaseUpdateStartButton);
 
+        // Get the updaterSelect LinearLayout
+        LinearLayout updaterSelectLinearLayout = (LinearLayout) findViewById(R.id.updaterSelectLinearLayout);
+
+        // Configure CheckBox
+        CheckBox checkBoxSeason1 = new CheckBox(getApplicationContext());
+        checkBoxSeason1.setText(R.string.database_update_checkbox_season1);
+        checkBoxSeason1.setTextColor(getResources().getColor(R.color.black));
+        checkBoxSeason1.setChecked(false);
+
+        CheckBox checkBoxSeason2 = new CheckBox(getApplicationContext());
+        checkBoxSeason2.setText(R.string.database_update_checkbox_season2);
+        checkBoxSeason2.setTextColor(getResources().getColor(R.color.black));
+        checkBoxSeason2.setChecked(true);
+
+        updaterSelectLinearLayout.addView(checkBoxSeason1);
+        updaterSelectLinearLayout.addView(checkBoxSeason2);
+
+        // Create the list of CheckBox
+        mCheckBoxArrayList = new ArrayList<>();
+        mCheckBoxArrayList.add(checkBoxSeason1);
+        mCheckBoxArrayList.add(checkBoxSeason2);
+
         // Check is started by the app.
         if (mStartOption != 1) {
 
@@ -90,7 +119,21 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
             databaseUpdateStartButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DatabaseUpdateActivity.this.startUpdateThread();
+                    // Check whether at least 1 updater is chosen
+                    boolean result = false;
+                    for (CheckBox checkBox: mCheckBoxArrayList) {
+                        result |= checkBox.isChecked();
+                    }
+
+                    if (result) {
+                        // At least 1 updater is chosen
+                        DatabaseUpdateActivity.this.startUpdateThread();
+
+                    } else {
+                        // No updater is chosen
+                        createNoUpdaterAlertDialog().show();
+                    }
+
                 }
             });
 
@@ -116,12 +159,15 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         ProgressBar databaseUpdateProgressBar = (ProgressBar) findViewById(R.id.databaseUpdateProgressBar);
         // Get TextView
         TextView databaseUpdateStatusTextView = (TextView) findViewById(R.id.databaseUpdateStatusTextView);
+
+
         // Create and Start update the database
         mDatabaseUpdateDownloadTask = new DatabaseUpdateDownloadTask(
                 DatabaseUpdateActivity.this,
                 databaseUpdateStartButton,
                 databaseUpdateProgressBar,
                 databaseUpdateStatusTextView,
+                mCheckBoxArrayList,
                 mStartOption
         );
         mDatabaseUpdateDownloadTask.execute();
@@ -298,4 +344,20 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
 
         return setAlertDialogNonCancellable(builder);
     }
+
+    /**
+     * Create no updater is selected alert dialog
+     * @return
+     */
+    private AlertDialog createNoUpdaterAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.info_download_no_updater_selected_message)
+                .setTitle(R.string.info_download_no_updater_selected_title);
+
+        // Add button
+        builder.setPositiveButton(R.string.button_yes_text, null);
+
+        return builder.create();
+    }
+
 }

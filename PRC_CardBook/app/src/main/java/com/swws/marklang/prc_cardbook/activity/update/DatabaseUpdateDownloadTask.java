@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
     private Button mDatabaseUpdateStartButton;
     private ProgressBar mDatabaseUpdateProgressBar;
     private TextView mDatabaseUpdateStatusTextView;
+    private ArrayList<CheckBox> mCheckBoxArrayList;
 
     private FileUtility mFileUtility;
 
@@ -56,6 +58,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             Button databaseUpdateStartButton,
             ProgressBar databaseUpdateProgressBar,
             TextView databaseUpdateStatusTextView,
+            ArrayList<CheckBox> checkBoxArrayList,
             int startOption
     ) {
         super();
@@ -75,11 +78,19 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         mDatabaseUpdateStartButton = databaseUpdateStartButton;
         mDatabaseUpdateProgressBar = databaseUpdateProgressBar;
         mDatabaseUpdateStatusTextView = databaseUpdateStatusTextView;
+        mCheckBoxArrayList = checkBoxArrayList;
 
         // Init. All Updaters
-        mUpdaterList = new ArrayList<IDatabaseUpdater>();
-        //mUpdaterList.add(new DatabaseUpdater1(this));   // Season 1
-        mUpdaterList.add(new DatabaseUpdater2(this));   // Season 2
+        mUpdaterList = new ArrayList<>();
+        // TODO: find a better structure to handle this logic
+        // Season 1
+        if (mCheckBoxArrayList.get(0).isChecked()){
+            mUpdaterList.add(new DatabaseUpdater1(this));
+        }
+        // Season 2
+        if (mCheckBoxArrayList.get(1).isChecked()){
+            mUpdaterList.add(new DatabaseUpdater2(this));
+        }
     }
 
     /**
@@ -263,6 +274,11 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
 
         // Hide the "Start" Button
         mDatabaseUpdateStartButton.setVisibility(View.GONE);
+        // Hide all CheckBox
+        for (CheckBox checkBox :mCheckBoxArrayList) {
+            checkBox.setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -274,7 +290,15 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         super.onPostExecute(result);
 
         if (result) {
-            // Successfully completed -> close this activity and refresh
+            // Successfully completed
+
+            // Clear all references to the UI objects. TODO: find a better way to handle these references
+            mDatabaseUpdateStartButton = null;
+            mDatabaseUpdateProgressBar = null;
+            mDatabaseUpdateStatusTextView = null;
+            mCheckBoxArrayList = null;
+
+            // Close this activity and refresh
             mParentActivity.finishAndRefresh();
 
         } else {
@@ -282,6 +306,10 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             if (mStartOption == 0) {
                 // Show the "Start" button again
                 mDatabaseUpdateStartButton.setVisibility(View.VISIBLE);
+                // Show all CheckBox
+                for (CheckBox checkBox :mCheckBoxArrayList) {
+                    checkBox.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
