@@ -23,6 +23,8 @@
     <string name="card_detail_score">いいね</string>
     <string name="card_detail_inventory_count">数量：</string>
 
+    <string name="card_detail_item_name_copied">コーデの名前をコピーしました。</string>
+
 
     <string name="navigation_menu_item_name_qrcode">QRコード</string>
     <string name="navigation_menu_item_name_setting">設定</string>

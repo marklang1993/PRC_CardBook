@@ -1,5 +1,7 @@
 package com.swws.marklang.prc_cardbook.activity.card;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
@@ -26,6 +29,9 @@ public class CardDetailActivity extends AppCompatActivity {
     private Item mCardItem = null;
     private SeasonID mSeasonID = null;
     private int mInventoryCount = 0; // the current count of this card in inventory
+
+    private ClipboardManager mClipboardManager;
+    private ClipData mClipData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,10 @@ public class CardDetailActivity extends AppCompatActivity {
             Log.e(this.getClass().getName(), "Inventory item does not found in DB.");
             return;
         }
+
+        // Init. mClipboardManager & mClipData
+        mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        mClipData = ClipData.newPlainText("PRC_CardBook Text", mCardItem.ItemName);
 
         // Init. UIs
         setTitle(getString(R.string.card_detail_activity_name));
@@ -95,6 +105,20 @@ public class CardDetailActivity extends AppCompatActivity {
         colorContentTextView.setText(mCardItem.Color);
         rarityContentTextView.setText(mCardItem.Rarity);
         scoreContentTextView.setText(mCardItem.Score);
+
+        // Add ClickListener to copy the item name to ClipBoard
+        cardNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClipboardManager.setPrimaryClip(mClipData);
+
+                Toast.makeText(
+                        CardDetailActivity.this,
+                        getString(R.string.card_detail_item_name_copied),
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
 
         // Set inventory value
         updateInventoryValue();

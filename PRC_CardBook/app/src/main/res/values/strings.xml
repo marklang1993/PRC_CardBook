@@ -23,6 +23,8 @@
     <string name="card_detail_score">Score</string>
     <string name="card_detail_inventory_count">Amount:</string>
 
+    <string name="card_detail_item_name_copied">Item name is copied to clipboard.</string>
+
 
     <string name="navigation_menu_item_name_qrcode">QR Code</string>
     <string name="navigation_menu_item_name_setting">Setting</string>
