@@ -23,7 +23,7 @@
     <string name="card_detail_score">いいね</string>
     <string name="card_detail_inventory_count">数量：</string>
 
-    <string name="card_detail_item_name_copied">コーデの名前をコピーしました。</string>
+    <string name="card_detail_item_name_copied">コーデの名前をコピーしました</string>
 
 
     <string name="navigation_menu_item_name_qrcode">QRコード</string>
@@ -49,9 +49,10 @@
     <string name="database_updater1_jp_keyword_color">カラー</string>
 
 
-    <string name="database_updater2_url_prefix">https://prichan.jp/item/J01/</string>
-    <string name="database_updater2_resource_prefix">https://prichan.jp/item/J01/</string>
+    <string name="database_updater2_url_prefix">https://prichan.jp/item/</string>
+    <string name="database_updater2_resource_prefix">https://prichan.jp/item/</string>
     <string name="database_updater2_entry_page">index.html</string>
+    <string name="database_updater2_series_entry_page">index.html</string>
     <string name="database_updater2_jp_keyword_color">カラー</string>
     <string name="database_updater2_jp_keyword_brand">ブランド</string>
     <string name="database_updater2_jp_keyword_type">タイプ</string>

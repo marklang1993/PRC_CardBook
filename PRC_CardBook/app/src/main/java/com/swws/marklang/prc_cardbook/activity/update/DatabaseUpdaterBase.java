@@ -12,6 +12,7 @@ import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -56,7 +57,11 @@ public class DatabaseUpdaterBase {
      * @throws HttpUtility.DirCreateException
      * @throws IOException
      */
-    protected boolean getItemImages(String urlPrefix, SeasonID seasonID, LinkedList<Database> databases)
+    protected boolean getItemImages(
+            String urlPrefix,
+            SeasonID seasonID,
+            LinkedList<Database> databases
+    )
             throws HttpUtility.DirCreateException, IOException
     {
         HashSet<String> allImageNames = new HashSet<>(); // For debug purpose
@@ -76,6 +81,31 @@ public class DatabaseUpdaterBase {
         int cursorItem = 0;
         int cursorList = 0;
         for (Database database : databases) {
+
+            String currentUrlPrefix;
+            /*
+             *  Since SEASON_2ND, the sub-directory of the resource is given by
+             *  the series prefix of the key(url) of "Database", such as "J01", "J02"..
+             */
+            if (seasonID != SeasonID.SEASON_1ST) {
+                // Get each URL
+                ArrayList<String> urlList = DatabaseUpdater2.GetUrlList(database.url());
+                /*
+                 *  Since all urls in the same Database share the same series prefix,
+                 *  use the 1st element is ok.
+                 */
+                String urlElement = urlList.get(0);
+                int firstSlashIndex = urlElement.indexOf('/');
+                String seriesPrefix = urlElement.substring(0, firstSlashIndex + 1);
+                currentUrlPrefix = urlPrefix + seriesPrefix;
+
+            } else {
+                // SEASON_1ST
+                currentUrlPrefix = urlPrefix;
+
+            }
+
+
             // Populate all items
             int cursorDataBase = 0;
             for (Item item: database) {
@@ -97,7 +127,7 @@ public class DatabaseUpdaterBase {
                 // Download ItemImage
                 mFileUtility.DownloadImage(
                         allImageNames,
-                        urlPrefix,
+                        currentUrlPrefix,
                         item.ItemImage,
                         FileUtility.IMAGE_TYPE.IMAGE,
                         seasonID,
@@ -107,7 +137,7 @@ public class DatabaseUpdaterBase {
                 // Download BrandImage
                 mFileUtility.DownloadImage(
                         null,
-                        urlPrefix,
+                        currentUrlPrefix,
                         item.Brand,
                         FileUtility.IMAGE_TYPE.BRAND,
                         seasonID,
@@ -117,7 +147,7 @@ public class DatabaseUpdaterBase {
                 // Download TypeImage
                 mFileUtility.DownloadImage(
                         null,
-                        urlPrefix,
+                        currentUrlPrefix,
                         item.Type,
                         FileUtility.IMAGE_TYPE.TYPE,
                         seasonID,
