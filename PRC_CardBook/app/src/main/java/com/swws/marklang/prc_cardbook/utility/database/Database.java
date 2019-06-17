@@ -117,11 +117,15 @@ public class Database implements Iterable<Item>, Parcelable {
     public boolean equals(Object obj) {
         Database otherDatabase = (Database) obj;
 
-        // Compare based on the mRefUrl and mSeasonID
+        // Compare based on (mName OR mRefUrl AND mSeasonID)
+        boolean isSameName = otherDatabase.mName.equals(this.mName);
         boolean isSameRefUrl = otherDatabase.mRefUrl.equals(this.mRefUrl);
         boolean isSameSeasonID = otherDatabase.mSeasonID.equals(this.mSeasonID);
 
-        return isSameRefUrl && isSameSeasonID;
+        /*
+         * NOTE: If two series are different, they must have different RefUrls or different Names.
+         */
+        return (isSameRefUrl || isSameName) && isSameSeasonID;
     }
 
     @Override

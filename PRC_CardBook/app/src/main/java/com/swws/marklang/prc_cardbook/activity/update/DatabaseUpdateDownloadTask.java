@@ -253,10 +253,15 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
             // Move all databases from "oldDatabases" to inheritDatabases
             LinkedList<Database> inheritDatabases = new LinkedList<>();
             for (Database oldDatabase : oldDatabases) {
-                // Check is there any entry with same key in both "oldDatabases" and "newDatabases"
+                // Check is there any entry with same key or same value in both "oldDatabases" and "newDatabases"
                 if (!newDatabases.contains(oldDatabase)) {
                     inheritDatabases.add(oldDatabase);
-                } // If True, discard the current entry in the oldDatabases.
+                }
+                /*
+                 * If True, discard the current entry in the oldDatabases since
+                 * 1. it may be duplicated with the entry in newDatabases;
+                 * 2. it may be outdated.
+                 */
             }
 
             // Merge inheritDatabases and newDatabases
