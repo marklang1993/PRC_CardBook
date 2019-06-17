@@ -1,27 +1,30 @@
-Prichan Mobile Phone Card Book (PRC_CardBook)
+Prichan Mobile Phone Card Book
 =======
 
 ## Current Version
-v1.2.1
+* v1.2.1.x
+
+Note: x is used as internal version number. The internal version tends to update frequently.
 
 ## Overview
-This project is aimed to help the players of "Kirato Prichan" to manage their possessed items. You can visit the official game site via [link][prichan_web].
+This project is aimed to help the players of "Kirato Prichan" to manage their possessed items. You can visit the official game website via [link][prichan_web].
 
 [prichan_web]: https://prichan.jp/
 
 ## Requirement
 * Android 5.0 (Minimum)
-* Internet Connection (For the initial data downloading)
+* Internet Connection (ONLY for downloading the initial data from the game website)
 
 ## Installation
 1. Clone the entire repository;
-2. Import the project by Android Studio;
-3. Build and Deploy.
+2. Load the project in Android Studio;
+3. Build the project;
+4. Deploy the apk file on your Android device.
 
 ## Localization
 * English (Default)
-* Japanese
-* Chinese (Plan to support)
+* Japanese 
+* Chinese
 
 ## External Libraries
 * ZXing 3.2.0
@@ -31,6 +34,8 @@ This project is aimed to help the players of "Kirato Prichan" to manage their po
 ## Tested Devices
 * OPPO R17
 * OPPO R9tm
+
+(More devices will be tested later...)
 
 ## License
 MIT license

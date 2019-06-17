@@ -1,0 +1,78 @@
+<resources>
+    <string name="inventory_db_file_name">inventory.db</string>
+
+
+    <string name="app_name">美妙频道卡册</string>
+    <string name="main_activity_name">系列一览</string>
+    <string name="card_activity_name">卡片一览</string>
+    <string name="card_detail_activity_name">套装详细</string>
+    <string name="qr_scanner_activity_name">扫描二位码</string>
+    <string name="database_update_activity_name">更新数据</string>
+    <string name="first_database_update_activity_name">下载初始数据</string>
+    <string name="main_load_activity_name">读取数据</string>
+
+
+    <string name="main_load_title">读取中．．．</string>
+
+
+    <string name="card_detail_category">种类</string>
+    <string name="card_detail_color">颜色</string>
+    <string name="card_detail_brand">品牌</string>
+    <string name="card_detail_type">类型</string>
+    <string name="card_detail_rarity">稀有度</string>
+    <string name="card_detail_score">点赞数</string>
+    <string name="card_detail_inventory_count">数量：</string>
+
+    <string name="card_detail_item_name_copied">套装名称已复制到剪贴板</string>
+
+
+    <string name="navigation_menu_item_name_qrcode">二维码</string>
+    <string name="navigation_menu_item_name_setting">设定</string>
+    <string name="navigation_menu_item_name_update">更新数据</string>
+    <string name="navigation_menu_item_name_exit">退出</string>
+
+
+    <string name="button_yes_text">是</string>
+    <string name="button_no_text">否</string>
+    <string name="button_start_text">开始</string>
+    <string name="button_stop_text">停止</string>
+
+
+    <string name="database_update_checkbox_season1">第一季</string>
+    <string name="database_update_checkbox_season2">第二季</string>
+
+
+    <string name="info_download_no_wifi_title">WIFI连接</string>
+    <string name="info_download_no_wifi_message">未连接到WIFI，是否继续更新数据？（将会消耗数据流量）</string>
+    <string name="info_download_first_time_download_database_title">下载</string>
+    <string name="info_download_first_time_download_database_message">是否下载初始数据？</string>
+    <string name="info_download_no_internet_connection_title">网络连接</string>
+    <string name="info_download_no_internet_connection_message">未连接到网络。</string>
+    <string name="info_download_no_updater_selected_title">无法更新</string>
+    <string name="info_download_no_updater_selected_message">请选择需要更新数据的季度。</string>
+    <string name="info_download_error_no_internet">错误：无法连接到网络。</string>
+    <string name="info_download_error_app_update_required">错误：URL异常，请更新本应用。</string>
+    <string name="info_download_error_official_server_malfunction">错误：服务器应答异常，请过一会儿再试一次。</string>
+    <string name="info_download_error_directory_creation_failed">错误：无法建立文件夹，请检查应用是否有权限读写内部存储。</string>
+
+
+    <string name="info_download_progress">进度：</string>
+    <string name="info_download_standby">待机中</string>
+    <string name="info_download_pages_list">获取系列数据中</string>
+    <string name="info_download_coordinates">获取套装数据中</string>
+    <string name="info_download_coordinate_images">获取套装图片中</string>
+    <string name="info_download_write_meta_file">正在保存数据</string>
+    <string name="info_download_complete">更新完成</string>
+
+
+    <string name="exception_no_camera_device">错误：没有发现可用的相机设备。</string>
+    <string name="exception_configure_failed_camera_capture_session">错误：读取捕获实例失败。</string>
+    <string name="exception_access_camera_failed">错误：相机被占用或没有权限。</string>
+    <string name="exception_get_camera_list_failed">错误：读取相机列表失败。</string>
+
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+
+</resources>

@@ -18,10 +18,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUpdater {
 
@@ -31,12 +33,66 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
     // All pages that will be ignored in _getUrlDict()
     private HashSet<String> IGNORE_PAGES;
 
+    // All constant strings
+    /*
+    <string name="database_updater2_url_prefix">https://prichan.jp/item/</string>
+    <string name="database_updater2_resource_prefix">https://prichan.jp/item/</string>
+    <string name="database_updater2_entry_page">index.html</string>
+    <string name="database_updater2_series_entry_page">index.html</string>
+    <string name="database_updater2_jp_keyword_color">カラー</string>
+    <string name="database_updater2_jp_keyword_brand">ブランド</string>
+    <string name="database_updater2_jp_keyword_type">タイプ</string>
+    <string name="database_updater2_jp_keyword_rarity">レアリティ</string>
+    <string name="database_updater2_jp_keyword_score">いいね☆</string>
+
+    <string name="database_updater2_jp_category_hair_accessory">ヘアアクセ</string>
+    <string name="database_updater2_jp_category_tops">トップス</string>
+    <string name="database_updater2_jp_category_skirt">スカート</string>
+    <string name="database_updater2_jp_category_shoes">シューズ</string>
+    <string name="database_updater2_jp_category_one_piece">ワンピ</string>
+    */
+    private final String URL_PREFIX = "https://prichan.jp/item/";
+    private final String RESOURCE_PREFIX = "https://prichan.jp/item/";
+    private final String ENTRY_PAGE = "index.html";
+    private final String SERIES_ENTRY_PAGE = "index.html";
+    private final String JP_KEYWORD_COLOR = "カラー";
+    private final String JP_KEYWORD_BRAND = "ブランド";
+    private final String JP_KEYWORD_TYPE = "タイプ";
+    private final String JP_KEYWORD_RARITY = "レアリティ";
+    private final String JP_KEYWORD_SCORE = "いいね☆";
+    
+    private Set<Map.Entry<String, String>> JP_CATEGORY_KEYWORDS_ENTRY_SET;
+
+
     public DatabaseUpdater2(DatabaseUpdateDownloadTask downloadTask) {
         super(downloadTask);
 
         // Init. IGNORE_PAGES
         IGNORE_PAGES = new HashSet<>();
         IGNORE_PAGES.add("item_fc.html"); // Follow ticket has different format
+
+        // Init. JP_CATEGORY_KEYWORDS_ENTRYSET
+        Hashtable<String, String> categoryKeywordsHashTable = new Hashtable<>();
+        categoryKeywordsHashTable.put("ヘアアクセ", "ヘアアクセ");
+        categoryKeywordsHashTable.put("トップス", "トップス");
+        categoryKeywordsHashTable.put("スカート", "スカート");
+        categoryKeywordsHashTable.put("シューズ", "シューズ");
+        categoryKeywordsHashTable.put("ワンピ", "ワンピース");
+        /**
+         * New Added Keywords on June 17th, 2019
+         */
+        categoryKeywordsHashTable.put("ドレス", "ワンピース");
+        categoryKeywordsHashTable.put("ブラウス", "トップス");
+        categoryKeywordsHashTable.put("パンプス", "シューズ");
+        categoryKeywordsHashTable.put("セットアップ", "ワンピース");
+        categoryKeywordsHashTable.put("サングラス", "ヘアアクセ");
+        categoryKeywordsHashTable.put("パンツ", "スカート");
+        categoryKeywordsHashTable.put("ジャケット", "トップス");
+        categoryKeywordsHashTable.put("ブーツ", "シューズ");
+        categoryKeywordsHashTable.put("スニーカー", "シューズ");
+        categoryKeywordsHashTable.put("カチューシャ", "ヘアアクセ");
+        JP_CATEGORY_KEYWORDS_ENTRY_SET = categoryKeywordsHashTable.entrySet();
+
     }
 
     @Override
@@ -128,9 +184,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
     public boolean GetItemImages(LinkedList<Database> databases)
             throws HttpUtility.DirCreateException, IOException {
 
-        String urlPrefix = mContext.getString(R.string.database_updater2_resource_prefix);
-
-        return getItemImages(urlPrefix, SeasonID.SEASON_2ND, databases);
+        return getItemImages(RESOURCE_PREFIX, SeasonID.SEASON_2ND, databases);
     }
 
 
@@ -146,8 +200,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
 
         for (String relativeUrl : urlList) {
             // Get the item page
-            String absoluteURL =
-                    mContext.getString(R.string.database_updater2_url_prefix) + relativeUrl;
+            String absoluteURL = URL_PREFIX + relativeUrl;
             String subpageHtmlContent = mHttpUtility.GetHtmlContent(absoluteURL);
             // Parse
             Document pageDoc = Jsoup.parse(subpageHtmlContent);
@@ -184,13 +237,11 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                     if (nodeAttr == null) continue; // Empty node, skip
 
                     String nodeAttrName = nodeAttr.text();
-                    if (nodeAttrName.contains(
-                            mContext.getString(R.string.database_updater2_jp_keyword_color))) {
+                    if (nodeAttrName.contains(JP_KEYWORD_COLOR)) {
                         // 4. Color
                         item.Color = otherAttr.selectFirst("td").text();
 
-                    } else if (nodeAttrName.contains(
-                            mContext.getString(R.string.database_updater2_jp_keyword_brand))) {
+                    } else if (nodeAttrName.contains(JP_KEYWORD_BRAND)) {
                         // 5. Brand
                         if (otherAttr.selectFirst("img") != null) {
                             // Brand is displayed by image
@@ -200,18 +251,15 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                             item.Brand = otherAttr.selectFirst("td").text();
                         }
 
-                    } else if (nodeAttrName.contains(
-                            mContext.getString(R.string.database_updater2_jp_keyword_type))) {
+                    } else if (nodeAttrName.contains(JP_KEYWORD_TYPE)) {
                         // 6. Type
                         item.Type = otherAttr.selectFirst("img").attr("src");
 
-                    } else if (nodeAttrName.contains(
-                            mContext.getString(R.string.database_updater2_jp_keyword_rarity))) {
+                    } else if (nodeAttrName.contains(JP_KEYWORD_RARITY)) {
                         // 7. Rarity
                         item.Rarity = otherAttr.selectFirst("td").text();
 
-                    } else if (nodeAttrName.contains(
-                            mContext.getString(R.string.database_updater2_jp_keyword_score))) {
+                    } else if (nodeAttrName.contains(JP_KEYWORD_SCORE)) {
                         // 8. Score
                         item.Score = otherAttr.selectFirst("td").text();
 
@@ -227,32 +275,17 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                  * Since the web page does not give out the item category,
                  * it is necessary to extract from the item name
                  */
-                if (item.ItemName.contains(
-                        mContext.getString(R.string.database_updater2_jp_category_hair_accessory))) {
-                    // Hair Accessory
-                    item.Category = mContext.getString(R.string.database_updater2_jp_category_hair_accessory);
-
-                } else if (item.ItemName.contains(
-                        mContext.getString(R.string.database_updater2_jp_category_tops))) {
-                    // Tops
-                    item.Category = mContext.getString(R.string.database_updater2_jp_category_tops);
-
-                } else if (item.ItemName.contains(
-                        mContext.getString(R.string.database_updater2_jp_category_skirt))) {
-                    // Skirt
-                    item.Category = mContext.getString(R.string.database_updater2_jp_category_skirt);
-
-                } else if (item.ItemName.contains(
-                        mContext.getString(R.string.database_updater2_jp_category_shoes))) {
-                    // Shoes
-                    item.Category = mContext.getString(R.string.database_updater2_jp_category_shoes);
-
-                } else if (item.ItemName.contains(
-                        mContext.getString(R.string.database_updater2_jp_category_one_piece))) {
-                    // One Piece
-                    item.Category = mContext.getString(R.string.database_updater2_jp_category_one_piece);
-
-                } else {
+                item.Category = "";
+                for (Map.Entry<String, String> categoryKeywordsEntry:
+                        JP_CATEGORY_KEYWORDS_ENTRY_SET) {
+                    if (item.ItemName.contains(categoryKeywordsEntry.getKey()))
+                    {
+                        // A match is found in the pre-built lookup table
+                        item.Category = categoryKeywordsEntry.getValue();
+                        break;
+                    }
+                }
+                if (item.Category.equals("")) {
                     item.Category = "UNKNOWN";
                 }
 
@@ -275,9 +308,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
         LinkedHashMap<String, String> urlDict = new LinkedHashMap<>();
 
         // Get the series page
-        String absoluteURL =
-                mContext.getString(R.string.database_updater2_url_prefix) +
-                        mContext.getString(R.string.database_updater2_entry_page);
+        String absoluteURL = URL_PREFIX + ENTRY_PAGE;
         String subpageHtmlContent = mHttpUtility.GetHtmlContent(absoluteURL);
         // Parse
         Document pageDoc = Jsoup.parse(subpageHtmlContent);
@@ -316,7 +347,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                 // Check if ".html" is presented
                 if (url.indexOf(".html") <= 0) {
                     // Manually add the entry page
-                    url = url.concat(mContext.getString(R.string.database_updater2_series_entry_page));
+                    url = url.concat(SERIES_ENTRY_PAGE);
                 }
 
                 // Add the HashSet for duplication removing

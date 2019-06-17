@@ -28,6 +28,22 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
     // All pages that will be ignored in _getUrlDict()
     private HashSet<String> IGNORE_PAGES;
 
+    // All constant strings
+    /*
+    <string name="database_updater1_url_prefix">https://prichan.jp/season1/items/</string>
+    <string name="database_updater1_resource_prefix">https://prichan.jp</string>
+    <string name="database_updater1_entry_page">1st.html</string>
+    <string name="database_updater1_jp_keyword_category">カテゴリー</string>
+    <string name="database_updater1_jp_keyword_color">カラー</string>
+    */
+
+    private final String URL_PREFIX = "https://prichan.jp/season1/items/";
+    private final String RESOURCE_PREFIX = "https://prichan.jp";
+    private final String ENTRY_PAGE = "1st.html";
+    private final String JP_KEYWORD_CATEGORY = "カテゴリー";
+    private final String JP_KEYWORD_COLOR = "カラー";
+
+
     /**
      * Constructor
      * @param downloadTask Caller (Async Task)
@@ -173,9 +189,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
     public boolean GetItemImages(LinkedList<Database> databases)
             throws HttpUtility.DirCreateException, IOException
     {
-        String urlPrefix = mContext.getString(R.string.database_updater1_resource_prefix);
-
-        return getItemImages(urlPrefix, SeasonID.SEASON_1ST, databases);
+        return getItemImages(RESOURCE_PREFIX, SeasonID.SEASON_1ST, databases);
     }
 
     /**
@@ -188,10 +202,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
         // NOTE: Key is "link"
         LinkedHashMap<String, String> urlTable = new LinkedHashMap<>();
 
-        String htmlContent = mHttpUtility.GetHtmlContent(
-                mContext.getString(R.string.database_updater1_url_prefix) +
-                        mContext.getString(R.string.database_updater1_entry_page)
-        );
+        String htmlContent = mHttpUtility.GetHtmlContent(URL_PREFIX + ENTRY_PAGE);
         Document doc = Jsoup.parse(htmlContent);
         // Select the main area
         Elements mainAreaItems = doc.select("nav[class=items-nav]");
@@ -238,7 +249,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
      */
     private LinkedList<String> _getAllItemSubpageUrls(String seriesRelativeUrl) throws HttpUtility.ServerErrorException, IOException
     {
-        String urlString = mContext.getString(R.string.database_updater1_url_prefix) + seriesRelativeUrl;
+        String urlString = URL_PREFIX + seriesRelativeUrl;
         String htmlContent = mHttpUtility.GetHtmlContent(urlString);
 
         // Parse
@@ -283,7 +294,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
             throws HttpUtility.ServerErrorException, IOException
     {
         // Get "detail page"
-        String subpageUrlString = mContext.getString(R.string.database_updater1_url_prefix) + itemSubpageUrl;
+        String subpageUrlString = URL_PREFIX + itemSubpageUrl;
         String subpageHtmlContent = mHttpUtility.GetHtmlContent(subpageUrlString);
         // Parse
         Document subpageDoc = Jsoup.parse(subpageHtmlContent);
@@ -315,10 +326,10 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
         for (Element detailNode: detailNodes) {
             Element detailNodeTitleNode = detailNode.select("div[class=-title]").first();
             String detailNodeTitle = detailNodeTitleNode.text();
-            if (detailNodeTitle.equals(mContext.getString(R.string.database_updater1_jp_keyword_category))) {
+            if (detailNodeTitle.equals(JP_KEYWORD_CATEGORY)) {
                 // 4. Category
                 localItem.Category = detailNode.select("div[class=-value]").first().text();
-            } else if (detailNodeTitle.equals(mContext.getString(R.string.database_updater1_jp_keyword_color))) {
+            } else if (detailNodeTitle.equals(JP_KEYWORD_COLOR)) {
                 // 5. Color
                 localItem.Color = detailNode.select("div[class=-value]").first().text();
             } else {
