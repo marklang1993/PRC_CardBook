@@ -14,12 +14,14 @@ import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseComparator;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

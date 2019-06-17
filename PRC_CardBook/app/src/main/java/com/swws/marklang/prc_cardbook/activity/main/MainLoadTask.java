@@ -7,11 +7,13 @@ import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.MathUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseComparator;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
 
@@ -88,6 +90,10 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
                     mProgressValues[3] - 1);
             publishProgress(currentProgress);
         }
+
+        // Sort
+        // * Collections.sort() implemented by Merge Sort which is stable.
+        Collections.sort(mDatabases, new DatabaseComparator());
 
         // Update progress value
         publishProgress(mProgressValues[3]);
