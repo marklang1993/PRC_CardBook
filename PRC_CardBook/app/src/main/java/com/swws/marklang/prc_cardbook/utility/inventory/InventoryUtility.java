@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.migration.Migration;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
@@ -84,7 +82,6 @@ public class InventoryUtility {
 
         return countCardInventory;
     }
-
 
     /**
      * Insert new inventory item

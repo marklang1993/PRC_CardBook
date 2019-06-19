@@ -10,4 +10,15 @@
     <color name="red">#FF0000</color>
     <color name="green">#00FF00</color>
     <color name="blue">#0000FF</color>
+
+    <!-- Color Variation for JR Item -->
+    <color name="JR_pink">#FF1493</color>
+    <color name="JR_yellow">#E0E000</color>
+    <color name="JR_blue">#0040FF</color>
+    <color name="JR_red">#E04000</color>
+    <color name="JR_green">#00BF40</color>
+    <color name="JR_purple">#9932CC</color>
+    <color name="JR_black">#000000</color>
+    <color name="JR_gold">#FFD700</color>
+
 </resources>

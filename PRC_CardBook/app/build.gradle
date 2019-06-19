@@ -43,6 +43,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.11.3'
     // Apache commons-io
     implementation 'commons-io:commons-io:2.6'
+    // RichTextView Library
+    implementation 'com.androidessence.lib:richtextview:1.0.4'
 }
 
 configurations.all {

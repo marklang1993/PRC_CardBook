@@ -15,6 +15,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidessence.lib.RichTextView;
+import com.google.zxing.common.StringUtils;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
@@ -37,6 +39,8 @@ public class CardItemAdapter extends BaseAdapter {
     private int mColorGreen;
     private int mColorBlue;
 
+    private int[] mJRColors;
+
     public CardItemAdapter(Context context, Database database, Resources res) {
         mDatabase = database;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,6 +51,16 @@ public class CardItemAdapter extends BaseAdapter {
         mColorRed = ContextCompat.getColor(mContext, R.color.red);
         mColorGreen = ContextCompat.getColor(mContext, R.color.green);
         mColorBlue = ContextCompat.getColor(mContext, R.color.blue);
+
+        mJRColors = new int[CardDetailActivity.JR_COLOR_TOTAL_COUNT];
+        mJRColors[0] = ContextCompat.getColor(mContext, R.color.JR_pink);
+        mJRColors[1] = ContextCompat.getColor(mContext, R.color.JR_yellow);
+        mJRColors[2] = ContextCompat.getColor(mContext, R.color.JR_blue);
+        mJRColors[3] = ContextCompat.getColor(mContext, R.color.JR_red);
+        mJRColors[4] = ContextCompat.getColor(mContext, R.color.JR_green);
+        mJRColors[5] = ContextCompat.getColor(mContext, R.color.JR_purple);
+        mJRColors[6] = ContextCompat.getColor(mContext, R.color.JR_black);
+        mJRColors[7] = ContextCompat.getColor(mContext, R.color.JR_gold);
     }
 
     @Override
@@ -66,12 +80,13 @@ public class CardItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        // TODO: make the scrolling smoother
         View view = mInflater.inflate(R.layout.card_gridview, null);
 
         // Retrieve the UI objects
         ImageView cardImageView = (ImageView) view.findViewById(R.id.cardImageView);
         TextView cardIdTextView = (TextView) view.findViewById(R.id.cardIdTextView);
-        TextView inventoryCountTextView = (TextView) view.findViewById(R.id.inventoryCountTextView);
+        RichTextView inventoryCountTextView = (RichTextView) view.findViewById(R.id.inventoryCountTextView);
 
         // Set the UI objects
         cardIdTextView.setText(mDatabase.get(position).InternalID);
@@ -88,27 +103,51 @@ public class CardItemAdapter extends BaseAdapter {
      * @param seasonID
      * @param cardItem
      */
-    private void setCardInventoryCount(TextView tv, SeasonID seasonID, Item cardItem) {
-        // Get the count of given card inventory
+    private void setCardInventoryCount(RichTextView tv, SeasonID seasonID, Item cardItem) {
+
+        // Get item inventory count
         int countCardInventory = InventoryUtility.getInventoryCount(seasonID, cardItem);
 
-        // Set text color
-        if (countCardInventory == 0)
-        {
-            // No inventory - RED
-            tv.setTextColor(mColorRed);
+        if (!cardItem.Rarity.equals("JR")) {
+            // 1. Not a JR item
 
-        } else if (countCardInventory == 1) {
-            // Only 1 - GREEN
-            tv.setTextColor(mColorGreen);
+            // Set text color
+            if (countCardInventory == 0)
+            {
+                // No inventory - RED
+                tv.setTextColor(mColorRed);
+
+            } else if (countCardInventory == 1) {
+                // Only 1 - GREEN
+                tv.setTextColor(mColorGreen);
+
+            } else {
+                // More than 1 - BLUE
+                tv.setTextColor(mColorBlue);
+            }
+
+            // Set text of inventory count
+            tv.setText(String.valueOf(countCardInventory));
 
         } else {
-            // More than 1 - BLUE
-            tv.setTextColor(mColorBlue);
+            // 2. JR item
+            String starString = "★";
+            String targetString = String.format("%0" + CardDetailActivity.JR_COLOR_TOTAL_COUNT + "d", 0)
+                    .replace("0", starString);
+            tv.setText(targetString);
+            
+            // Set displayed color based on the corresponding item color
+            for (int i = 0; i < CardDetailActivity.JR_COLOR_TOTAL_COUNT; ++i) {
+                int shiftBitCount = 3 * i;
+                int currentJRItemInventory = (countCardInventory >>> shiftBitCount)
+                        & CardDetailActivity.MAX_JR_INVENTORY_COUNT;
+                // Check the inventory
+                if (currentJRItemInventory > 0) {
+                    tv.colorSpan(i, i + 1, RichTextView.ColorFormatType.FOREGROUND, mJRColors[i]);
+                }
+            }
         }
 
-        // Set text of inventory count
-        tv.setText(String.valueOf(countCardInventory));
     }
 
     /**

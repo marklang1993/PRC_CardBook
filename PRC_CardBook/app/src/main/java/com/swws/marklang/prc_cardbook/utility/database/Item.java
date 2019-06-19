@@ -47,6 +47,23 @@ public class Item implements Parcelable {
     }
 
     /**
+     * Copy constructor
+     */
+    public Item(Item src) {
+        // Init. all attributes with null
+        ItemImage = src.ItemImage;
+        InternalID = src.InternalID;
+        ItemName = src.ItemName;
+        Category = src.Category;
+        Type = src.Type;
+        Brand = src.Brand;
+        Rarity = src.Rarity;
+        Score = src.Score;
+        Color = src.Color;
+        Remarks = src.Remarks;
+    }
+
+    /**
      * Construct this item by using an item string that contains 10 attributes
      * @param itemString
      */

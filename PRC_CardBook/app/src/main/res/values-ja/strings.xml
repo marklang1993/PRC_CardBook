@@ -23,6 +23,15 @@
     <string name="card_detail_score">いいね</string>
     <string name="card_detail_inventory_count">数量：</string>
 
+    <string name="card_detail_JR_color_pink">ピンク</string>
+    <string name="card_detail_JR_color_yellow">イエロー</string>
+    <string name="card_detail_JR_color_blue">ブルー</string>
+    <string name="card_detail_JR_color_red">レッド</string>
+    <string name="card_detail_JR_color_green">グリーン</string>
+    <string name="card_detail_JR_color_purple">パープル</string>
+    <string name="card_detail_JR_color_black">ブラック</string>
+    <string name="card_detail_JR_color_gold">ゴールド</string>
+
     <string name="card_detail_item_name_copied">コーデの名前をコピーしました</string>
 
 
