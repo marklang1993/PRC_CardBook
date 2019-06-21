@@ -46,6 +46,8 @@
     <string name="button_start_text">開始</string>
     <string name="button_stop_text">中止</string>
 
+    <string name="lable_loading_text">読込み中．．．</string>
+
 
     <string name="database_update_checkbox_season1">1ST シーズン</string>
     <string name="database_update_checkbox_season2">2ND シーズン</string>

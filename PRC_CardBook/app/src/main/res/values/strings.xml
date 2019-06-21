@@ -46,6 +46,8 @@
     <string name="button_start_text">Start</string>
     <string name="button_stop_text">Stop</string>
 
+    <string name="lable_loading_text">Loading...</string>
+
 
     <string name="database_update_checkbox_season1">1ST Season</string>
     <string name="database_update_checkbox_season2">2ND Season</string>

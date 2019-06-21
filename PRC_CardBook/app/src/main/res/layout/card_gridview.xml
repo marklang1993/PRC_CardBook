@@ -16,11 +16,11 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cardImageView"
-        android:gravity="center"
-        android:textColor="@color/black"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:text="Card ID" />
+        android:gravity="center"
+        android:text="@string/lable_loading_text"
+        android:textColor="@color/black" />
 
     <com.androidessence.lib.RichTextView
         android:id="@+id/inventoryCountTextView"
@@ -30,7 +30,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="4dp"
-        android:text="Inventory"
+        android:text="@string/lable_loading_text"
         android:textAlignment="textEnd"
         android:textStyle="bold" />
 </RelativeLayout>

@@ -46,6 +46,8 @@
     <string name="button_start_text">开始</string>
     <string name="button_stop_text">停止</string>
 
+    <string name="lable_loading_text">读取中．．．</string>
+
 
     <string name="database_update_checkbox_season1">第一季</string>
     <string name="database_update_checkbox_season2">第二季</string>

@@ -27,18 +27,12 @@ import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 public class CardItemAdapter extends BaseAdapter {
 
-    private static final float SIZE_SP = 100.0f; // TODO: size
-
     private Context mContext;
     private LayoutInflater mInflater;
     private Database mDatabase;
     private Resources mRes;
 
-    // Colors from R
-    private int mColorRed;
-    private int mColorGreen;
-    private int mColorBlue;
-
+    // All JR colors
     private int[] mJRColors;
 
     public CardItemAdapter(Context context, Database database, Resources res) {
@@ -47,11 +41,7 @@ public class CardItemAdapter extends BaseAdapter {
         mContext = context;
         mRes = res;
 
-        // Init. colors
-        mColorRed = ContextCompat.getColor(mContext, R.color.red);
-        mColorGreen = ContextCompat.getColor(mContext, R.color.green);
-        mColorBlue = ContextCompat.getColor(mContext, R.color.blue);
-
+        // Init. JR colors
         mJRColors = new int[CardDetailActivity.JR_COLOR_TOTAL_COUNT];
         mJRColors[0] = ContextCompat.getColor(mContext, R.color.JR_pink);
         mJRColors[1] = ContextCompat.getColor(mContext, R.color.JR_yellow);
@@ -80,137 +70,22 @@ public class CardItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO: make the scrolling smoother
         View view = mInflater.inflate(R.layout.card_gridview, null);
 
-        // Retrieve the UI objects
-        ImageView cardImageView = (ImageView) view.findViewById(R.id.cardImageView);
-        TextView cardIdTextView = (TextView) view.findViewById(R.id.cardIdTextView);
-        RichTextView inventoryCountTextView = (RichTextView) view.findViewById(R.id.inventoryCountTextView);
+        SeasonID seasonID = mDatabase.seasonId();
+        Item item = mDatabase.get(position);
 
-        // Set the UI objects
-        cardIdTextView.setText(mDatabase.get(position).InternalID);
-        setCardImageByScaling(cardImageView, mDatabase.seasonId(), mDatabase.get(position));
-        setCardInventoryCount(inventoryCountTextView, mDatabase.seasonId(), mDatabase.get(position));
+        // Display item internal ID
+        TextView cardIdTextView = (TextView) view.findViewById(R.id.cardIdTextView);
+        cardIdTextView.setText(item.InternalID);
+
+        // Load other time-consuming resources and display
+        CardItemLoadTask loadTask = new CardItemLoadTask(mRes, view, seasonID, item, mJRColors);
+        loadTask.execute();
 
         return view;
     }
 
 
-    /**
-     * Set the inventory count of an item
-     * @param tv
-     * @param seasonID
-     * @param cardItem
-     */
-    private void setCardInventoryCount(RichTextView tv, SeasonID seasonID, Item cardItem) {
 
-        // Get item inventory count
-        int countCardInventory = InventoryUtility.getInventoryCount(seasonID, cardItem);
-
-        if (!cardItem.Rarity.equals("JR")) {
-            // 1. Not a JR item
-
-            // Set text color
-            if (countCardInventory == 0)
-            {
-                // No inventory - RED
-                tv.setTextColor(mColorRed);
-
-            } else if (countCardInventory == 1) {
-                // Only 1 - GREEN
-                tv.setTextColor(mColorGreen);
-
-            } else {
-                // More than 1 - BLUE
-                tv.setTextColor(mColorBlue);
-            }
-
-            // Set text of inventory count
-            tv.setText(String.valueOf(countCardInventory));
-
-        } else {
-            // 2. JR item
-            String starString = "★";
-            String targetString = String.format("%0" + CardDetailActivity.JR_COLOR_TOTAL_COUNT + "d", 0)
-                    .replace("0", starString);
-            tv.setText(targetString);
-            
-            // Set displayed color based on the corresponding item color
-            for (int i = 0; i < CardDetailActivity.JR_COLOR_TOTAL_COUNT; ++i) {
-                int shiftBitCount = 3 * i;
-                int currentJRItemInventory = (countCardInventory >>> shiftBitCount)
-                        & CardDetailActivity.MAX_JR_INVENTORY_COUNT;
-                // Check the inventory
-                if (currentJRItemInventory > 0) {
-                    tv.colorSpan(i, i + 1, RichTextView.ColorFormatType.FOREGROUND, mJRColors[i]);
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Scale the image and load it to ImageView iv
-     * @param iv
-     * @param seasonID
-     * @param cardItem
-     */
-    private void setCardImageByScaling(ImageView iv, SeasonID seasonID, Item cardItem) {
-        // Get card image
-        FileUtility fileUtility = new FileUtility(mContext);
-        Bitmap cardImage = fileUtility.ReadImage(
-                cardItem.ItemImage,
-                FileUtility.IMAGE_TYPE.IMAGE,
-                seasonID
-        );
-        // Get the count of given card inventory
-        int countCardInventory = InventoryUtility.getInventoryCount(seasonID, cardItem);
-
-        // Check is cardImage NULL
-        if (cardImage == null)
-        {
-            return;
-        }
-
-        // Change image color by inventory count
-        if (countCardInventory == 0)
-        {
-            // If the user does not own this card, show the card image in greyscale
-            cardImage = bitmapToGreyscale(cardImage);
-        }
-
-        // Scale
-        float side = SIZE_SP * mRes.getDisplayMetrics().scaledDensity;
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(cardImage, (int)side, (int)side, false);
-
-        // Display card image
-        iv.setScaleType(ImageView.ScaleType.CENTER);
-        iv.setImageBitmap(scaledBitmap);
-
-    }
-
-    /**
-     * Change a bitmap with color to a bitmap in greyscale
-     * @param srcBitmap
-     * @return
-     */
-    private Bitmap bitmapToGreyscale(Bitmap srcBitmap) {
-        // Create an blank grey bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth(),
-                srcBitmap.getHeight(),
-                Bitmap.Config.ARGB_8888 // NOTE: cannot use RGB565, otherwise we lose the Alpha channel
-        );
-
-        Canvas canvas = new Canvas(dstBitmap);
-        Paint paint = new Paint();
-        ColorMatrix colorMatrix = new ColorMatrix();
-        colorMatrix.setSaturation(0);
-        ColorMatrixColorFilter colorMatrixFilter = new ColorMatrixColorFilter(colorMatrix);
-        paint.setColorFilter(colorMatrixFilter);
-        canvas.drawBitmap(srcBitmap, 0, 0, paint);
-
-        return dstBitmap;
-    }
 }

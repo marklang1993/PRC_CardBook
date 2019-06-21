@@ -30,6 +30,7 @@ This project is aimed to help the players of "Kirato Prichan" to manage their po
 * ZXing 3.2.0
 * Jsoup 1.11.3
 * Apache Commons-IO 2.6
+* RichTextView 1.0.4
 
 ## Tested Devices
 * OPPO R17
