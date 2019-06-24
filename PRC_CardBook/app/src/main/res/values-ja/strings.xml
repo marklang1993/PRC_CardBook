@@ -35,9 +35,14 @@
     <string name="card_detail_item_name_copied">コーデの名前をコピーしました</string>
 
 
+    <string name="navigation_menu_item_name_profile">プロフィール</string>
+    <string name="navigation_menu_item_name_statistics">統計</string>
     <string name="navigation_menu_item_name_qrcode">QRコード</string>
+    <string name="navigation_menu_item_name_generate">図鑑生成</string>
     <string name="navigation_menu_item_name_setting">設定</string>
+    <string name="navigation_menu_item_name_system">システム機能</string>
     <string name="navigation_menu_item_name_update">データベース更新</string>
+    <string name="navigation_menu_item_name_about">アプリ情報</string>
     <string name="navigation_menu_item_name_exit">終了</string>
 
 

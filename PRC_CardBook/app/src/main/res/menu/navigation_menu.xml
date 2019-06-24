@@ -5,11 +5,23 @@
 
     <group>
         <item
+            android:id="@+id/profile_menu_item"
+            android:icon="@drawable/ic_function_profile"
+            android:title="@string/navigation_menu_item_name_profile" />
+        <item
+            android:id="@+id/statistics_menu_item"
+            android:icon="@drawable/ic_function_statistics"
+            android:title="@string/navigation_menu_item_name_statistics" />
+        <item
             android:id="@+id/qrcode_menu_item"
             android:title="@string/navigation_menu_item_name_qrcode"
             android:icon="@drawable/ic_function_qrcode">
         </item>
 
+        <item
+            android:id="@+id/generate_menu_item"
+            android:icon="@drawable/ic_function_generate"
+            android:title="@string/navigation_menu_item_name_generate" />
         <item
             android:id="@+id/setting_menu_item"
             android:title="@string/navigation_menu_item_name_setting"
@@ -17,11 +29,19 @@
         </item>
 
         <item
+            android:id="@+id/system_menu_item"
+            android:icon="@drawable/ic_function_system"
+            android:title="@string/navigation_menu_item_name_system" />
+        <item
             android:id="@+id/update_menu_item"
             android:title="@string/navigation_menu_item_name_update"
             android:icon="@drawable/ic_function_update">
         </item>
 
+        <item
+            android:id="@+id/about_menu_item"
+            android:icon="@drawable/ic_function_about"
+            android:title="@string/navigation_menu_item_name_about" />
         <item
             android:id="@+id/exit_menu_item"
             android:title="@string/navigation_menu_item_name_exit"

@@ -35,9 +35,14 @@
     <string name="card_detail_item_name_copied">套装名称已复制到剪贴板</string>
 
 
+    <string name="navigation_menu_item_name_profile">个人档案</string>
+    <string name="navigation_menu_item_name_statistics">统计</string>
     <string name="navigation_menu_item_name_qrcode">二维码</string>
+    <string name="navigation_menu_item_name_generate">生成图鉴</string>
     <string name="navigation_menu_item_name_setting">设定</string>
+    <string name="navigation_menu_item_name_system">系统功能</string>
     <string name="navigation_menu_item_name_update">更新数据</string>
+    <string name="navigation_menu_item_name_about">关于</string>
     <string name="navigation_menu_item_name_exit">退出</string>
 
 
