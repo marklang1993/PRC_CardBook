@@ -128,12 +128,23 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
 
         } else {
             // 2. JR item
-            String starString = "★";
-            String targetString = String.format("%0" + CardDetailActivity.JR_COLOR_TOTAL_COUNT + "d", 0)
-                    .replace("0", starString);
-            tv.setText(targetString);
+            StringBuilder targetStringBuilder = new StringBuilder(CardDetailActivity.JR_COLOR_TOTAL_COUNT);
 
-            // Set displayed color based on the corresponding item color
+            // Set displayed string based on the inventory of the item with corresponding color
+            for (int i = 0; i < CardDetailActivity.JR_COLOR_TOTAL_COUNT; ++i) {
+                int shiftBitCount = 3 * i;
+                int currentJRItemInventory = (countCardInventory >>> shiftBitCount)
+                        & CardDetailActivity.MAX_JR_INVENTORY_COUNT;
+                // Check the inventory
+                if (currentJRItemInventory > 0) {
+                    targetStringBuilder.append("★");
+                } else {
+                    targetStringBuilder.append("☆");
+                }
+            }
+            tv.setText(targetStringBuilder.toString());
+
+            // Set displayed color based on the inventory of the item with corresponding color
             for (int i = 0; i < CardDetailActivity.JR_COLOR_TOTAL_COUNT; ++i) {
                 int shiftBitCount = 3 * i;
                 int currentJRItemInventory = (countCardInventory >>> shiftBitCount)
