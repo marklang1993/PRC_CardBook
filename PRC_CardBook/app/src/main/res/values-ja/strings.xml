@@ -15,6 +15,9 @@
     <string name="main_load_title">読込み中．．．</string>
 
 
+    <string name="profile_default_name">プリチャンアイドル</string>
+
+
     <string name="card_detail_category">カテゴリー</string>
     <string name="card_detail_color">カラー</string>
     <string name="card_detail_brand">ブランド</string>

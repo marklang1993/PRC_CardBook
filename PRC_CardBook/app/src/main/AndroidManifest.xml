@@ -20,42 +20,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <!--#1-->
-        <activity
-            android:name=".activity.main.MainLoadActivity">
-
+        <activity android:name=".activity.main.MainLoadActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--#2-->
-        <activity
-            android:name=".activity.main.MainActivity">
-        </activity>
-
-        <!--#3-->
-        <activity
-            android:name=".activity.card.CardActivity">
-        </activity>
-
-        <!--#4-->
-        <activity
-            android:name=".activity.card.CardDetailActivity">
-        </activity>
-
-        <!--#5-->
-        <activity
-            android:name=".activity.qrcode.ScannerActivity">
-        </activity>
-
-        <!--#6-->
-        <activity
-            android:name=".activity.update.DatabaseUpdateActivity">
-        </activity>
-
+        <activity android:name=".activity.profile.ProfileActivity"></activity>
+        <activity android:name=".activity.main.MainActivity"></activity>
+        <activity android:name=".activity.card.CardActivity"></activity>
+        <activity android:name=".activity.card.CardDetailActivity"></activity>
+        <activity android:name=".activity.qrcode.ScannerActivity"></activity>
+        <activity android:name=".activity.update.DatabaseUpdateActivity"></activity>
     </application>
 
 </manifest>

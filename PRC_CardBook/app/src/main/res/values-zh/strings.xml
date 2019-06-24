@@ -15,6 +15,9 @@
     <string name="main_load_title">读取中．．．</string>
 
 
+    <string name="profile_default_name">美妙频道偶像</string>
+
+
     <string name="card_detail_category">种类</string>
     <string name="card_detail_color">颜色</string>
     <string name="card_detail_brand">品牌</string>

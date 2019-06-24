@@ -15,6 +15,9 @@
     <string name="main_load_title">Loading...</string>
 
 
+    <string name="profile_default_name">Prichan Idol</string>
+
+
     <string name="card_detail_category">Category</string>
     <string name="card_detail_color">Color</string>
     <string name="card_detail_brand">Brand</string>

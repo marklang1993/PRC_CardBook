@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
+import com.swws.marklang.prc_cardbook.activity.profile.ProfileActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initDrawer() {
         // Init. DrawerLayout and DrawerToggle
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_main_activity);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main_activity);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -91,23 +92,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
-                boolean result;
+                boolean result = true;
 
                 switch (id)
                 {
+                    case R.id.profile_menu_item:
+                        // Start "profile setting" activity
+                        Intent profileSettingActivityIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        startActivity(profileSettingActivityIntent);
+                        break;
+
                     case R.id.qrcode_menu_item:
-                        result = true;
                         // Start QRCode Scanner
                         Intent scannerActivityIntent = new Intent(getApplicationContext(), ScannerActivity.class);
                         startActivity(scannerActivityIntent);
                         break;
 
                     case R.id.setting_menu_item:
-                        result = true;
                         break;
 
                     case R.id.update_menu_item:
-                        result = true;
                         // Start the "local database update" activity
                         Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
                         databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 0); // "0" means it is started by user
@@ -115,17 +119,17 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.exit_menu_item:
-                        result = true;
                         finishAndRemoveTask(); // MUST be used since API 21
                         break;
 
                     default:
+                        // Unknown selection
                         result = false;
                         break;
                 }
 
                 // Shrink the navigation view
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerlayout_main_activity);
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_main_activity);
                 drawer.closeDrawer(GravityCompat.START);
                 return result;
             }
