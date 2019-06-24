@@ -43,7 +43,7 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
         mParentActivity = parentActivity;
         mMainLoadProgressBar = mainLoadProgressBar;
 
-        mDatabaseFileUtility = new DatabaseFileUtility(parentActivity.getApplicationContext());
+        mDatabaseFileUtility = DatabaseFileUtility.getInstance();
     }
 
     @Override

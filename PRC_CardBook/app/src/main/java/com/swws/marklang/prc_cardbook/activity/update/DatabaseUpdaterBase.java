@@ -45,7 +45,7 @@ public class DatabaseUpdaterBase {
 
         // Init. IO Utilities
         mHttpUtility = new HttpUtility();
-        mDatabaseFileUtility = new DatabaseFileUtility(mContext);
+        mDatabaseFileUtility = DatabaseFileUtility.getInstance();
     }
 
     /**

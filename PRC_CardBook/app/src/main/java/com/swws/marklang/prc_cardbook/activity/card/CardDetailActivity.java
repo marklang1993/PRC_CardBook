@@ -430,8 +430,7 @@ public class CardDetailActivity extends AppCompatActivity {
      */
     private void setImageByScaling(ImageView iv, String imageOnlinePath, DatabaseFileUtility.IMAGE_TYPE imageType, float targetSize) {
         // Get image
-        DatabaseFileUtility databaseFileUtility = new DatabaseFileUtility(getApplicationContext());
-        Bitmap image = databaseFileUtility.ReadImage(imageOnlinePath, imageType, mSeasonID);
+        Bitmap image = DatabaseFileUtility.getInstance().ReadImage(imageOnlinePath, imageType, mSeasonID);
 
         // Check is image NULL
         if (image == null)

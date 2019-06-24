@@ -164,8 +164,7 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
      */
     private Bitmap getScaledCardImage(SeasonID seasonID, Item cardItem) {
         // Get card image
-        DatabaseFileUtility databaseFileUtility = new DatabaseFileUtility(mContext);
-        Bitmap cardImage = databaseFileUtility.ReadImage(
+        Bitmap cardImage = DatabaseFileUtility.getInstance().ReadImage(
                 cardItem.ItemImage,
                 DatabaseFileUtility.IMAGE_TYPE.IMAGE,
                 seasonID

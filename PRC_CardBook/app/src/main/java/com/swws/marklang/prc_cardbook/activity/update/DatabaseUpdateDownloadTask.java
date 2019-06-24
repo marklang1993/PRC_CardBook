@@ -63,7 +63,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         mContext = mParentActivity.getApplicationContext();
 
         // Init. File Utilities
-        mDatabaseFileUtility = new DatabaseFileUtility(mContext);
+        mDatabaseFileUtility = DatabaseFileUtility.getInstance();
 
         // Get StartOption
         mStartOption = startOption;

@@ -1,21 +1,15 @@
 package com.swws.marklang.prc_cardbook.utility.database;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
-import com.swws.marklang.prc_cardbook.utility.database.Database;
-import com.swws.marklang.prc_cardbook.utility.database.Item;
-import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,19 +17,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
-public class DatabaseFileUtility {
+public final class DatabaseFileUtility extends FileUtility{
 
-    private final String TOP_DIR = "data";
-    private final String IMAGE_DIR = TOP_DIR + "/image/";
-    private final String BRAND_DIR = TOP_DIR + "/brand/";
-    private final String TYPE_DIR = TOP_DIR + "/type/";
-
-    private final String META_FILE = TOP_DIR + "/meta.txt";
-
-    private String mInternalPath;
+    // Singleton instance
+    private static DatabaseFileUtility mDatabaseFileUtility = null;
 
     // Constants
-    private final int LENGTH_DATABASE_LINE_HEADER = 4;
+    private static final String TOP_DIR = "data";
+    private static final String IMAGE_DIR = TOP_DIR + "/image/";
+    private static final String BRAND_DIR = TOP_DIR + "/brand/";
+    private static final String TYPE_DIR = TOP_DIR + "/type/";
+    private static final String META_FILE = TOP_DIR + "/meta.txt";
+
+    private static final int LENGTH_DATABASE_LINE_HEADER = 4;
 
     /**
      * Type of the image
@@ -61,123 +55,25 @@ public class DatabaseFileUtility {
 
     /**
      * Constructor
-     * @param context
      */
-    public DatabaseFileUtility(Context context)
+    private DatabaseFileUtility()
     {
-        // Get internal path from Context
-        mInternalPath = context.getFilesDir().getPath();
-
         // Check the existence of TOP_DIR
-        File topDir = new File(mInternalPath + "/" + TOP_DIR);
-        if (!topDir.exists()) {
-            // Create TOP_DIR
-            topDir.mkdir();
-        }
+        // TODO: check the return value
+        checkAndMakeDirectory(TOP_DIR);
     }
 
     /**
-     * Get BufferedReader (For text file)
-     * @param fileName relative path w.r.t "internalPath"
+     * Get an instance of DatabaseFileUtility
      * @return
      */
-    private BufferedReader _getReader(String fileName)
+    public static DatabaseFileUtility getInstance()
     {
-        try
-        {
-            FileReader fileReader = new FileReader(mInternalPath + "/" + fileName);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            return bufferedReader;
+        // TODO: thread-safe?
+        if (mDatabaseFileUtility == null) {
+            mDatabaseFileUtility = new DatabaseFileUtility();
         }
-        catch (Exception ex) {
-            return null;
-        }
-    }
-
-    /**
-     * Read one line text from BufferedReader
-     * @param reader
-     * @param isPrint Output to Log.i() ?
-     * @return
-     */
-    private String _readLine(BufferedReader reader, Boolean isPrint)
-    {
-        try
-        {
-            String line = reader.readLine();
-            if (isPrint)
-            {
-                if (line != null)
-                {
-                    Log.i(this.getClass().getSimpleName(), "Reader: " + line);
-                }
-            }
-            return line;
-
-        } catch (IOException ex) {
-
-            Log.e(this.getClass().getSimpleName(), String.format("Read line failed"));
-            return null;
-        }
-    }
-
-    /**
-     * Get BufferedWriter (For text file)
-     * @param fileName relative path w.r.t "internalPath"
-     * @return
-     */
-    private BufferedWriter _getWriter(String fileName)
-    {
-        try
-        {
-            FileWriter fileWriter = new FileWriter(mInternalPath + "/" + fileName);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-            return bufferedWriter;
-        }
-        catch (Exception ex) {
-            return null;
-        }
-    }
-
-    /**
-     * Read one line text from BufferedReader
-     * @param writer
-     * @param line One line text
-     * @param isPrint Output to Log.i() ?
-     * @return
-     */
-    private void _writeLine(BufferedWriter writer, String line, Boolean isPrint)
-    {
-        try
-        {
-            writer.write(line, 0, line.length());
-            writer.write('\n');
-            if (isPrint)
-            {
-                Log.i(this.getClass().getSimpleName(), "Writer: " + line);
-            }
-
-        } catch (IOException ex)
-        {
-            Log.e(this.getClass().getSimpleName(), String.format("Write line failed: %s", line));
-        }
-    }
-
-    /**
-     * Close a BufferedReader or BufferedWriter
-     * @param operator
-     */
-    private void _close(Closeable operator)
-    {
-        try {
-            operator.close();
-        }
-        catch (Exception ex)
-        {
-            System.err.println("Close operator failed.");
-        }
+        return mDatabaseFileUtility;
     }
 
     /**
@@ -185,15 +81,7 @@ public class DatabaseFileUtility {
      * @return
      */
     public boolean IsMetadataFilePresented() {
-        BufferedReader bufferedReader = _getReader(META_FILE);
-
-        if (bufferedReader == null) {
-            // Metadata file is not presented OR not accessible.
-            return false;
-        }
-
-        _close(bufferedReader);
-        return true;
+        return isFilePresented(META_FILE);
     }
 
     /**
@@ -203,14 +91,14 @@ public class DatabaseFileUtility {
      */
     public ArrayList<Database> ReadAllMetaData(Boolean isPrint)
     {
-        BufferedReader bufferedReader = _getReader(META_FILE);
+        BufferedReader bufferedReader = getReader(META_FILE);
         ArrayList<Database> listDataBase = new ArrayList<>();
 
         // Read data
         try
         {
             Database database = null;
-            String line = _readLine(bufferedReader, isPrint);
+            String line = readLine(bufferedReader, isPrint);
             while(line != null) {
                 // Process
                 if (database == null) {
@@ -240,14 +128,14 @@ public class DatabaseFileUtility {
                     }
                 }
                 // Read Next Line
-                line = _readLine(bufferedReader, isPrint);
+                line = readLine(bufferedReader, isPrint);
             }
 
         } catch (InvalidDataFormatException ex) {
             Log.e(this.getClass().getSimpleName(), String.format("Invalid Data Format: %s", ex.InvalidData));
 
         } finally {
-            _close(bufferedReader);
+            close(bufferedReader);
         }
 
         return listDataBase;
@@ -260,7 +148,7 @@ public class DatabaseFileUtility {
      */
     public void WriteAllMetaData(LinkedList<Database> databases, Boolean isPrint)
     {
-        BufferedWriter bufferedWriter = _getWriter(META_FILE);
+        BufferedWriter bufferedWriter = getWriter(META_FILE);
         Iterator<Database> iterator = databases.iterator();
         int cursor = 0;
         while (iterator.hasNext())
@@ -270,7 +158,7 @@ public class DatabaseFileUtility {
             ++cursor;
 
             // Write the name and url of the database
-            _writeLine(bufferedWriter,
+            writeLine(bufferedWriter,
                     String.format(Locale.JAPAN, "%d,%s,%s,%s",
                             cursor,
                             database.name(),
@@ -282,21 +170,21 @@ public class DatabaseFileUtility {
             // Write all items
             for (Item item:
                     database) {
-                _writeLine(bufferedWriter,
+                writeLine(bufferedWriter,
                         item.toString(),
                         isPrint
                 );
             }
 
             // Write one more line as separator
-            _writeLine(bufferedWriter,
+            writeLine(bufferedWriter,
                     "",
                     isPrint
             );
         }
 
         // Close the writer
-        _close(bufferedWriter);
+        close(bufferedWriter);
     }
 
 
@@ -312,16 +200,16 @@ public class DatabaseFileUtility {
         switch (imageType)
         {
             case IMAGE:
-                directory = mInternalPath + "/" + IMAGE_DIR + seasonDir + "/";
+                directory = getInternalPath() + "/" + IMAGE_DIR + seasonDir + "/";
                 break;
 
             case BRAND:
-                directory = mInternalPath + "/" + BRAND_DIR + seasonDir + "/";
+                directory = getInternalPath() + "/" + BRAND_DIR + seasonDir + "/";
                 break;
 
             default:
                 // TYPE
-                directory = mInternalPath + "/" + TYPE_DIR + seasonDir + "/";
+                directory = getInternalPath() + "/" + TYPE_DIR + seasonDir + "/";
                 break;
         }
 

@@ -1,5 +1,6 @@
 package com.swws.marklang.prc_cardbook.activity.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 
 public class MainLoadActivity extends AppCompatActivity {
 
+    private static Context mApplicationContext;
+
     public static final String KEY_INIT_DB_OPTION = "com.swws.marklang.prc_cardbook.INIT_DB_OPTION";
     private boolean isStartedByMain;
 
@@ -23,6 +26,9 @@ public class MainLoadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_load);
+
+        // Get application context
+        mApplicationContext = getApplicationContext();
 
         // Init. UIs
         setTitle(getString(R.string.main_load_activity_name));
@@ -39,9 +45,9 @@ public class MainLoadActivity extends AppCompatActivity {
         }
 
         // Check is metadata presented
-        mDatabaseFileUtility = new DatabaseFileUtility(getApplicationContext());
+        mDatabaseFileUtility = DatabaseFileUtility.getInstance();
         if (!mDatabaseFileUtility.IsMetadataFilePresented()) {
-            // Forcely start "local database update" activity
+            // Have to start "local database update" activity to download all initial data
             Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
             databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 1); // "1" means it is started by app.
             startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_UPDATE_RESULT_APP);
@@ -130,5 +136,13 @@ public class MainLoadActivity extends AppCompatActivity {
                 finishAndRemoveTask(); // MUST be used since API 21
             }
         }
+    }
+
+    /**
+     * Get current application context
+     * @return
+     */
+    public static Context getCurrentApplicationContext() {
+        return mApplicationContext;
     }
 }
