@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
-
 import java.io.File;
 
 public class Item implements Parcelable {
@@ -67,11 +65,11 @@ public class Item implements Parcelable {
      * Construct this item by using an item string that contains 10 attributes
      * @param itemString
      */
-    public Item(String itemString) throws FileUtility.InvalidDataFormatException {
+    public Item(String itemString) throws DatabaseFileUtility.InvalidDataFormatException {
 
         String[] tokens = itemString.split(",");
         if (tokens.length != Item.COUNT_ATTRIBUTES) {
-            throw new FileUtility.InvalidDataFormatException(itemString);
+            throw new DatabaseFileUtility.InvalidDataFormatException(itemString);
         }
 
         // Init. all attributes
@@ -142,7 +140,7 @@ public class Item implements Parcelable {
             Item restoredItem = null;
             try {
                 restoredItem = new Item(src.readString());
-            } catch (FileUtility.InvalidDataFormatException ex) {
+            } catch (DatabaseFileUtility.InvalidDataFormatException ex) {
                 Log.e(this.getClass().getSimpleName(), String.format("Invalid Data Format: %s", ex.InvalidData));
             }
 

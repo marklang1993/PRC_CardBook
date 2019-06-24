@@ -14,7 +14,7 @@ import android.widget.ImageView;
 
 import com.androidessence.lib.RichTextView;
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
@@ -164,10 +164,10 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
      */
     private Bitmap getScaledCardImage(SeasonID seasonID, Item cardItem) {
         // Get card image
-        FileUtility fileUtility = new FileUtility(mContext);
-        Bitmap cardImage = fileUtility.ReadImage(
+        DatabaseFileUtility databaseFileUtility = new DatabaseFileUtility(mContext);
+        Bitmap cardImage = databaseFileUtility.ReadImage(
                 cardItem.ItemImage,
-                FileUtility.IMAGE_TYPE.IMAGE,
+                DatabaseFileUtility.IMAGE_TYPE.IMAGE,
                 seasonID
         );
         // Get the count of given card inventory

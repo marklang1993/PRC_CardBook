@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
 import com.swws.marklang.prc_cardbook.utility.MathUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
@@ -22,7 +22,7 @@ public class DatabaseUpdaterBase {
     protected Context mContext;
 
     protected HttpUtility mHttpUtility;
-    protected FileUtility mFileUtility;
+    protected DatabaseFileUtility mDatabaseFileUtility;
 
     /**
      * Index: Message
@@ -45,7 +45,7 @@ public class DatabaseUpdaterBase {
 
         // Init. IO Utilities
         mHttpUtility = new HttpUtility();
-        mFileUtility = new FileUtility(mContext);
+        mDatabaseFileUtility = new DatabaseFileUtility(mContext);
     }
 
     /**
@@ -125,31 +125,31 @@ public class DatabaseUpdaterBase {
                 );
 
                 // Download ItemImage
-                mFileUtility.DownloadImage(
+                mDatabaseFileUtility.DownloadImage(
                         allImageNames,
                         currentUrlPrefix,
                         item.ItemImage,
-                        FileUtility.IMAGE_TYPE.IMAGE,
+                        DatabaseFileUtility.IMAGE_TYPE.IMAGE,
                         seasonID,
                         mHttpUtility,
                         mIsPrintDebug
                 );
                 // Download BrandImage
-                mFileUtility.DownloadImage(
+                mDatabaseFileUtility.DownloadImage(
                         null,
                         currentUrlPrefix,
                         item.Brand,
-                        FileUtility.IMAGE_TYPE.BRAND,
+                        DatabaseFileUtility.IMAGE_TYPE.BRAND,
                         seasonID,
                         mHttpUtility,
                         mIsPrintDebug
                 );
                 // Download TypeImage
-                mFileUtility.DownloadImage(
+                mDatabaseFileUtility.DownloadImage(
                         null,
                         currentUrlPrefix,
                         item.Type,
-                        FileUtility.IMAGE_TYPE.TYPE,
+                        DatabaseFileUtility.IMAGE_TYPE.TYPE,
                         seasonID,
                         mHttpUtility,
                         mIsPrintDebug

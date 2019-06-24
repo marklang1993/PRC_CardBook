@@ -2,27 +2,17 @@ package com.swws.marklang.prc_cardbook.activity.card;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.androidessence.lib.RichTextView;
-import com.google.zxing.common.StringUtils;
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
-import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 
 public class CardItemAdapter extends BaseAdapter {

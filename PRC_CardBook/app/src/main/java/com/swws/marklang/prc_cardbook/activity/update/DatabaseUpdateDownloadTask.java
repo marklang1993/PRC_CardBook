@@ -2,7 +2,6 @@ package com.swws.marklang.prc_cardbook.activity.update;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -11,22 +10,15 @@ import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
-import com.swws.marklang.prc_cardbook.utility.database.DatabaseComparator;
-import com.swws.marklang.prc_cardbook.utility.database.Item;
-import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean> {
 
@@ -38,7 +30,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
     private TextView mDatabaseUpdateStatusTextView;
     private ArrayList<CheckBox> mCheckBoxArrayList;
 
-    private FileUtility mFileUtility;
+    private DatabaseFileUtility mDatabaseFileUtility;
 
     private ArrayList<IDatabaseUpdater> mUpdaterList;
 
@@ -71,7 +63,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         mContext = mParentActivity.getApplicationContext();
 
         // Init. File Utilities
-        mFileUtility = new FileUtility(mContext);
+        mDatabaseFileUtility = new DatabaseFileUtility(mContext);
 
         // Get StartOption
         mStartOption = startOption;
@@ -269,7 +261,7 @@ public class DatabaseUpdateDownloadTask extends AsyncTask<Void, String, Boolean>
         }
 
         // Go to write metadata
-        mFileUtility.WriteAllMetaData(newDatabases, mIsPrintDebug);
+        mDatabaseFileUtility.WriteAllMetaData(newDatabases, mIsPrintDebug);
     }
 
     /**

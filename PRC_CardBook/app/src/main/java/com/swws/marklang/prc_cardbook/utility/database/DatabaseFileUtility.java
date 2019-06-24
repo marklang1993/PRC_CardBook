@@ -1,11 +1,11 @@
-package com.swws.marklang.prc_cardbook.utility;
+package com.swws.marklang.prc_cardbook.utility.database;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.utility.HttpUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
@@ -20,12 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Map;
 
-public class FileUtility {
+public class DatabaseFileUtility {
 
     private final String TOP_DIR = "data";
     private final String IMAGE_DIR = TOP_DIR + "/image/";
@@ -35,7 +33,6 @@ public class FileUtility {
     private final String META_FILE = TOP_DIR + "/meta.txt";
 
     private String mInternalPath;
-    private Context mContext;
 
     // Constants
     private final int LENGTH_DATABASE_LINE_HEADER = 4;
@@ -66,10 +63,10 @@ public class FileUtility {
      * Constructor
      * @param context
      */
-    public FileUtility(Context context)
+    public DatabaseFileUtility(Context context)
     {
-        mContext = context;
-        mInternalPath = mContext.getFilesDir().getPath();
+        // Get internal path from Context
+        mInternalPath = context.getFilesDir().getPath();
 
         // Check the existence of TOP_DIR
         File topDir = new File(mInternalPath + "/" + TOP_DIR);

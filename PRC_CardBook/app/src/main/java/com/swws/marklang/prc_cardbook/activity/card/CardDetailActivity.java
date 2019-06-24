@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
@@ -161,9 +161,9 @@ public class CardDetailActivity extends AppCompatActivity {
         TextView scoreContentTextView = (TextView) findViewById(R.id.scoreContentTextView);
 
         // Set images
-        setImageByScaling(cardBigImageView, mCardItem.ItemImage, FileUtility.IMAGE_TYPE.IMAGE, CARD_BIG_IMAGE_SIZE_SP);
-        setImageByScaling(brandContentTextView, mCardItem.Brand, FileUtility.IMAGE_TYPE.BRAND,-1.0f);
-        setImageByScaling(typeContentImageView, mCardItem.Type, FileUtility.IMAGE_TYPE.TYPE,-1.0f);
+        setImageByScaling(cardBigImageView, mCardItem.ItemImage, DatabaseFileUtility.IMAGE_TYPE.IMAGE, CARD_BIG_IMAGE_SIZE_SP);
+        setImageByScaling(brandContentTextView, mCardItem.Brand, DatabaseFileUtility.IMAGE_TYPE.BRAND,-1.0f);
+        setImageByScaling(typeContentImageView, mCardItem.Type, DatabaseFileUtility.IMAGE_TYPE.TYPE,-1.0f);
 
         // Set values for static information
         cardNameTextView.setText(mCardItem.ItemName.replace(' ', '\n'));
@@ -428,10 +428,10 @@ public class CardDetailActivity extends AppCompatActivity {
      * @param imageOnlinePath
      * @param targetSize
      */
-    private void setImageByScaling(ImageView iv, String imageOnlinePath, FileUtility.IMAGE_TYPE imageType, float targetSize) {
+    private void setImageByScaling(ImageView iv, String imageOnlinePath, DatabaseFileUtility.IMAGE_TYPE imageType, float targetSize) {
         // Get image
-        FileUtility fileUtility = new FileUtility(getApplicationContext());
-        Bitmap image = fileUtility.ReadImage(imageOnlinePath, imageType, mSeasonID);
+        DatabaseFileUtility databaseFileUtility = new DatabaseFileUtility(getApplicationContext());
+        Bitmap image = databaseFileUtility.ReadImage(imageOnlinePath, imageType, mSeasonID);
 
         // Check is image NULL
         if (image == null)

@@ -3,7 +3,6 @@ package com.swws.marklang.prc_cardbook.activity.update;
 import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
 import com.swws.marklang.prc_cardbook.utility.MathUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;

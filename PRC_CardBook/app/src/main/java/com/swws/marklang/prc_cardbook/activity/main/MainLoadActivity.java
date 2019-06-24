@@ -9,14 +9,14 @@ import android.widget.ProgressBar;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 
 public class MainLoadActivity extends AppCompatActivity {
 
     public static final String KEY_INIT_DB_OPTION = "com.swws.marklang.prc_cardbook.INIT_DB_OPTION";
     private boolean isStartedByMain;
 
-    private FileUtility mFileUtility;
+    private DatabaseFileUtility mDatabaseFileUtility;
     private MainLoadTask mMainLoadTask;
 
     @Override
@@ -39,8 +39,8 @@ public class MainLoadActivity extends AppCompatActivity {
         }
 
         // Check is metadata presented
-        mFileUtility = new FileUtility(getApplicationContext());
-        if (!mFileUtility.IsMetadataFilePresented()) {
+        mDatabaseFileUtility = new DatabaseFileUtility(getApplicationContext());
+        if (!mDatabaseFileUtility.IsMetadataFilePresented()) {
             // Forcely start "local database update" activity
             Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
             databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 1); // "1" means it is started by app.

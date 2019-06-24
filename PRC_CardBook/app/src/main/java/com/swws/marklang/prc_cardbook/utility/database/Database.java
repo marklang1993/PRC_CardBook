@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -49,7 +47,7 @@ public class Database implements Iterable<Item>, Parcelable {
             try {
                 newItem = new Item(src.readString());
 
-            } catch (FileUtility.InvalidDataFormatException ex) {
+            } catch (DatabaseFileUtility.InvalidDataFormatException ex) {
                 Log.e(this.getClass().getSimpleName(), String.format("Invalid Data Format: %s", ex.InvalidData));
             }
             mAllItems.add(newItem);
@@ -69,7 +67,7 @@ public class Database implements Iterable<Item>, Parcelable {
      * Add an item by using an item string that contains 10 attributes
      * @param itemString
      */
-    public void Insert(String itemString) throws FileUtility.InvalidDataFormatException {
+    public void Insert(String itemString) throws DatabaseFileUtility.InvalidDataFormatException {
         // Prepare
         Item item = new Item(itemString);
         // Insert

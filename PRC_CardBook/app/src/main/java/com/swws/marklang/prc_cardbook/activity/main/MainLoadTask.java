@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
 import com.swws.marklang.prc_cardbook.activity.Constants;
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
+import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.MathUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.DatabaseComparator;
@@ -20,7 +20,7 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
     private MainLoadActivity mParentActivity;
     private ProgressBar mMainLoadProgressBar;
 
-    private FileUtility mFileUtility;
+    private DatabaseFileUtility mDatabaseFileUtility;
 
     private static ArrayList<Database> mDatabases;
 
@@ -43,7 +43,7 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
         mParentActivity = parentActivity;
         mMainLoadProgressBar = mainLoadProgressBar;
 
-        mFileUtility = new FileUtility(parentActivity.getApplicationContext());
+        mDatabaseFileUtility = new DatabaseFileUtility(parentActivity.getApplicationContext());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
         publishProgress(mProgressValues[0]);
 
         // 1. Read meta data
-        mDatabases = mFileUtility.ReadAllMetaData(Constants.READ_ALL_METADATA_DEBUG);
+        mDatabases = mDatabaseFileUtility.ReadAllMetaData(Constants.READ_ALL_METADATA_DEBUG);
         // Update progress value
         publishProgress(mProgressValues[1]);
 
