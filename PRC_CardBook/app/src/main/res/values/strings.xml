@@ -11,6 +11,7 @@
     <string name="first_database_update_activity_name">Download Initial Data</string>
     <string name="main_load_activity_name">Load</string>
     <string name="profile_activity_name">Profile</string>
+    <string name="image_crop_activity_name">Create Icon</string>
 
 
     <string name="main_load_title">Loading...</string>
@@ -20,6 +21,7 @@
     <string name="info_profile_saved">New profile is saved.</string>
     <string name="exception_profile_name_too_long">Error: New name cannot be longer than %d.</string>
     <string name="exception_profile_save_fail">Error: Cannot save the new profile.</string>
+    <string name="exception_profile_crop_icon_fail">Error: Cannot create new icon.</string>
 
 
     <string name="card_detail_category">Category</string>

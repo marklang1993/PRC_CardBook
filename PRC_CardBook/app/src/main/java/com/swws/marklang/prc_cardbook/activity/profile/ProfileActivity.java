@@ -1,5 +1,6 @@
 package com.swws.marklang.prc_cardbook.activity.profile;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.utility.ProfileFileUtility;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -18,7 +22,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ProfileFileUtility mProfileFileUtility;
 
     // Views
-    private ImageView mProfileIconImageView;
+    private CircleImageView mProfileIconCircleImageView;
     private EditText mProfileNameEditText;
 
     // Icon cache
@@ -33,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
         mProfileFileUtility = ProfileFileUtility.getInstance();
 
         // Find out views
-        mProfileIconImageView = (ImageView) findViewById(R.id.profileIconImageView);
+        mProfileIconCircleImageView = (CircleImageView) findViewById(R.id.profileIconCircleImageView);
         mProfileNameEditText = (EditText) findViewById(R.id.profileNameEditText);
 
         // Init. UI
@@ -47,11 +51,14 @@ public class ProfileActivity extends AppCompatActivity {
      */
     public void initValues() {
         mIconBitmapCache = mProfileFileUtility.getIcon();
-        mProfileIconImageView.setImageBitmap(mIconBitmapCache);
+        mProfileIconCircleImageView.setImageBitmap(mIconBitmapCache);
 
         mProfileNameEditText.setText(mProfileFileUtility.getName());
     }
 
+    /**
+     * Init. all buttons in this activity
+     */
     public void initButtons() {
         // Save button
         Button saveButton = (Button) findViewById(R.id.profileSaveButton);
@@ -98,15 +105,35 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         // Icon Button
-        mProfileIconImageView.setOnClickListener(new View.OnClickListener() {
+        mProfileIconCircleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                Intent startImageCropActivityIntent = new Intent(ProfileActivity.this, ImageCropActivity.class);
+                startActivityForResult(startImageCropActivityIntent, Constants.REQUEST_CROP_IMAGE);
             }
         });
 
         // Back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Display this button: Enable
+    }
+
+    /**
+     * Get result from "ImageCropActivity"
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constants.REQUEST_CROP_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                // Update icon display
+                mIconBitmapCache = mProfileFileUtility.getIcon();
+                mProfileIconCircleImageView.setImageBitmap(mIconBitmapCache);
+            }
+        }
     }
 
     /**

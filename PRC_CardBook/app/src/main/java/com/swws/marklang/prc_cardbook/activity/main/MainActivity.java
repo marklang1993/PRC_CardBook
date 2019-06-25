@@ -26,6 +26,8 @@ import com.swws.marklang.prc_cardbook.utility.database.Database;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -139,6 +141,17 @@ public class MainActivity extends AppCompatActivity {
                 return result;
             }
         });
+
+        // Init. onClickListener of profileImageView
+        CircleImageView profileIconCircleImageView = (CircleImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profileIconCircleImageView);
+        profileIconCircleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start "profile setting" activity
+                Intent profileSettingActivityIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_PROFILE_UPDATE);
+            }
+        });
     }
 
     /**
@@ -148,10 +161,10 @@ public class MainActivity extends AppCompatActivity {
         // Configure profile
         ProfileFileUtility profileFileUtility = ProfileFileUtility.getInstance();
         TextView profileNameTextView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profileNameTextView);
-        ImageView profileImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profileIconImageView);
+        CircleImageView profileIconCircleImageView = (CircleImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profileIconCircleImageView);
 
         profileNameTextView.setText(profileFileUtility.getName());
-        profileImageView.setImageBitmap(profileFileUtility.getIcon());
+        profileIconCircleImageView.setImageBitmap(profileFileUtility.getIcon());
     }
 
     @Override
@@ -170,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Constants.REQUEST_UPDATE_RESULT_USER) {
            // Check is database updating successful

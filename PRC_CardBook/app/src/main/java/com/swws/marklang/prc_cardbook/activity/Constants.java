@@ -12,6 +12,10 @@ public class Constants {
     public static final int REQUEST_LOAD_RESULT = 3;
     // Used to start "ProfileActivity"
     public static final int REQUEST_PROFILE_UPDATE = 4;
+    // Used to start Image File Explorer
+    public static final int REQUEST_IMAGE_FILE_SELECTION = 5;
+    // Used to start "ImageCropActivity"
+    public static final int REQUEST_CROP_IMAGE = 6;
 
 
     // Others

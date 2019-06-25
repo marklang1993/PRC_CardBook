@@ -11,6 +11,7 @@
     <string name="first_database_update_activity_name">最初データのダウンロード</string>
     <string name="main_load_activity_name">読込み中</string>
     <string name="profile_activity_name">プロフィール</string>
+    <string name="image_crop_activity_name">アイコン作る</string>
 
 
     <string name="main_load_title">読込み中．．．</string>
@@ -20,6 +21,7 @@
     <string name="info_profile_saved">新しいプロフィールを保存しました。</string>
     <string name="exception_profile_name_too_long">エラー：名前は%d文字以上に設定できません。</string>
     <string name="exception_profile_save_fail">エラー：新しいプロフィールを保存できません。</string>
+    <string name="exception_profile_crop_icon_fail">エラー：新しいアイコンを作ることができません。</string>
 
 
     <string name="card_detail_category">カテゴリー</string>

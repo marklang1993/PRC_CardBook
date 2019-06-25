@@ -11,6 +11,7 @@
     <string name="first_database_update_activity_name">下载初始数据</string>
     <string name="main_load_activity_name">读取数据</string>
     <string name="profile_activity_name">个人档案</string>
+    <string name="image_crop_activity_name">制作头像</string>
 
 
     <string name="main_load_title">读取中．．．</string>
@@ -20,6 +21,7 @@
     <string name="info_profile_saved">新的个人档案已经保存完毕。</string>
     <string name="exception_profile_name_too_long">错误：名字不能长于%d个文字。</string>
     <string name="exception_profile_save_fail">错误：无法保存新的个人档案。</string>
+    <string name="exception_profile_crop_icon_fail">错误：无法制作新的个人头像。</string>
 
 
     <string name="card_detail_category">种类</string>

@@ -127,6 +127,8 @@ public class MainLoadActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == Constants.REQUEST_UPDATE_RESULT_APP) {
             // Check is database updating successful
             if (resultCode == RESULT_OK) {

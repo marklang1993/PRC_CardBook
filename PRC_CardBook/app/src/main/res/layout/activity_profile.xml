@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".activity.profile.ProfileActivity">
 
-    <ImageView
-        android:id="@+id/profileIconImageView"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileIconCircleImageView"
         android:layout_width="180sp"
         android:layout_height="180sp"
         android:layout_marginStart="8dp"
@@ -17,7 +17,9 @@
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/black"/>
 
     <EditText
         android:id="@+id/profileNameEditText"
@@ -32,7 +34,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileIconImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/profileIconCircleImageView" />
 
     <LinearLayout
         android:layout_width="match_parent"

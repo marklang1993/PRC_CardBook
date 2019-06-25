@@ -45,8 +45,10 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     // RichTextView Library
     implementation 'com.androidessence.lib:richtextview:1.0.4'
-    // Simple Crop View
+    // SimpleCropView
     implementation 'com.isseiaoki:simplecropview:1.1.8'
+    // CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
 }
 
 configurations.all {
