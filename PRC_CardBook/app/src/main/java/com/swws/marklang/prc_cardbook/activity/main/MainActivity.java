@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +19,7 @@ import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
 import com.swws.marklang.prc_cardbook.activity.profile.ProfileActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
+import com.swws.marklang.prc_cardbook.activity.statistics.StatisticsActivity;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
 import com.swws.marklang.prc_cardbook.utility.ProfileFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
@@ -107,6 +107,12 @@ public class MainActivity extends AppCompatActivity {
                         // Start "profile setting" activity
                         Intent profileSettingActivityIntent = new Intent(getApplicationContext(), ProfileActivity.class);
                         startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_PROFILE_UPDATE);
+                        break;
+
+                    case R.id.statistics_menu_item:
+                        // Start "statistics" activity
+                        Intent statisticsActivityIntent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                        startActivity(statisticsActivityIntent);
                         break;
 
                     case R.id.qrcode_menu_item:

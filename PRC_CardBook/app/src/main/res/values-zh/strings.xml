@@ -12,6 +12,7 @@
     <string name="main_load_activity_name">读取数据</string>
     <string name="profile_activity_name">个人档案</string>
     <string name="image_crop_activity_name">制作头像</string>
+    <string name="statistics_activity_name">统计</string>
 
 
     <string name="main_load_title">读取中．．．</string>
@@ -63,6 +64,7 @@
     <string name="button_cancel_text">取消</string>
 
     <string name="lable_loading_text">读取中．．．</string>
+    <string name="lable_calculating_text">计算中．．．</string>
 
 
     <string name="database_update_checkbox_season1">第一季</string>

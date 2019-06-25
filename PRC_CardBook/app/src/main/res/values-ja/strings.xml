@@ -12,6 +12,7 @@
     <string name="main_load_activity_name">読込み中</string>
     <string name="profile_activity_name">プロフィール</string>
     <string name="image_crop_activity_name">アイコン作る</string>
+    <string name="statistics_activity_name">統計</string>
 
 
     <string name="main_load_title">読込み中．．．</string>
@@ -63,6 +64,7 @@
     <string name="button_cancel_text">取消し</string>
 
     <string name="lable_loading_text">読込み中．．．</string>
+    <string name="lable_calculating_text">計算中．．．</string>
 
 
     <string name="database_update_checkbox_season1">1ST シーズン</string>

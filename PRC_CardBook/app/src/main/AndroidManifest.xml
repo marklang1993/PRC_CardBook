@@ -10,7 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- For Simple Crop View -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.profile.ImageCropActivity"></activity>
+        <activity android:name=".activity.statistics.StatisticsActivity"></activity>
+        <activity android:name=".activity.profile.ImageCropActivity" />
         <activity android:name=".activity.profile.ProfileActivity" />
         <activity android:name=".activity.main.MainLoadActivity">
             <intent-filter>
