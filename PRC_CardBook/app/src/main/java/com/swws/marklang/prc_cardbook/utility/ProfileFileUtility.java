@@ -10,8 +10,6 @@ import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 public final class ProfileFileUtility extends FileUtility{
 
@@ -82,7 +80,7 @@ public final class ProfileFileUtility extends FileUtility{
             // Default icon
             iconBitmap = BitmapFactory.decodeResource(
                     mApplicationContext.getResources(),
-                    R.mipmap.ic_launcher_round);
+                    R.drawable.ic_default_character);
         }
 
         return iconBitmap;

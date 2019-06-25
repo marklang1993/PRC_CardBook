@@ -98,6 +98,9 @@
     <string name="exception_get_camera_list_failed">エラー：カメラリストを取得できませんでした</string>
 
 
+    <string name="exception_no_permission_runtime">エラー：必要な権限を取得できません</string>
+
+
     <string name="open">Open</string>
     <string name="close">Close</string>
 

@@ -18,6 +18,12 @@ public class Constants {
     public static final int REQUEST_CROP_IMAGE = 6;
 
 
+    /**
+     * requestCode definition for requestPermissions()
+     */
+    public static final int REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 100;
+
+
     // Others
     public static final boolean READ_ALL_METADATA_DEBUG = false;
 }

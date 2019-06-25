@@ -98,6 +98,9 @@
     <string name="exception_get_camera_list_failed">Error: Cannot get the camera list.</string>
 
 
+    <string name="exception_no_permission_runtime">Error: Cannot get the required permission.</string>
+
+
     <string name="open">Open</string>
     <string name="close">Close</string>
 

@@ -98,6 +98,9 @@
     <string name="exception_get_camera_list_failed">错误：读取相机列表失败。</string>
 
 
+    <string name="exception_no_permission_runtime">错误：未能获取必须的权限。</string>
+
+
     <string name="open">Open</string>
     <string name="close">Close</string>
 
