@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
@@ -19,6 +21,7 @@ import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
 import com.swws.marklang.prc_cardbook.activity.profile.ProfileActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
+import com.swws.marklang.prc_cardbook.utility.ProfileFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private SeriesItemAdapter mSeriesItemAdapter;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setListView();
         initDrawer();
         initNavigationView();
+        updateProfile();
     }
 
     /**
@@ -87,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
      * Init. Navigation View
      */
     private void initNavigationView() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.mainNavigationView);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mNavigationView = (NavigationView) findViewById(R.id.mainNavigationView);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.profile_menu_item:
                         // Start "profile setting" activity
                         Intent profileSettingActivityIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                        startActivity(profileSettingActivityIntent);
+                        startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_PROFILE_UPDATE);
                         break;
 
                     case R.id.qrcode_menu_item:
@@ -136,6 +141,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Update profile display
+     */
+    private void updateProfile() {
+        // Configure profile
+        ProfileFileUtility profileFileUtility = ProfileFileUtility.getInstance();
+        TextView profileNameTextView = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profileNameTextView);
+        ImageView profileImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profileIconImageView);
+
+        profileNameTextView.setText(profileFileUtility.getName());
+        profileImageView.setImageBitmap(profileFileUtility.getIcon());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (mActionBarDrawerToggle.onOptionsItemSelected(menuItem)) {
@@ -145,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Receive the Result from "DatabaseUpdateActivity"
+     * Receive the Result from invoked Activities
      * @param requestCode
      * @param resultCode
      * @param data
@@ -167,6 +185,10 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == Constants.REQUEST_LOAD_RESULT) {
             // Notify "seriesListView" to update
             mSeriesItemAdapter.notifyDataSetChanged(mDatabases);
+
+        } else if (requestCode == Constants.REQUEST_PROFILE_UPDATE) {
+            // Notify navigation drawer to update
+            updateProfile();
         }
     }
 

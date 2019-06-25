@@ -10,12 +10,16 @@
     <string name="database_update_activity_name">データベース更新</string>
     <string name="first_database_update_activity_name">最初データのダウンロード</string>
     <string name="main_load_activity_name">読込み中</string>
+    <string name="profile_activity_name">プロフィール</string>
 
 
     <string name="main_load_title">読込み中．．．</string>
 
 
     <string name="profile_default_name">プリチャンアイドル</string>
+    <string name="info_profile_saved">新しいプロフィールを保存しました。</string>
+    <string name="exception_profile_name_too_long">エラー：名前は%d文字以上に設定できません。</string>
+    <string name="exception_profile_save_fail">エラー：新しいプロフィールを保存できません。</string>
 
 
     <string name="card_detail_category">カテゴリー</string>
@@ -53,6 +57,8 @@
     <string name="button_no_text">いいえ</string>
     <string name="button_start_text">開始</string>
     <string name="button_stop_text">中止</string>
+    <string name="button_save_text">保存</string>
+    <string name="button_cancel_text">取消し</string>
 
     <string name="lable_loading_text">読込み中．．．</string>
 

@@ -5,11 +5,13 @@ public class Constants {
     /**
      * requestCode definition for startActivityForResult()
      */
-    // Used for starting "DatabaseUpdateActivity"
+    // Used to start "DatabaseUpdateActivity"
     public static final int REQUEST_UPDATE_RESULT_USER = 1;
     public static final int REQUEST_UPDATE_RESULT_APP = 2;
-    // Used for starting "MainLoadActivity"
+    // Used to start "MainLoadActivity"
     public static final int REQUEST_LOAD_RESULT = 3;
+    // Used to start "ProfileActivity"
+    public static final int REQUEST_PROFILE_UPDATE = 4;
 
 
     // Others

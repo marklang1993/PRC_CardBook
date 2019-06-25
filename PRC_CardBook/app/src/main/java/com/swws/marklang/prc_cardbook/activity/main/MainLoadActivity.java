@@ -6,10 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
+import com.swws.marklang.prc_cardbook.utility.ProfileFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 
 public class MainLoadActivity extends AppCompatActivity {

@@ -10,12 +10,16 @@
     <string name="database_update_activity_name">Update</string>
     <string name="first_database_update_activity_name">Download Initial Data</string>
     <string name="main_load_activity_name">Load</string>
+    <string name="profile_activity_name">Profile</string>
 
 
     <string name="main_load_title">Loading...</string>
 
 
     <string name="profile_default_name">Prichan Idol</string>
+    <string name="info_profile_saved">New profile is saved.</string>
+    <string name="exception_profile_name_too_long">Error: New name cannot be longer than %d.</string>
+    <string name="exception_profile_save_fail">Error: Cannot save the new profile.</string>
 
 
     <string name="card_detail_category">Category</string>
@@ -53,6 +57,8 @@
     <string name="button_no_text">No</string>
     <string name="button_start_text">Start</string>
     <string name="button_stop_text">Stop</string>
+    <string name="button_save_text">Save</string>
+    <string name="button_cancel_text">Cancel</string>
 
     <string name="lable_loading_text">Loading...</string>
 
