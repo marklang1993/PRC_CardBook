@@ -24,10 +24,10 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
 
     private static final float SIZE_SP = 120.0f; // TODO: size
 
-    private Context mContext;
     private Resources mRes;
     private SeasonID mSeasonID;
     private Item mItem;
+    private boolean mIsGreyLevel;
 
     private ImageView mCardImageView;
     private RichTextView mInventoryCountTextView;
@@ -44,18 +44,20 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
             View view,
             SeasonID seasonID,
             Item item,
-            int[] JRColors) {
+            int[] JRColors,
+            boolean isGreyLevel) {
 
         // Init. data
-        mContext = view.getContext();
+        Context context = view.getContext();
         mRes = res;
         mSeasonID = seasonID;
         mItem = item;
+        mIsGreyLevel = isGreyLevel;
 
         // Init. colors
-        mColorRed = ContextCompat.getColor(mContext, R.color.red);
-        mColorGreen = ContextCompat.getColor(mContext, R.color.green);
-        mColorBlue = ContextCompat.getColor(mContext, R.color.blue);
+        mColorRed = ContextCompat.getColor(context, R.color.red);
+        mColorGreen = ContextCompat.getColor(context, R.color.green);
+        mColorBlue = ContextCompat.getColor(context, R.color.blue);
         mJRColors = JRColors;
 
         // Retrieve the UI objects
@@ -92,7 +94,6 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
         setCardInventoryCount(mInventoryCountTextView, result.CountCardInventory, result.IsJR);
 
         // Do some clean
-        mContext = null;
         mCardImageView = null;
         mInventoryCountTextView = null;
     }
@@ -178,7 +179,7 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
         }
 
         // Change image color by inventory count
-        if (countCardInventory == 0)
+        if (countCardInventory == 0 && mIsGreyLevel)
         {
             // If the user does not own this card, show the card image in greyscale
             cardImage = bitmapToGreyscale(cardImage);

@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.statistics.StatisticsActivity"></activity>
+        <activity android:name=".activity.setting.SettingActivity"></activity>
+        <activity android:name=".activity.statistics.StatisticsActivity" />
         <activity android:name=".activity.profile.ImageCropActivity" />
         <activity android:name=".activity.profile.ProfileActivity" />
         <activity android:name=".activity.main.MainLoadActivity">

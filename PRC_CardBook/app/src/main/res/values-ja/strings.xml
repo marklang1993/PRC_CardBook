@@ -13,6 +13,7 @@
     <string name="profile_activity_name">プロフィール</string>
     <string name="image_crop_activity_name">アイコン作る</string>
     <string name="statistics_activity_name">統計</string>
+    <string name="setting_activity_name">設定</string>
 
 
     <string name="main_load_title">読込み中．．．</string>
@@ -23,6 +24,9 @@
     <string name="exception_profile_name_too_long">エラー：名前は%d文字以上に設定できません。</string>
     <string name="exception_profile_save_fail">エラー：新しいプロフィールを保存できません。</string>
     <string name="exception_profile_crop_icon_fail">エラー：新しいアイコンを作ることができません。</string>
+
+
+    <string name="setting_item_1">持っていないアイテム画像を色なしで表示する</string>
 
 
     <string name="card_detail_category">カテゴリー</string>

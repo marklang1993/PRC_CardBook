@@ -19,6 +19,7 @@ import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
 import com.swws.marklang.prc_cardbook.activity.profile.ProfileActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
+import com.swws.marklang.prc_cardbook.activity.setting.SettingActivity;
 import com.swws.marklang.prc_cardbook.activity.statistics.StatisticsActivity;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
 import com.swws.marklang.prc_cardbook.utility.ProfileFileUtility;
@@ -122,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.setting_menu_item:
+                        // Start "setting" activity
+                        Intent settingActivityIntent = new Intent(getApplicationContext(), SettingActivity.class);
+                        startActivity(settingActivityIntent);;
                         break;
 
                     case R.id.update_menu_item:

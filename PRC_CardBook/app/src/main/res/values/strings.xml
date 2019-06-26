@@ -13,6 +13,7 @@
     <string name="profile_activity_name">Profile</string>
     <string name="image_crop_activity_name">Create Icon</string>
     <string name="statistics_activity_name">Statistics</string>
+    <string name="setting_activity_name">Setting</string>
 
 
     <string name="main_load_title">Loading...</string>
@@ -23,6 +24,9 @@
     <string name="exception_profile_name_too_long">Error: New name cannot be longer than %d.</string>
     <string name="exception_profile_save_fail">Error: Cannot save the new profile.</string>
     <string name="exception_profile_crop_icon_fail">Error: Cannot create new icon.</string>
+
+
+    <string name="setting_item_1">Display non-possessed item image without color</string>
 
 
     <string name="card_detail_category">Category</string>
