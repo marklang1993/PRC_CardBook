@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.swws.marklang.prc_cardbook.utility.FileUtility;
+import com.swws.marklang.prc_cardbook.utility.InternalFileUtility;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
 
 import java.io.BufferedReader;
@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
-public final class DatabaseFileUtility extends FileUtility{
+public final class DatabaseFileUtility extends InternalFileUtility {
 
     // Singleton instance
     private static DatabaseFileUtility mDatabaseFileUtility = null;

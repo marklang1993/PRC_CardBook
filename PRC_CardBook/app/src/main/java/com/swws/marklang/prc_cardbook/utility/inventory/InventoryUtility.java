@@ -101,6 +101,17 @@ public class InventoryUtility {
     }
 
     /**
+     * Insert new inventory item
+     * @param newInventory New inventory item
+     */
+    public static void insertInventoryItem(Inventory newInventory) {
+        // Execute
+        if (mInventoryDB != null) {
+            mInventoryDB.inventoryDAO().insertInventory(newInventory);
+        }
+    }
+
+    /**
      * Update an existed inventory item
      * @param itemID Item ID (Key)
      * @param itemCount New count of this item
@@ -116,5 +127,39 @@ public class InventoryUtility {
         if (mInventoryDB != null) {
             mInventoryDB.inventoryDAO().updateInventory(newInventory);
         }
+    }
+
+    /**
+     * Query all inventory items
+     * @return "null" once no result or DAO is not initialized
+     */
+    public static Inventory[] queryAllInventoryItems() {
+        // Execute
+        if (mInventoryDB != null) {
+            Inventory[] queriedResult = mInventoryDB.inventoryDAO().queryAllInventories();
+            if (queriedResult.length == 0) {
+                return null;
+
+            } else {
+                // Return the valid result
+                return queriedResult;
+            }
+
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Remove all inventory items
+     * @return
+     */
+    public static boolean removeAllInventoryItems() {
+        // Execute
+        if (mInventoryDB != null) {
+            mInventoryDB.inventoryDAO().removeAllInventories();
+            return true;
+        }
+        return false;
     }
 }

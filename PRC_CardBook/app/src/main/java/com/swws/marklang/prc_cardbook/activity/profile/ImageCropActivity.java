@@ -23,7 +23,6 @@ import com.isseiaoki.simplecropview.callback.LoadCallback;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
-import com.swws.marklang.prc_cardbook.utility.ProfileFileUtility;
 
 public class ImageCropActivity extends AppCompatActivity {
 

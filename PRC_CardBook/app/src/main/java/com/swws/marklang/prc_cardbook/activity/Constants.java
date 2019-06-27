@@ -16,6 +16,9 @@ public class Constants {
     public static final int REQUEST_IMAGE_FILE_SELECTION = 5;
     // Used to start "ImageCropActivity"
     public static final int REQUEST_CROP_IMAGE = 6;
+    // Used to start "SystemProgressActivity"
+    public static final int REQUEST_SYSTEM_PROGRESS_EXPORTING = 7;
+    public static final int REQUEST_SYSTEM_PROGRESS_IMPORTING = 8;
 
 
     /**

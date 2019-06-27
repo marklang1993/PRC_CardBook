@@ -14,6 +14,7 @@
     <string name="image_crop_activity_name">制作头像</string>
     <string name="statistics_activity_name">统计</string>
     <string name="setting_activity_name">设定</string>
+    <string name="system_activity_name">系统功能</string>
 
 
     <string name="main_load_title">读取中．．．</string>
@@ -27,6 +28,20 @@
 
 
     <string name="setting_item_1">以黑白色显示未获得的道具图片</string>
+
+
+    <string name="system_export_inventory_database">向外部存储导出道具数量的数据</string>
+    <string name="system_import_inventory_database">从外部存储导入道具数量的数据</string>
+    <string name="system_bluetooth_send_inventory_database">经过蓝牙发送道具数量的数据</string>
+    <string name="system_bluetooth_receive_inventory_database">经过蓝牙接收道具数量的数据</string>
+    <string name="system_check_item_database">再次检查道具数据库</string>
+    <string name="system_clear_item_database">删除道具数据库</string>
+    <string name="system_clear_item_inventory_database">删除道具数量的数据</string>
+
+    <string name="system_export_inventory_database_done">导出完成</string>
+    <string name="system_export_inventory_database_fail">导出失败</string>
+    <string name="system_import_inventory_database_done">导入完成</string>
+    <string name="system_import_inventory_database_fail">导入失败</string>
 
 
     <string name="card_detail_category">种类</string>

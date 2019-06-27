@@ -21,8 +21,9 @@ import com.swws.marklang.prc_cardbook.activity.profile.ProfileActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
 import com.swws.marklang.prc_cardbook.activity.setting.SettingActivity;
 import com.swws.marklang.prc_cardbook.activity.statistics.StatisticsActivity;
+import com.swws.marklang.prc_cardbook.activity.system.SystemActivity;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
-import com.swws.marklang.prc_cardbook.utility.ProfileFileUtility;
+import com.swws.marklang.prc_cardbook.activity.profile.ProfileFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 
 import java.util.ArrayList;
@@ -106,36 +107,43 @@ public class MainActivity extends AppCompatActivity {
                 {
                     case R.id.profile_menu_item:
                         // Start "profile setting" activity
-                        Intent profileSettingActivityIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        Intent profileSettingActivityIntent = new Intent(MainActivity.this, ProfileActivity.class);
                         startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_PROFILE_UPDATE);
                         break;
 
                     case R.id.statistics_menu_item:
                         // Start "statistics" activity
-                        Intent statisticsActivityIntent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                        Intent statisticsActivityIntent = new Intent(MainActivity.this, StatisticsActivity.class);
                         startActivity(statisticsActivityIntent);
                         break;
 
                     case R.id.qrcode_menu_item:
                         // Start QRCode Scanner
-                        Intent scannerActivityIntent = new Intent(getApplicationContext(), ScannerActivity.class);
+                        Intent scannerActivityIntent = new Intent(MainActivity.this, ScannerActivity.class);
                         startActivity(scannerActivityIntent);
                         break;
 
                     case R.id.setting_menu_item:
                         // Start "setting" activity
-                        Intent settingActivityIntent = new Intent(getApplicationContext(), SettingActivity.class);
-                        startActivity(settingActivityIntent);;
+                        Intent settingActivityIntent = new Intent(MainActivity.this, SettingActivity.class);
+                        startActivity(settingActivityIntent);
+                        break;
+
+                    case R.id.system_menu_item:
+                        // Start "system" activity
+                        Intent systemActivityIntent = new Intent(MainActivity.this, SystemActivity.class);
+                        startActivity(systemActivityIntent);
                         break;
 
                     case R.id.update_menu_item:
                         // Start the "local database update" activity
-                        Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
+                        Intent databaseUpdateActivityIntent = new Intent(MainActivity.this, DatabaseUpdateActivity.class);
                         databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 0); // "0" means it is started by user
                         startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_UPDATE_RESULT_USER);
                         break;
 
                     case R.id.exit_menu_item:
+                        // Terminate this app
                         finishAndRemoveTask(); // MUST be used since API 21
                         break;
 
@@ -177,6 +185,11 @@ public class MainActivity extends AppCompatActivity {
         profileIconCircleImageView.setImageBitmap(profileFileUtility.getIcon());
     }
 
+    /**
+     * Item selection handler
+     * @param menuItem
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (mActionBarDrawerToggle.onOptionsItemSelected(menuItem)) {

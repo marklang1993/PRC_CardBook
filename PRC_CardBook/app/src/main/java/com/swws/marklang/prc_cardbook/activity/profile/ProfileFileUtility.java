@@ -1,4 +1,4 @@
-package com.swws.marklang.prc_cardbook.utility;
+package com.swws.marklang.prc_cardbook.activity.profile;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,12 +6,13 @@ import android.graphics.BitmapFactory;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
+import com.swws.marklang.prc_cardbook.utility.InternalFileUtility;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 
-public final class ProfileFileUtility extends FileUtility{
+public final class ProfileFileUtility extends InternalFileUtility {
 
     // Singleton instance
     private static ProfileFileUtility mProfileFileUtility = null;

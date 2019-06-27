@@ -14,6 +14,7 @@
     <string name="image_crop_activity_name">アイコン作る</string>
     <string name="statistics_activity_name">統計</string>
     <string name="setting_activity_name">設定</string>
+    <string name="system_activity_name">システム機能</string>
 
 
     <string name="main_load_title">読込み中．．．</string>
@@ -27,6 +28,20 @@
 
 
     <string name="setting_item_1">持っていないアイテム画像を色なしで表示する</string>
+
+
+    <string name="system_export_inventory_database">アイテム数量のデータを外部メモリーに出力する</string>
+    <string name="system_import_inventory_database">アイテム数量のデータを外部メモリーから入力する</string>
+    <string name="system_bluetooth_send_inventory_database">アイテム数量のデータをブルートゥースで送信する</string>
+    <string name="system_bluetooth_receive_inventory_database">アイテム数量のデータをブルートゥースで受信する</string>
+    <string name="system_check_item_database">アイテムデータを再検査する</string>
+    <string name="system_clear_item_database">アイテムデータを削除する</string>
+    <string name="system_clear_item_inventory_database">アイテム数量のデータを削除する</string>
+
+    <string name="system_export_inventory_database_done">出力が完成しました</string>
+    <string name="system_export_inventory_database_fail">出力が失敗しました</string>
+    <string name="system_import_inventory_database_done">入力が完成しました</string>
+    <string name="system_import_inventory_database_fail">入力が失敗しました</string>
 
 
     <string name="card_detail_category">カテゴリー</string>

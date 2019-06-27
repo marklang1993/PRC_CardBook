@@ -6,7 +6,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.swws.marklang.prc_cardbook.R;
-import com.swws.marklang.prc_cardbook.utility.SettingFileUtility;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -23,8 +22,14 @@ public class SettingActivity extends AppCompatActivity {
 
         // Init. UIs
         setTitle(R.string.setting_activity_name);
+        initButtons();
         initSettings();
+    }
 
+    /**
+     * Init. all buttons in this activity
+     */
+    public void initButtons() {
         // Back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Display this button: Enable
     }

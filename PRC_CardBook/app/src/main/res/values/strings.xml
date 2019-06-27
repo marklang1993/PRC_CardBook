@@ -14,6 +14,7 @@
     <string name="image_crop_activity_name">Create Icon</string>
     <string name="statistics_activity_name">Statistics</string>
     <string name="setting_activity_name">Setting</string>
+    <string name="system_activity_name">System</string>
 
 
     <string name="main_load_title">Loading...</string>
@@ -27,6 +28,20 @@
 
 
     <string name="setting_item_1">Display non-possessed item image without color</string>
+
+
+    <string name="system_export_inventory_database">Export Item Inventory Data to External Storage</string>
+    <string name="system_import_inventory_database">Import Item Inventory Data from External Storage</string>
+    <string name="system_bluetooth_send_inventory_database">Send Item Inventory Data via Bluetooth</string>
+    <string name="system_bluetooth_receive_inventory_database">Receive Item Inventory Data via Bluetooth</string>
+    <string name="system_check_item_database">Re-Check Item Database</string>
+    <string name="system_clear_item_database">Clear Item Database</string>
+    <string name="system_clear_item_inventory_database">Clear Item Inventory Data</string>
+
+    <string name="system_export_inventory_database_done">Successfully exported</string>
+    <string name="system_export_inventory_database_fail">Failed to export</string>
+    <string name="system_import_inventory_database_done">Successfully imported</string>
+    <string name="system_import_inventory_database_fail">Failed to import</string>
 
 
     <string name="card_detail_category">Category</string>

@@ -1,5 +1,6 @@
 package com.swws.marklang.prc_cardbook.utility;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
@@ -12,17 +13,27 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class FileUtility {
+abstract class FileUtility {
 
-    // Internal storage path
-    private String mInternalPath;
+    private String mRootDirectory;
+    protected Context mApplicationContext;
 
     /**
      * Constructor
      */
-    protected FileUtility() {
-        // Get internal storage path from Context
-        mInternalPath = MainLoadActivity.getCurrentApplicationContext().getFilesDir().getPath();
+    FileUtility() {
+        mApplicationContext = MainLoadActivity.getCurrentApplicationContext();
+        mRootDirectory = initRootDirectory();
+    }
+
+    protected abstract String initRootDirectory();
+
+    /**
+     * Get root path
+     * @return
+     */
+    protected String getRootPath() {
+        return mRootDirectory;
     }
 
     /**
@@ -34,7 +45,7 @@ public class FileUtility {
     {
         try
         {
-            FileReader fileReader = new FileReader(mInternalPath + "/" + fileName);
+            FileReader fileReader = new FileReader(mRootDirectory + "/" + fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             return bufferedReader;
@@ -80,7 +91,7 @@ public class FileUtility {
     {
         try
         {
-            FileWriter fileWriter = new FileWriter(mInternalPath + "/" + fileName);
+            FileWriter fileWriter = new FileWriter(mRootDirectory + "/" + fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             return bufferedWriter;
@@ -136,7 +147,7 @@ public class FileUtility {
      */
     protected boolean checkAndMakeDirectory(String dirName) {
         // Construct the full path of the given directory
-        File dir = new File(mInternalPath + "/" + dirName);
+        File dir = new File(mRootDirectory + "/" + dirName);
         if (!dir.exists()) {
             // Create the corresponding directory
             return dir.mkdirs();
@@ -150,15 +161,7 @@ public class FileUtility {
      * @return
      */
     protected boolean isFilePresented(String filePath) {
-        File file = new File(mInternalPath + "/" + filePath);
+        File file = new File(mRootDirectory + "/" + filePath);
         return file.exists();
-    }
-
-    /**
-     * Get the path of internal storage
-     * @return
-     */
-    protected String getInternalPath() {
-        return mInternalPath;
     }
 }

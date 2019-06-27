@@ -1,8 +1,6 @@
-package com.swws.marklang.prc_cardbook.utility;
+package com.swws.marklang.prc_cardbook.activity.setting;
 
-import android.content.Context;
-
-import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
+import com.swws.marklang.prc_cardbook.utility.InternalFileUtility;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,11 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class SettingFileUtility extends FileUtility {
+public final class SettingFileUtility extends InternalFileUtility {
 
     // Singleton instance
     private static SettingFileUtility mSettingFileUtility = null;
-    private static Context mApplicationContext = null;
 
     // Constants
     private static final boolean SETTING_DEBUG_IS_PRINT = false;
@@ -27,9 +24,6 @@ public class SettingFileUtility extends FileUtility {
      * Constructor
      */
     private SettingFileUtility() {
-        // Get application context
-        mApplicationContext = MainLoadActivity.getCurrentApplicationContext();
-
         // Init. the dictionary for holding all setting items
         mSettings = new HashMap<>();
 
