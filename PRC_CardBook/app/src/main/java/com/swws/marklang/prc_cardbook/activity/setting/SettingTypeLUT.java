@@ -21,6 +21,7 @@ public class SettingTypeLUT {
 
         // Modify this LUT once the items in setting are changed
         mLUT.put("card_not_possessed_without_color", Type.BOOLEAN);
+        mLUT.put("jr_card_display_by_number", Type.BOOLEAN);
     }
 
     private static Type getType(String key) {

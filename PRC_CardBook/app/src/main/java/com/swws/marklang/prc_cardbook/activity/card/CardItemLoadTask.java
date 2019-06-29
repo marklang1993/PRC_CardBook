@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.androidessence.lib.RichTextView;
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.setting.SettingFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
@@ -129,6 +130,9 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
 
         } else {
             // 2. JR item
+            SettingFileUtility settingFileUtility = SettingFileUtility.getInstance();
+            boolean isDisplayByNumber = settingFileUtility.getBooleanValue(
+                    settingFileUtility.readItem("jr_card_display_by_number"));
             StringBuilder targetStringBuilder = new StringBuilder(CardDetailActivity.JR_COLOR_TOTAL_COUNT);
 
             // Set displayed string based on the inventory of the item with corresponding color
@@ -137,10 +141,23 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
                 int currentJRItemInventory = (countCardInventory >>> shiftBitCount)
                         & CardDetailActivity.MAX_JR_INVENTORY_COUNT;
                 // Check the inventory
-                if (currentJRItemInventory > 0) {
-                    targetStringBuilder.append("★");
+                if (isDisplayByNumber) {
+                    // Display the inventory of JR item by number
+                    if ((currentJRItemInventory >= 0) && (currentJRItemInventory < 8)) {
+                        targetStringBuilder.append(currentJRItemInventory);
+
+                    } else {
+                        // This should not happen unless currentJRItemInventory is out of range.
+                        targetStringBuilder.append('E');
+                    }
+
                 } else {
-                    targetStringBuilder.append("☆");
+                    // Display the inventory of JR item by star
+                    if (currentJRItemInventory > 0) {
+                        targetStringBuilder.append("★");
+                    } else {
+                        targetStringBuilder.append("☆");
+                    }
                 }
             }
             tv.setText(targetStringBuilder.toString());

@@ -29,6 +29,7 @@
 
 
     <string name="setting_item_1">持っていないアイテム画像を色なしで表示する</string>
+    <string name="setting_item_2">所持したJRアイテムの状態を数字で表示する</string>
 
 
     <string name="system_export_inventory_database">アイテム数量のデータを外部メモリーに出力する</string>

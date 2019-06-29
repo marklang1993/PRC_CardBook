@@ -29,6 +29,7 @@
 
 
     <string name="setting_item_1">Display non-possessed item image without color</string>
+    <string name="setting_item_2">Display JR inventory status by number</string>
 
 
     <string name="system_export_inventory_database">Export Item Inventory Data to External Storage</string>

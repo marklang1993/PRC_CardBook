@@ -38,6 +38,7 @@ public class SettingActivity extends AppCompatActivity {
      * Init. all settings
      */
     private void initSettings() {
+        // Item 1
         CheckBox cardNotPossessedWithoutColorCheckBox = (CheckBox) findViewById(R.id.cardNotPossessedWithoutColorCheckBox);
         cardNotPossessedWithoutColorCheckBox.setChecked(mSettingFileUtility.getBooleanValue(
                 mSettingFileUtility.readItem("card_not_possessed_without_color")));
@@ -45,6 +46,18 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mSettingFileUtility.writeItem("card_not_possessed_without_color",
+                        mSettingFileUtility.putBooleanValue(isChecked));
+            }
+        });
+
+        // Item 2
+        CheckBox jrCardDisplayByNumberCheckBox = (CheckBox) findViewById(R.id.jrCardDisplayByNumberCheckBox);
+        jrCardDisplayByNumberCheckBox.setChecked(mSettingFileUtility.getBooleanValue(
+                mSettingFileUtility.readItem("jr_card_display_by_number")));
+        jrCardDisplayByNumberCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettingFileUtility.writeItem("jr_card_display_by_number",
                         mSettingFileUtility.putBooleanValue(isChecked));
             }
         });

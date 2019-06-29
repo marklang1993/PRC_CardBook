@@ -17,4 +17,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--2. Display JR inventory status by number-->
+    <CheckBox
+        android:id="@+id/jrCardDisplayByNumberCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:padding="18dp"
+        android:text="@string/setting_item_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardNotPossessedWithoutColorCheckBox" />
+
 </android.support.constraint.ConstraintLayout>
