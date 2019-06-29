@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
+import com.swws.marklang.prc_cardbook.activity.about.AboutActivity;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
 import com.swws.marklang.prc_cardbook.activity.profile.ProfileActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
@@ -140,6 +141,12 @@ public class MainActivity extends AppCompatActivity {
                         Intent databaseUpdateActivityIntent = new Intent(MainActivity.this, DatabaseUpdateActivity.class);
                         databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 0); // "0" means it is started by user
                         startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_UPDATE_RESULT_USER);
+                        break;
+
+                    case R.id.about_menu_item:
+                        // Start the "about" activity
+                        Intent aboutActivityIntent = new Intent(MainActivity.this, AboutActivity.class);
+                        startActivity(aboutActivityIntent);
                         break;
 
                     case R.id.exit_menu_item:

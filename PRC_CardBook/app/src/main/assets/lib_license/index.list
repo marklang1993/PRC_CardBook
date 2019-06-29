@@ -1,0 +1,7 @@
+#License Text File, #Library Name, #Copyright Holder, #Repository Link
+zxing_license.txt,ZXing 3.2,Google,https://github.com/zxing/zxing
+apache_commons_io_license.txt,Apache Commons-IO 2.6,The Apache Software Foundation,https://github.com/apache/commons-io
+jsoup_license.txt,Jsoup 1.11.3,Jonathan Hedley,https://github.com/jhy/jsoup/
+circleimageview_license.txt,CircleImageView 1.1.8,Henning Dodenhof,https://github.com/hdodenhof/CircleImageView
+richtextview_license.txt,RichTextView 1.0.4,Adam McNeilly,https://github.com/androidessence/RichTextView
+simplecropview_license.txt,SimpleCropView 3.0.0,Issei Aoki,https://github.com/igreenwood/SimpleCropView

@@ -15,6 +15,7 @@
     <string name="statistics_activity_name">统计</string>
     <string name="setting_activity_name">设定</string>
     <string name="system_activity_name">系统功能</string>
+    <string name="about_activity_name">关于</string>
 
 
     <string name="main_load_title">读取中．．．</string>
@@ -42,6 +43,11 @@
     <string name="system_export_inventory_database_fail">导出失败</string>
     <string name="system_import_inventory_database_done">导入完成</string>
     <string name="system_import_inventory_database_fail">导入失败</string>
+
+
+    <string name="about_version_number">版本号</string>
+    <string name="about_user_agreement">用户协议</string>
+    <string name="about_license_info">许可证</string>
 
 
     <string name="card_detail_category">种类</string>

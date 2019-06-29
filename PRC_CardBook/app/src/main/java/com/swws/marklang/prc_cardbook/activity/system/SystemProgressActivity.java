@@ -17,7 +17,7 @@ import java.io.File;
 
 public class SystemProgressActivity extends AppCompatActivity {
 
-    // TODO
+    // TODO: Use dynamical file name
     private static final String BACKUP_FILE_NAME = "backup.prc";
 
     private ProgressBar mProgressBar;

@@ -15,6 +15,7 @@
     <string name="statistics_activity_name">統計</string>
     <string name="setting_activity_name">設定</string>
     <string name="system_activity_name">システム機能</string>
+    <string name="about_activity_name">アプリ情報</string>
 
 
     <string name="main_load_title">読込み中．．．</string>
@@ -42,6 +43,11 @@
     <string name="system_export_inventory_database_fail">出力が失敗しました</string>
     <string name="system_import_inventory_database_done">入力が完成しました</string>
     <string name="system_import_inventory_database_fail">入力が失敗しました</string>
+
+
+    <string name="about_version_number">バージョン</string>
+    <string name="about_user_agreement">利用規約</string>
+    <string name="about_license_info">ライセンス</string>
 
 
     <string name="card_detail_category">カテゴリー</string>
