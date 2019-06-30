@@ -1,11 +1,11 @@
 package com.swws.marklang.prc_cardbook.activity.about.license;
 
-import com.swws.marklang.prc_cardbook.utility.AssetsFileUtility;
+import com.swws.marklang.prc_cardbook.activity.about.AboutFileUtility;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
 
-public class LicenseFileUtility extends AssetsFileUtility {
+public class LicenseFileUtility extends AboutFileUtility {
 
     // Singleton
     private static LicenseFileUtility mLicenseFileUtility = null;
@@ -72,6 +72,7 @@ public class LicenseFileUtility extends AssetsFileUtility {
             licenseItem.LibraryName = tokens[1];
             licenseItem.CopyrightHolder = tokens[2];
             licenseItem.RepositoryLink = tokens[3];
+            licenseItem.IsShrinkLicenseContentDisplay = false;
 
             licenseItems.add(licenseItem);
         }
@@ -87,104 +88,5 @@ public class LicenseFileUtility extends AssetsFileUtility {
         }
 
         return licenseItems;
-    }
-
-    /**
-     * Read out the license contents
-     * @param licenseTextFileName
-     * @return
-     */
-    private String readLicenseContent(String licenseTextFileName) {
-        // Get reader
-        BufferedReader reader = getReader(licenseTextFileName);
-        if (reader == null) return null;
-
-        // Read the content
-        StringBuilder content = new StringBuilder();
-        while (true) {
-            String rawLine = readLine(reader, LICENSE_DEBUG_IS_PRINT);
-            if (rawLine == null) break;
-            content.append(removeLeadingSpaces(rawLine));
-            content.append("\n");
-        }
-
-        if (content.length() == 0) return null;
-        return removeRedundantNewline(content);
-    }
-
-    /**
-     * Remove the leading spaces of the given raw string
-     * @param rawLine
-     * @return
-     */
-    private String removeLeadingSpaces(String rawLine) {
-        int rawLineLength = rawLine.length();
-        StringBuilder sb = new StringBuilder(rawLineLength);
-        boolean isTextStart = false;
-
-        for(int i = 0; i < rawLineLength; ++i) {
-            if (isTextStart) {
-                // Copy the rest characters to the target StringBuilder
-                sb.append(rawLine.charAt(i));
-
-            } else {
-                if (rawLine.charAt(i) == ' ') {
-                    // This is a leading space
-                    ;
-
-                } else {
-                    // Start copy the characters from here
-                    sb.append(rawLine.charAt(i));
-                    isTextStart = true;
-                }
-            }
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * Remove redundant newline within a paragraph
-     * TODO: this could be a coding interview question
-     * @param content
-     * @return
-     */
-    private String removeRedundantNewline(StringBuilder content) {
-        int contentLength = content.length();
-        if (contentLength < 2) return content.toString();
-        StringBuilder sb = new StringBuilder(contentLength);
-
-        // This can be considered as a state machine
-        boolean isNewState = false;
-        for (int i = 0; i < contentLength; ++i) {
-            char curChar = content.charAt(i);
-
-            if (isNewState) {
-                // Last character is newline
-                if (curChar == '\n') {
-                    // Output 2 newlines and jump back to the original state
-                    sb.append('\n');
-                    sb.append('\n');
-                    isNewState = false;
-
-                } else {
-                    // Output nothing, just jump back to the original state
-                    isNewState = false;
-                }
-
-            } else {
-                // Last character is not newline
-                if (curChar == '\n') {
-                    // Output nothing, just change the state
-                    isNewState = true;
-
-                } else {
-                    // Output current character
-                    sb.append(curChar);
-                    isNewState = false;
-                }
-            }
-        }
-        return sb.toString();
     }
 }

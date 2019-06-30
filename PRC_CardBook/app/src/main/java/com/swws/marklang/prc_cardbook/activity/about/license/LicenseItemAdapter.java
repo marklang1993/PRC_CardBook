@@ -13,10 +13,9 @@ import java.util.ArrayList;
 
 public class LicenseItemAdapter extends BaseAdapter {
 
-    private ArrayList<LicenseItem> mLicenseItems;
-
     // Internal variables
     private LayoutInflater mInflater;
+    private ArrayList<LicenseItem> mLicenseItems;
 
     /**
      * Constructor
@@ -47,13 +46,22 @@ public class LicenseItemAdapter extends BaseAdapter {
         TextView licenseLibraryNameTextView = (TextView) view.findViewById(R.id.licenseLibraryNameTextView);
         TextView licenseCopyrightHolderTextView = (TextView) view.findViewById(R.id.licenseCopyrightHolderTextView);
         TextView licenseRepoLinkTextView = (TextView) view.findViewById(R.id.licenseRepoLinkTextView);
-        TextView licenseContentTextView = (TextView)view.findViewById(R.id.licenseContentTextView);
+        TextView licenseContentTextView = (TextView) view.findViewById(R.id.licenseContentTextView);
+        TextView licenseExpandTipTextView = (TextView) view.findViewById(R.id.licenseExpandTipTextView);
 
         LicenseItem licenseItem = (LicenseItem) getItem(position);
         licenseLibraryNameTextView.setText(licenseItem.LibraryName);
         licenseCopyrightHolderTextView.setText(licenseItem.CopyrightHolder);
         licenseRepoLinkTextView.setText(licenseItem.RepositoryLink);
         licenseContentTextView.setText(licenseItem.LicenseContent);
+
+        if (licenseItem.IsShrinkLicenseContentDisplay) {
+            licenseContentTextView.setMaxLines(3);
+            licenseExpandTipTextView.setText("＋");
+
+        } else {
+            licenseExpandTipTextView.setText("ー");
+        }
 
         return view;
     }

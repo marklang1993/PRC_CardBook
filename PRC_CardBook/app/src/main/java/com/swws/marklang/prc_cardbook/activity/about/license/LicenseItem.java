@@ -7,4 +7,5 @@ public class LicenseItem {
     public String RepositoryLink;
     public String LicenseTextFile;
     public String LicenseContent;
+    public boolean IsShrinkLicenseContentDisplay;
 }

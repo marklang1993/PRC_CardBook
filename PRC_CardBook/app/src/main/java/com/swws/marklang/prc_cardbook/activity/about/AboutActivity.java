@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.about.license.LicenseActivity;
+import com.swws.marklang.prc_cardbook.activity.about.useragreement.UserAgreementActivity;
 
 public class AboutActivity extends AppCompatActivity {
 

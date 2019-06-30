@@ -2,6 +2,8 @@ package com.swws.marklang.prc_cardbook.activity.about.license;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.swws.marklang.prc_cardbook.R;
@@ -31,9 +33,18 @@ public class LicenseActivity extends AppCompatActivity {
         ArrayList<LicenseItem> licenseItems = licenseFileUtility.getList();
 
         // Init. licenseListView
-        ListView licenseListView = (ListView) findViewById(R.id.licenseListView);
-        LicenseItemAdapter licenseItemAdapter = new LicenseItemAdapter(getApplicationContext(), licenseItems);
+        final ListView licenseListView = (ListView) findViewById(R.id.licenseListView);
+        final LicenseItemAdapter licenseItemAdapter = new LicenseItemAdapter(getApplicationContext(), licenseItems);
         licenseListView.setAdapter(licenseItemAdapter);
+        licenseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LicenseItem licenseItem = (LicenseItem) licenseItemAdapter.getItem(position);
+                licenseItem.IsShrinkLicenseContentDisplay = !licenseItem.IsShrinkLicenseContentDisplay;
+                // Update
+                licenseItemAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     /**
