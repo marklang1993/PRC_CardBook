@@ -15,14 +15,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CardDetailActivity extends AppCompatActivity {
 
+    // Constants
+    public static final String KEY_CARD_DETAIL_START_TYPE = "com.swws.marklang.prc_cardbook.CARD_DETAIL_START_TYPE";
+    public static final String KEY_ITEM_SEASON_ID = "com.swws.marklang.prc_cardbook.ITEM_SEASON_ID";
     public static final String KEY_ITEM_INDEX = "com.swws.marklang.prc_cardbook.ITEM_INDEX";
+    public static final String KEY_ITEM_IMAGE_ID = "com.swws.marklang.prc_cardbook.ITEM_IMAGE_ID";
+    public static final String KEY_ITEM_INDICATED_JR_COLOR = "com.swws.marklang.prc_cardbook.ITEM_INDICATED_JR_COLOR";
 
     private static final float CARD_BIG_IMAGE_SIZE_SP = 180.0f; // TODO: size
 
@@ -32,7 +41,6 @@ public class CardDetailActivity extends AppCompatActivity {
     public static final int MAX_JR_INVENTORY_COUNT = 0x7;
 
     // Internal variables
-    private int mCardItemIndex = 0;
     private Item mCardItem = null;
     private SeasonID mSeasonID = null;
     private int mInventoryCount = 0; // the current count of this card in inventory
@@ -51,6 +59,11 @@ public class CardDetailActivity extends AppCompatActivity {
     private Button mInventoryJRColorBlackButton;
     private Button mInventoryJRColorGoldButton;
 
+
+    // Activity start type
+    public enum StartType {
+        CARD, SCANNER
+    }
 
     // JR color enum
     private enum JRColor {
@@ -77,32 +90,104 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
 
-        // Get param passed in
         Intent intent = getIntent();
-        if (intent.hasExtra(KEY_ITEM_INDEX)) {
-            mCardItemIndex = intent.getExtras().getInt(KEY_ITEM_INDEX);
+
+        // Get mStartType
+        StartType startType;
+        if (intent.hasExtra(KEY_CARD_DETAIL_START_TYPE)) {
+            startType = StartType.valueOf(
+                    intent.getExtras().getString(KEY_CARD_DETAIL_START_TYPE));
+
         } else {
-            Log.e(this.getClass().getName(), KEY_ITEM_INDEX + " NOT FOUND!");
+            Log.e(this.getClass().getName(), KEY_CARD_DETAIL_START_TYPE + " NOT FOUND!");
+            finish();
             return;
         }
 
-        // Get season id and card item
-        mSeasonID = CardActivity.getSeasonID();
-        mCardItem = CardActivity.getItemByIndex(mCardItemIndex);
-        if (!mCardItem.Rarity.equals("JR")) {
-            mJRColor = JRColor.NOT_JR;
+        // Get mSeasonID
+        if (intent.hasExtra(KEY_ITEM_SEASON_ID)) {
+            mSeasonID = SeasonID.valueOf(
+                    intent.getExtras().getString(KEY_ITEM_SEASON_ID));
+
+        } else {
+            Log.e(this.getClass().getName(), KEY_ITEM_SEASON_ID + " NOT FOUND!");
+            finish();
+            return;
         }
 
-        // Configure the JR color if this is an item with rarity of JR
-        if (mJRColor != JRColor.NOT_JR) {
-            configureJRColor();
+        // Init. indicatedJRColor
+        JRColor indicatedJRColor = JRColor.UNKNOWN;
+
+        // Based on startType to initialize
+        switch (startType) {
+            // Started by CardActivity
+            case CARD:
+                // Get item index
+                int cardItemIndex;
+                if (intent.hasExtra(KEY_ITEM_INDEX)) {
+                    cardItemIndex = intent.getExtras().getInt(KEY_ITEM_INDEX);
+
+                } else {
+                    Log.e(this.getClass().getName(), KEY_ITEM_INDEX + " NOT FOUND!");
+                    finish();
+                    return;
+                }
+
+                // Get card item
+                mCardItem = CardActivity.getItemByIndex(cardItemIndex);
+                if (!mCardItem.Rarity.equals("JR")) {
+                    // Not a JR item
+                    mJRColor = JRColor.NOT_JR;
+
+                } else {
+                    // Configure the JR color since it is a JR item
+                    configureJRColor();
+                }
+                break;
+
+            // Started by ScannerActivity
+            case SCANNER:
+                // Get item image id
+                String cardItemImageID;
+                if (intent.hasExtra(KEY_ITEM_IMAGE_ID)) {
+                    cardItemImageID = intent.getExtras().getString(KEY_ITEM_IMAGE_ID);
+
+                } else {
+                    Log.e(this.getClass().getName(), KEY_ITEM_IMAGE_ID + " NOT FOUND!");
+                    finish();
+                    return;
+                }
+
+                // Get card item
+                HashMap<String, Item> itemIDLUT = MainActivity.getItemIDLUT();
+                mCardItem = itemIDLUT.get(cardItemImageID);
+                if (!mCardItem.Rarity.equals("JR")) {
+                    // Not a JR item
+                    mJRColor = JRColor.NOT_JR;
+
+                } else {
+                    // This is a JR item - get indicated color of JR item
+                    if (intent.hasExtra(KEY_ITEM_IMAGE_ID)) {
+                        indicatedJRColor = JRColor.valueOf(
+                                intent.getExtras().getString(KEY_ITEM_INDICATED_JR_COLOR));
+
+                    } else {
+                        Log.e(this.getClass().getName(), KEY_ITEM_IMAGE_ID + " NOT FOUND!");
+                        finish();
+                        return;
+                    }
+
+                    // Configure the ORIGINAL JR color of this item
+                    configureJRColor();
+                }
+                break;
         }
 
         // Get the current count of this card in inventory
         mInventoryCount = InventoryUtility.getInventoryCount(mSeasonID, mCardItem);
         if (mInventoryCount < 0) {
             Log.e(this.getClass().getName(), "This item does not have an Inventory record in DB.");
-            return;
+            finish();
         }
 
         // Init. mClipboardManager & mClipData
@@ -113,6 +198,11 @@ public class CardDetailActivity extends AppCompatActivity {
         setTitle(getString(R.string.card_detail_activity_name));
         uiLoadCard();
         initButtons();
+
+        // Check is JR color indicated
+        if (indicatedJRColor != JRColor.UNKNOWN) {
+            updateUIAfterSelectingJRColor(indicatedJRColor);
+        }
     }
 
     /**
@@ -150,7 +240,7 @@ public class CardDetailActivity extends AppCompatActivity {
      * @return
      */
     private void uiLoadCard() {
-        // Card static information
+        // Get all necessary views
         ImageView cardBigImageView = (ImageView) findViewById(R.id.cardBigImageView);
         ImageView brandContentTextView = (ImageView) findViewById(R.id.brandContentImageView);
         ImageView typeContentImageView = (ImageView) findViewById(R.id.typeContentImageView);

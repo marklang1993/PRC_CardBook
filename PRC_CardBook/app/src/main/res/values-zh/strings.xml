@@ -51,6 +51,10 @@
     <string name="about_license_info">许可证</string>
 
 
+    <string name="qr_scanner_info_cannot_recognize">无法识别的二维码</string>
+    <string name="qr_scanner_info_update_local_database">请更新数据</string>
+
+
     <string name="card_detail_category">种类</string>
     <string name="card_detail_color">颜色</string>
     <string name="card_detail_brand">品牌</string>
@@ -118,12 +122,6 @@
     <string name="info_download_coordinate_images">获取套装图片中</string>
     <string name="info_download_write_meta_file">正在保存数据</string>
     <string name="info_download_complete">更新完成</string>
-
-
-    <string name="exception_no_camera_device">错误：没有发现可用的相机设备。</string>
-    <string name="exception_configure_failed_camera_capture_session">错误：读取捕获实例失败。</string>
-    <string name="exception_access_camera_failed">错误：相机被占用或没有权限。</string>
-    <string name="exception_get_camera_list_failed">错误：读取相机列表失败。</string>
 
 
     <string name="exception_no_permission_runtime">错误：未能获取必须的权限。</string>

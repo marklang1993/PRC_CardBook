@@ -27,7 +27,8 @@ This project is aimed to help the players of "Kirato Prichan" to manage their po
 * Chinese
 
 ## External Libraries
-* ZXing 3.2.0
+* ZXing 3.3.2
+* Zxing Android Embedded 3.6.0
 * Jsoup 1.11.3
 * Apache Commons-IO 2.6
 * RichTextView 1.0.4

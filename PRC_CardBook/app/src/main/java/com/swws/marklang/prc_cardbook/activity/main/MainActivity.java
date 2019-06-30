@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.about.AboutActivity;
@@ -26,8 +27,10 @@ import com.swws.marklang.prc_cardbook.activity.system.SystemActivity;
 import com.swws.marklang.prc_cardbook.activity.update.DatabaseUpdateActivity;
 import com.swws.marklang.prc_cardbook.activity.profile.ProfileFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
+import com.swws.marklang.prc_cardbook.utility.database.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,9 +38,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity {
 
     private static ArrayList<Database> mDatabases;
+    private static HashMap<String, Item> mItemIDLUT;
 
     private SeriesItemAdapter mSeriesItemAdapter;
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private NavigationView mNavigationView;
 
@@ -61,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         // Init. seriesListView
         ListView seriesListView = (ListView) findViewById(R.id.seriesListView);
         mSeriesItemAdapter = new SeriesItemAdapter(
-                getApplicationContext(), mDatabases
+                getApplicationContext(),
+                mDatabases
         );
         seriesListView.setAdapter(mSeriesItemAdapter);
         seriesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -81,14 +85,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initDrawer() {
         // Init. DrawerLayout and DrawerToggle
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main_activity);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_main_activity);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
-                mDrawerLayout,
+                drawerLayout,
                 R.string.open,
                 R.string.close
         );
-        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
+        drawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -120,8 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.qrcode_menu_item:
                         // Start QRCode Scanner
-                        Intent scannerActivityIntent = new Intent(MainActivity.this, ScannerActivity.class);
-                        startActivity(scannerActivityIntent);
+                        new IntentIntegrator(MainActivity.this).setCaptureActivity(ScannerActivity.class).initiateScan();
                         break;
 
                     case R.id.setting_menu_item:
@@ -257,4 +260,20 @@ public class MainActivity extends AppCompatActivity {
      * @param newDatabases new Databases
      */
     public static void setAllDatabases(ArrayList<Database> newDatabases) { mDatabases = newDatabases; }
+
+    /**
+     * Get item id LUT
+     * @return
+     */
+    public static HashMap<String, Item> getItemIDLUT() {
+        return mItemIDLUT;
+    }
+
+    /**
+     * Set item id LUT
+     * @param lut
+     */
+    public static void setItemIDLUT(HashMap<String, Item> lut) {
+        mItemIDLUT = lut;
+    }
 }

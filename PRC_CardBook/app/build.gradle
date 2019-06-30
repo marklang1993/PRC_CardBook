@@ -37,8 +37,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    // Zxing libraries
-    implementation 'com.google.zxing:core:3.2.0'
+    // zxing libraries
+    implementation 'com.google.zxing:core:3.3.2'
+    // zxing-android-embedded
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     // jsoup HTML parser library @ https://jsoup.org/
     implementation 'org.jsoup:jsoup:1.11.3'
     // Apache commons-io

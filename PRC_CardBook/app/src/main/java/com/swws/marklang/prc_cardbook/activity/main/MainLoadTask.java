@@ -14,6 +14,7 @@ import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
 
@@ -22,16 +23,20 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
 
     private DatabaseFileUtility mDatabaseFileUtility;
 
+    // Data variables
     private static ArrayList<Database> mDatabases;
+    private static HashMap<String, Item> mItemIDLUT;
+
 
     /**
      * Index: ProgressValue
      * 0    : init_item_database
-     * 1    : init_inventory_db
-     * 2    : init_inventory_db_count
-     * 3    : end
+     * 1    : init_item_id_lut
+     * 2    : init_inventory_db
+     * 3    : init_inventory_db_count
+     * 4    : end
      */
-    protected int[] mProgressValues = {0, 55, 60, 100};
+    protected int[] mProgressValues = {0, 25, 55, 60, 100};
 
     public MainLoadTask(
             MainLoadActivity parentActivity,
@@ -52,18 +57,45 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
         // Update progress value
         publishProgress(mProgressValues[0]);
 
+
         // 1. Read meta data
         mDatabases = mDatabaseFileUtility.ReadAllMetaData(Constants.READ_ALL_METADATA_DEBUG);
+        int databaseSize = mDatabases.size();
         // Update progress value
         publishProgress(mProgressValues[1]);
 
-        // 2. Init. DB
+
+        // 2. Construct ItemIDLUT
+        mItemIDLUT = new HashMap<>();
+        for (int i = 0; i < databaseSize; ++i) {
+            // Get current Database
+            Database database = mDatabases.get(i);
+
+            // Iterate all items in the current Database
+            for (Item item: database) {
+                String itemImageId = item.getImageID();
+                mItemIDLUT.put(itemImageId, item);
+            }
+
+            // Calculate the progress and update
+            int currentProgress = MathUtility.calculateCurrentProgressValue(
+                    i,
+                    0,
+                    databaseSize,
+                    mProgressValues[2],
+                    mProgressValues[3] - 1);
+            publishProgress(currentProgress);
+        }
+
+
+        // 3. Init. DB
         InventoryUtility.initDB(mParentActivity);
         // Update progress value
-        publishProgress(mProgressValues[2]);
+        publishProgress(mProgressValues[3]);
 
-        // 3. Init. the content of Inventory DB
-        for (int i = 0; i < mDatabases.size(); ++i) {
+
+        // 4. Init. the content of Inventory DB
+        for (int i = 0; i < databaseSize; ++i) {
             // Get current Database
             Database database = mDatabases.get(i);
             SeasonID dbSeasonId = database.seasonId();
@@ -85,18 +117,18 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
             int currentProgress = MathUtility.calculateCurrentProgressValue(
                     i,
                     0,
-                    mDatabases.size(),
-                    mProgressValues[2],
-                    mProgressValues[3] - 1);
+                    databaseSize,
+                    mProgressValues[3],
+                    mProgressValues[4] - 1);
             publishProgress(currentProgress);
         }
 
-        // Sort
-        // * Collections.sort() implemented by Merge Sort which is stable.
-        Collections.sort(mDatabases, new DatabaseComparator());
 
+        // 4. Sort
+        // * Collections.sort() is implemented by Merge Sort, which is a stable sorting algorithm.
+        Collections.sort(mDatabases, new DatabaseComparator());
         // Update progress value
-        publishProgress(mProgressValues[3]);
+        publishProgress(mProgressValues[4]);
 
         return true;
     }
@@ -110,13 +142,18 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
 
-        // If initialization is successful, update Databases in MainActivity.
+        // If initialization is successful, update "Databases" and "ItemIDLUT" in MainActivity.
         if (aBoolean) {
             MainActivity.setAllDatabases(mDatabases);
+            MainActivity.setItemIDLUT(mItemIDLUT);
         }
 
         // Notify the parent activity
         mParentActivity.Finished(aBoolean);
+
+        // Do some clean
+        mParentActivity = null;
+        mMainLoadProgressBar = null;
     }
 
     @Override

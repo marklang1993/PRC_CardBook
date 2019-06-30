@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
@@ -18,7 +19,6 @@ public class CardActivity extends AppCompatActivity {
 
     public static final String KEY_SERIES_INDEX = "com.swws.marklang.prc_cardbook.SERIES_INDEX";
 
-    private int mSeriesIndex = 0;
     private static Database mDatabase = null;
 
     private CardItemAdapter mCardItemAdapter = null;
@@ -30,15 +30,18 @@ public class CardActivity extends AppCompatActivity {
 
         // Extract passed in info.
         Intent intent = getIntent();
+        int seriesIndex;
         if (intent.hasExtra(KEY_SERIES_INDEX)) {
-            mSeriesIndex = intent.getExtras().getInt(KEY_SERIES_INDEX);
+            seriesIndex = intent.getExtras().getInt(KEY_SERIES_INDEX);
+
         } else {
             Log.e(this.getClass().getName(), KEY_SERIES_INDEX + " NOT FOUND!");
             mDatabase = null;
+            finish();
             return;
         }
         // Get corresponding database
-        mDatabase = MainActivity.getDatabaseByIndex(mSeriesIndex);
+        mDatabase = MainActivity.getDatabaseByIndex(seriesIndex);
 
         // Initialize UI components
         initUI();
@@ -62,8 +65,12 @@ public class CardActivity extends AppCompatActivity {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Update "cardGridView" after "CardDetailActivity" closed.
-        mCardItemAdapter.notifyDataSetChanged();
+        if (requestCode == Constants.REQUEST_CARD_INVENTORY_CHANGE) {
+            if (resultCode == RESULT_OK) {
+                // Update "cardGridView" if the inventory of any item changed
+                mCardItemAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     /**
@@ -84,11 +91,13 @@ public class CardActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showCardDetailActivity = new Intent(getApplicationContext(), CardDetailActivity.class);
 
-                // Passing the index of the card item
+                // Passing params
+                showCardDetailActivity.putExtra(CardDetailActivity.KEY_CARD_DETAIL_START_TYPE, CardDetailActivity.StartType.CARD.toString());
                 showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_INDEX, position);
+                showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_SEASON_ID, mDatabase.seasonId().toString());
 
                 // Start the CardDetailActivity
-                startActivityForResult(showCardDetailActivity, 0);
+                startActivityForResult(showCardDetailActivity, Constants.REQUEST_CARD_INVENTORY_CHANGE);
             }
         });
 
@@ -104,11 +113,4 @@ public class CardActivity extends AppCompatActivity {
     public static Item getItemByIndex(int itemIndex) {
         return mDatabase.get(itemIndex);
     }
-
-    /**
-     * Get current Season ID
-     * @return Season ID
-     */
-    public static SeasonID getSeasonID() { return mDatabase.seasonId(); }
-
 }

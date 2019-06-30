@@ -1,97 +1,100 @@
 package com.swws.marklang.prc_cardbook.activity.qrcode;
 
-import android.graphics.Rect;
-import android.media.Image;
-import android.media.ImageReader;
 import android.util.Log;
 
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.ChecksumException;
-import com.google.zxing.FormatException;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.NotFoundException;
-import com.google.zxing.PlanarYUVLuminanceSource;
-import com.google.zxing.Reader;
-import com.google.zxing.Result;
-import com.google.zxing.common.HybridBinarizer;
+import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
+import com.swws.marklang.prc_cardbook.activity.qrcode.lut.QRCodeFileUtility;
+import com.swws.marklang.prc_cardbook.activity.qrcode.lut.QRCodeLUTItem;
+import com.swws.marklang.prc_cardbook.utility.database.Item;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
-import java.util.concurrent.Semaphore;
+import java.util.HashMap;
 
-public class QRCodeDecoder extends Thread {
+public class QRCodeDecoder {
 
-    private ImageReader mImageReader;
-    private Semaphore mCapturePictureSemaphore;
-    private Rect mCropAreaQRCode;
+    // Debug only
+    private static String lastDigest = "";
 
-    public QRCodeDecoder(
-            ImageReader imageReader,
-            Semaphore capturePictureSemaphore,
-            Rect cropAreaQRCode
-    ) {
-        super();
+    // Constants
+    private final int SIZE_MESSAGE_DIGEST = 40;
+    private final String TYPE_MESSAGE_DIGEST = "SHA-1";
 
-        // Set member variables
-        mImageReader = imageReader;
-        mCapturePictureSemaphore = capturePictureSemaphore;
-        mCropAreaQRCode = cropAreaQRCode;
-    }
+    /**
+     * Generate MessageDigest
+     * @param rawBytes
+     * @return null if error occurs
+     */
+    private String generateMessageDigest(byte[] rawBytes) {
+        StringBuilder sb = new StringBuilder(SIZE_MESSAGE_DIGEST);
 
-    @Override
-    public void run() {
-        // When an image is available, use zxing to decode this image
-        Image previewImage = mImageReader.acquireLatestImage();
-        ByteBuffer previewByteBuffer = previewImage.getPlanes()[0].getBuffer();
-        byte[] previewBytes = new byte[previewByteBuffer.capacity()];
-        previewByteBuffer.get(previewBytes);
-
-        // Get the image size
-        int imageWidth = previewImage.getWidth();
-        int imageHeight = previewImage.getHeight();
-
-        // Must release the image after all data are achieved
-        previewImage.close();
-
-        // Convert the image (cropping should be done here)
-        PlanarYUVLuminanceSource luminanceSource = new PlanarYUVLuminanceSource(
-                previewBytes, imageWidth, imageHeight,  // image data
-                mCropAreaQRCode.left, mCropAreaQRCode.top, mCropAreaQRCode.width(), mCropAreaQRCode.height(), // crop area
-                false);
-        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
-        Reader qrReader = new MultiFormatReader();
         try {
-            Result result = qrReader.decode(binaryBitmap);
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA-1");
-                md.update(result.getRawBytes());
-                byte[] digest = md.digest();
-                BigInteger bigInt = new BigInteger(1,digest);
-                String hashtext = bigInt.toString(16);
-                // Now we need to zero pad it if you actually want the full 32 chars.
-                while(hashtext.length() < 32 ){
-                    hashtext = "0" + hashtext;
-                }
-                Log.i(getClass().getName(), "SHA-1: " + hashtext);
-            } catch (Exception ex)
-            {
-                ;
+            // Generate message digest
+            MessageDigest md = MessageDigest.getInstance(TYPE_MESSAGE_DIGEST);
+            md.update(rawBytes);
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1,digest);
+            String hashText = bigInt.toString(16);
+
+            // Now we need to zero pad it if you actually want the full SIZE_MESSAGE_DIGEST chars.
+            for (int i = hashText.length(); i < SIZE_MESSAGE_DIGEST; ++i) {
+                sb.append('0');
             }
-            Log.i(getClass().getName(), "Decoded: " + result.getText());
+            sb.append(hashText);
 
-        } catch (FormatException e) {
-            Log.e(getClass().getName(), "FormatException");
+            //Log.i(getClass().getName(), "Message Digest: " + sb.toString());
 
-        } catch (ChecksumException e) {
-            Log.e(getClass().getName(), "ChecksumException");
-
-        } catch (NotFoundException e) {
-            Log.e(getClass().getName(), "NotFoundException");
+        } catch (Exception ex) {
+            return null;
         }
 
-        // Release the semaphore
-        mCapturePictureSemaphore.release();
+        return sb.toString();
     }
 
+    /**
+     * Decode raw bytes from QRCode
+     * @param rawBytes
+     */
+    public QRCodeDecodeResult decode(byte[] rawBytes) {
+        // Get message digest of the raw bytes
+        String digest = generateMessageDigest(rawBytes);
+        // Log.i(getClass().getName(), "Decoded: " + result.getText());
+
+        // Init. decoding result
+        QRCodeDecodeResult decodeResult = new QRCodeDecodeResult();
+
+        // Find the possible corresponding item
+        QRCodeFileUtility qrCodeFileUtility = QRCodeFileUtility.getInstance();
+        QRCodeLUTItem lutItem = qrCodeFileUtility.getLUTItem(digest);
+        if (lutItem == null) {
+            // Item not found
+            decodeResult.DecodingResult = QRCodeDecodeResult.Result.UNKNOWN;
+            if (digest == null) {
+                Log.e(getClass().getName(), "Digest is NULL");
+
+            } else if (!digest.equals(lastDigest)) {
+                lastDigest = digest;
+                Log.e(getClass().getName(), "Item Not Found with Digest: " + digest);
+            }
+
+        } else {
+            // Get corresponding Item
+            HashMap<String, Item> itemIDLUT = MainActivity.getItemIDLUT();
+
+            // Try to get item
+            if (itemIDLUT.containsKey(lutItem.ImageID)) {
+                // Item Found
+                decodeResult.DecodingResult = QRCodeDecodeResult.Result.OK;
+                decodeResult.ItemImageID = lutItem.ImageID;
+                decodeResult.ItemSeasonID = lutItem.SeasonID;
+                decodeResult.JRColor = lutItem.JRColor;
+
+            } else {
+                // Item not found -> Need to update local database
+                decodeResult.DecodingResult = QRCodeDecodeResult.Result.UPDATE;
+            }
+        }
+
+        return decodeResult;
+    }
 }

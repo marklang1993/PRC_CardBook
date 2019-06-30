@@ -51,6 +51,10 @@
     <string name="about_license_info">ライセンス</string>
 
 
+    <string name="qr_scanner_info_cannot_recognize">認識できないQRコード</string>
+    <string name="qr_scanner_info_update_local_database">データベースを更新してください</string>
+
+
     <string name="card_detail_category">カテゴリー</string>
     <string name="card_detail_color">カラー</string>
     <string name="card_detail_brand">ブランド</string>
@@ -118,12 +122,6 @@
     <string name="info_download_coordinate_images">コーデ画像取得中</string>
     <string name="info_download_write_meta_file">データ保存中</string>
     <string name="info_download_complete">更新完了</string>
-
-
-    <string name="exception_no_camera_device">エラー：カメラを見つかりませんでした</string>
-    <string name="exception_configure_failed_camera_capture_session">エラー：読取りセッション初期化失敗</string>
-    <string name="exception_access_camera_failed">エラー：カメラをアクセスできません</string>
-    <string name="exception_get_camera_list_failed">エラー：カメラリストを取得できませんでした</string>
 
 
     <string name="exception_no_permission_runtime">エラー：必要な権限を取得できません</string>

@@ -51,6 +51,10 @@
     <string name="about_license_info">License</string>
 
 
+    <string name="qr_scanner_info_cannot_recognize">Cannot Recognize</string>
+    <string name="qr_scanner_info_update_local_database">Please Update Database</string>
+
+
     <string name="card_detail_category">Category</string>
     <string name="card_detail_color">Color</string>
     <string name="card_detail_brand">Brand</string>
@@ -118,12 +122,6 @@
     <string name="info_download_coordinate_images">Retrieving item images</string>
     <string name="info_download_write_meta_file">Saving data</string>
     <string name="info_download_complete">Finish</string>
-
-
-    <string name="exception_no_camera_device">Error: Cannot find camera.</string>
-    <string name="exception_configure_failed_camera_capture_session">Error: Failed to initialize the capture session.</string>
-    <string name="exception_access_camera_failed">Error: Cannot access to the camera.</string>
-    <string name="exception_get_camera_list_failed">Error: Cannot get the camera list.</string>
 
 
     <string name="exception_no_permission_runtime">Error: Cannot get the required permission.</string>
