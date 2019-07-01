@@ -2,7 +2,7 @@ Prichan Mobile Phone Card Book
 =======
 
 ## Current Version
-* v1.2.1.x
+* v1.2.2.x
 
 Note: x is used as internal version number. The internal version tends to update frequently.
 

@@ -90,6 +90,8 @@ public class ScannerActivity extends AppCompatActivity {
             @Override
             public void possibleResultPoints(List<ResultPoint> resultPoints) { }
         });
+
+        setTitle(R.string.qr_scanner_activity_name);
     }
 
     @Override
