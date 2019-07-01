@@ -22,6 +22,9 @@ public class ExportInventoryDatabaseTask extends ExternalFileOperationInventoryD
     @Override
     protected Boolean doInBackground(Void... voids) {
 
+        // Publish the initial progress
+        publishProgress(mProgressValues[0]);
+
         // Get the inventory data of all items
         Inventory[] allInventories = InventoryUtility.queryAllInventoryItems();
         publishProgress(mProgressValues[1]);

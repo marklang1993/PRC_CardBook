@@ -44,6 +44,7 @@
     <string name="system_export_inventory_database_fail">Failed to export</string>
     <string name="system_import_inventory_database_done">Successfully imported</string>
     <string name="system_import_inventory_database_fail">Failed to import</string>
+    <string name="system_clear_inventory_database_done">Successfully cleared</string>
 
 
     <string name="about_version_number">Version</string>

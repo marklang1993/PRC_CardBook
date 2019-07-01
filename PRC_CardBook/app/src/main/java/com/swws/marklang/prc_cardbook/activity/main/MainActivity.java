@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.system_menu_item:
                         // Start "system" activity
                         Intent systemActivityIntent = new Intent(MainActivity.this, SystemActivity.class);
-                        startActivity(systemActivityIntent);
+                        startActivityForResult(systemActivityIntent, Constants.REQUEST_SYSTEM_INVENTORY_DATABASE_CHANGE);
                         break;
 
                     case R.id.update_menu_item:
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                Intent startMainLoadActivityIntent = new Intent(
                        getApplicationContext(), MainLoadActivity.class
                );
-               startMainLoadActivityIntent.putExtra(MainLoadActivity.KEY_INIT_DB_OPTION, true);
+               startMainLoadActivityIntent.putExtra(MainLoadActivity.KEY_IS_START_BY_MAIN_ACTIVITY, true);
                startActivityForResult(startMainLoadActivityIntent, Constants.REQUEST_LOAD_RESULT);
            }
 
@@ -236,6 +236,16 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == Constants.REQUEST_PROFILE_UPDATE) {
             // Notify navigation drawer to update
             updateProfile();
+
+        } else if (requestCode == Constants.REQUEST_SYSTEM_INVENTORY_DATABASE_CHANGE) {
+            if (resultCode == RESULT_OK) {
+                // Need to Start MainLoadActivity & update inventory database
+                Intent startMainLoadActivityIntent = new Intent(
+                        getApplicationContext(), MainLoadActivity.class
+                );
+                startMainLoadActivityIntent.putExtra(MainLoadActivity.KEY_IS_START_BY_MAIN_ACTIVITY, true);
+                startActivity(startMainLoadActivityIntent);
+            }
         }
     }
 

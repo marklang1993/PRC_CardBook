@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
+import com.swws.marklang.prc_cardbook.activity.system.inventory.ClearInventoryDatabaseTask;
 import com.swws.marklang.prc_cardbook.activity.system.inventory.ExportInventoryDatabaseTask;
 import com.swws.marklang.prc_cardbook.activity.system.inventory.ImportInventoryDatabaseTask;
 
@@ -74,6 +75,11 @@ public class SystemProgressActivity extends AppCompatActivity {
                         BACKUP_FILE_NAME
                 );
                 importInventoryDBTask.execute();
+                break;
+
+            case SystemActivity.SYSTEM_TASK_CLEAR_INVENTORY_DATABASE:
+                ClearInventoryDatabaseTask clearInventoryDBTask = new ClearInventoryDatabaseTask(this);
+                clearInventoryDBTask.execute();
                 break;
 
             default:

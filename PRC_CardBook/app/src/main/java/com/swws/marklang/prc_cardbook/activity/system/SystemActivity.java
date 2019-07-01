@@ -16,6 +16,7 @@ public class SystemActivity extends AppCompatActivity {
     public static final String KEY_SYSTEM_TASK_INDEX = "com.swws.marklang.prc_cardbook.SYSTEM_TASK_INDEX";
     public static final int SYSTEM_TASK_EXPORT_INVENTORY_DATABASE = 1;
     public static final int SYSTEM_TASK_IMPORT_INVENTORY_DATABASE = 2;
+    public static final int SYSTEM_TASK_CLEAR_INVENTORY_DATABASE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class SystemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SystemActivity.this, SystemProgressActivity.class);
                 intent.putExtra(KEY_SYSTEM_TASK_INDEX, SYSTEM_TASK_EXPORT_INVENTORY_DATABASE);
-                startActivityForResult(intent, Constants.REQUEST_SYSTEM_PROGRESS_EXPORTING);
+                startActivityForResult(intent, Constants.REQUEST_SYSTEM_PROGRESS_INVENTORY_DB_EXPORTING);
             }
         });
 
@@ -51,7 +52,19 @@ public class SystemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SystemActivity.this, SystemProgressActivity.class);
                 intent.putExtra(KEY_SYSTEM_TASK_INDEX, SYSTEM_TASK_IMPORT_INVENTORY_DATABASE);
-                startActivityForResult(intent, Constants.REQUEST_SYSTEM_PROGRESS_IMPORTING);
+                startActivityForResult(intent, Constants.REQUEST_SYSTEM_PROGRESS_INVENTORY_DB_IMPORTING);
+            }
+        });
+
+        // System Clear Inventory Database Button
+        Button systemClearInventoryDatabaseButton = (Button)
+                findViewById(R.id.systemClearInventoryDatabaseButton);
+        systemClearInventoryDatabaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SystemActivity.this, SystemProgressActivity.class);
+                intent.putExtra(KEY_SYSTEM_TASK_INDEX, SYSTEM_TASK_CLEAR_INVENTORY_DATABASE);
+                startActivityForResult(intent, Constants.REQUEST_SYSTEM_PROGRESS_INVENTORY_DB_CLEAR);
             }
         });
 
@@ -80,7 +93,7 @@ public class SystemActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case Constants.REQUEST_SYSTEM_PROGRESS_EXPORTING:
+            case Constants.REQUEST_SYSTEM_PROGRESS_INVENTORY_DB_EXPORTING:
                 Toast.makeText(this,
                         resultCode == RESULT_OK ?
                                 R.string.system_export_inventory_database_done :
@@ -89,15 +102,31 @@ public class SystemActivity extends AppCompatActivity {
                         .show();
                 break;
 
-            case Constants.REQUEST_SYSTEM_PROGRESS_IMPORTING:
+            case Constants.REQUEST_SYSTEM_PROGRESS_INVENTORY_DB_IMPORTING:
+                if (resultCode == RESULT_OK) {
+                    // Importing is successful
+                    Toast.makeText(this,
+                            R.string.system_import_inventory_database_done,
+                            Toast.LENGTH_SHORT).show();
+                    // Need to ask MainActivity to update inventory database
+                    setResult(RESULT_OK);
+
+                } else {
+                    // Importing is failed
+                    Toast.makeText(this,
+                            R.string.system_import_inventory_database_fail,
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case Constants.REQUEST_SYSTEM_PROGRESS_INVENTORY_DB_CLEAR:
+                // Clear is successful
                 Toast.makeText(this,
-                        resultCode == RESULT_OK ?
-                                R.string.system_import_inventory_database_done :
-                                R.string.system_import_inventory_database_fail,
-                        Toast.LENGTH_SHORT)
-                        .show();
+                        R.string.system_clear_inventory_database_done,
+                        Toast.LENGTH_SHORT).show();
+                // Need to ask MainActivity to update inventory database
+                setResult(RESULT_OK);
                 break;
         }
-
     }
 }

@@ -16,7 +16,7 @@ public class MainLoadActivity extends AppCompatActivity {
 
     private static Context mApplicationContext;
 
-    public static final String KEY_INIT_DB_OPTION = "com.swws.marklang.prc_cardbook.INIT_DB_OPTION";
+    public static final String KEY_IS_START_BY_MAIN_ACTIVITY = "com.swws.marklang.prc_cardbook.IS_START_BY_MAIN_ACTIVITY";
     private boolean isStartedByMain;
 
     private DatabaseFileUtility mDatabaseFileUtility;
@@ -35,7 +35,7 @@ public class MainLoadActivity extends AppCompatActivity {
 
         // Extract passed in info.
         Intent intent = getIntent();
-        if (intent.hasExtra(KEY_INIT_DB_OPTION)) {
+        if (intent.hasExtra(KEY_IS_START_BY_MAIN_ACTIVITY)) {
             // Started by MainActivity (after local Database updated)
             isStartedByMain = true;
 

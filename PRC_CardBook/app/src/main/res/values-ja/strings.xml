@@ -44,6 +44,7 @@
     <string name="system_export_inventory_database_fail">出力が失敗しました</string>
     <string name="system_import_inventory_database_done">入力が完成しました</string>
     <string name="system_import_inventory_database_fail">入力が失敗しました</string>
+    <string name="system_clear_inventory_database_done">削除が完成した</string>
 
 
     <string name="about_version_number">バージョン</string>

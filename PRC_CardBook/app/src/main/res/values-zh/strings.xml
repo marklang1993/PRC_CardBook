@@ -44,6 +44,7 @@
     <string name="system_export_inventory_database_fail">导出失败</string>
     <string name="system_import_inventory_database_done">导入完成</string>
     <string name="system_import_inventory_database_fail">导入失败</string>
+    <string name="system_clear_inventory_database_done">删除完成</string>
 
 
     <string name="about_version_number">版本号</string>

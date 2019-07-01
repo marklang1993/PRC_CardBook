@@ -23,6 +23,9 @@ public class ImportInventoryDatabaseTask extends ExternalFileOperationInventoryD
     @Override
     protected Boolean doInBackground(Void... voids) {
 
+        // Publish the initial progress
+        publishProgress(mProgressValues[0]);
+
         // 1. Read the inventory data from file
         InventoryFileUtility inventoryFileUtility = InventoryFileUtility.getInstance();
         Inventory[] allInventories = inventoryFileUtility.readAllInventory(
