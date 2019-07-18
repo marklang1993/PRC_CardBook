@@ -47,7 +47,6 @@ public class CardDetailActivity extends AppCompatActivity {
     private JRColor mJRColor = JRColor.UNKNOWN;
 
     private ClipboardManager mClipboardManager;
-    private ClipData mClipData;
 
     // Inventory JR color selection buttons
     private Button mInventoryJRColorPinkButton;
@@ -190,9 +189,8 @@ public class CardDetailActivity extends AppCompatActivity {
             finish();
         }
 
-        // Init. mClipboardManager & mClipData
+        // Init. mClipboardManager
         mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        mClipData = ClipData.newPlainText("PRC_CardBook Text", mCardItem.ItemName);
 
         // Init. UIs
         setTitle(getString(R.string.card_detail_activity_name));
@@ -266,7 +264,10 @@ public class CardDetailActivity extends AppCompatActivity {
         cardNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mClipboardManager.setPrimaryClip(mClipData);
+                TextView cardNameTextView = (TextView) findViewById(R.id.cardNameTextView);
+                String itemName = cardNameTextView.getText().toString().replace('\n', ' ');
+                ClipData clipData = ClipData.newPlainText("PRC_CardBook Text", itemName);
+                mClipboardManager.setPrimaryClip(clipData);
 
                 Toast.makeText(
                         CardDetailActivity.this,
