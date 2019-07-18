@@ -1,6 +1,7 @@
 package com.swws.marklang.prc_cardbook.activity.update;
 
 import android.util.Log;
+import android.util.Pair;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.HttpUtility;
@@ -23,34 +24,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUpdater {
-
-    // Separator used to split Urls
-    private static final String mUrlSeparator = ";";
 
     // All pages that will be ignored in _getUrlDict()
     private HashSet<String> IGNORE_PAGES;
 
     // All constant strings
-    /*
-    <string name="database_updater2_url_prefix">https://prichan.jp/item/</string>
-    <string name="database_updater2_resource_prefix">https://prichan.jp/item/</string>
-    <string name="database_updater2_entry_page">index.html</string>
-    <string name="database_updater2_series_entry_page">index.html</string>
-    <string name="database_updater2_jp_keyword_color">カラー</string>
-    <string name="database_updater2_jp_keyword_brand">ブランド</string>
-    <string name="database_updater2_jp_keyword_type">タイプ</string>
-    <string name="database_updater2_jp_keyword_rarity">レアリティ</string>
-    <string name="database_updater2_jp_keyword_score">いいね☆</string>
-
-    <string name="database_updater2_jp_category_hair_accessory">ヘアアクセ</string>
-    <string name="database_updater2_jp_category_tops">トップス</string>
-    <string name="database_updater2_jp_category_skirt">スカート</string>
-    <string name="database_updater2_jp_category_shoes">シューズ</string>
-    <string name="database_updater2_jp_category_one_piece">ワンピ</string>
-    */
     private final String URL_PREFIX = "https://prichan.jp/item/";
     private final String RESOURCE_PREFIX = "https://prichan.jp/item/";
     private final String ENTRY_PAGE = "index.html";
@@ -60,8 +42,14 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
     private final String JP_KEYWORD_TYPE = "タイプ";
     private final String JP_KEYWORD_RARITY = "レアリティ";
     private final String JP_KEYWORD_SCORE = "いいね☆";
-    
+
+    // Separator used to split Urls
+    private static final String mUrlSeparator = ";";
+    // Category keyword dictionary
     private Set<Map.Entry<String, String>> JP_CATEGORY_KEYWORDS_ENTRY_SET;
+
+    // Latest series
+    private Pair<String, String> mLatestSeries = null;
 
 
     public DatabaseUpdater2(DatabaseUpdateDownloadTask downloadTask) {
@@ -78,7 +66,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
         categoryKeywordsHashTable.put("スカート", "スカート");
         categoryKeywordsHashTable.put("シューズ", "シューズ");
         categoryKeywordsHashTable.put("ワンピ", "ワンピース");
-        /**
+        /*
          * New Added Keywords on June 17th, 2019
          */
         categoryKeywordsHashTable.put("ドレス", "ワンピース");
@@ -121,6 +109,16 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                         rawUrlDict.remove(correspondingUrl);
                     }
                 }
+            }
+        }
+
+        /*
+         * If no database is required to update,
+         * forcedly update the latest database.
+         */
+        if (rawUrlDict.isEmpty()) {
+            if (mLatestSeries != null) {
+                rawUrlDict.put(mLatestSeries.first, mLatestSeries.second);
             }
         }
 
@@ -305,7 +303,9 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
     private LinkedHashMap<String, String> _populateAllSeries()
             throws HttpUtility.ServerErrorException, IOException {
 
+        // Url dictionary & queue
         LinkedHashMap<String, String> urlDict = new LinkedHashMap<>();
+        LinkedList<Pair<String, String>> urlQueue = new LinkedList<>();
 
         // Get the series page
         String absoluteURL = URL_PREFIX + ENTRY_PAGE;
@@ -313,7 +313,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
         // Parse
         Document pageDoc = Jsoup.parse(subpageHtmlContent);
 
-        // Selete the series area
+        // Select the series area
         Elements seriesArea = pageDoc.select("div[class=section clearfix itemListWrap]");
         Elements seriesList = seriesArea.select("div[class=itemIndexList]");
 
@@ -360,13 +360,26 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                 }
             }
 
+            // Save the current <url, name> pair to "urlDict" and "urlQueue"
             String urlTable = urlTableString.toString();
             if (urlTable.length() > 0) {
                 // Remove the trailing mUrlSeparator
                 urlTable = urlTable.substring(0, urlTable.length() - 1);
-                // Add the current <url, name> pair to the urlDict.
+
+                // 1. Put the current <url, name> pair to "urlDict"
                 urlDict.put(urlTable, title);
+                // 2. Enqueue the current <url, name> pair
+                Pair<String, String> currentPair = new Pair<>(urlTable, title);
+                urlQueue.addLast(currentPair);
             }
+        }
+
+        // Update mLatestSeries
+        if (!urlQueue.isEmpty()) {
+            mLatestSeries = urlQueue.getFirst();
+
+        } else {
+            mLatestSeries = null;
         }
 
         return urlDict;

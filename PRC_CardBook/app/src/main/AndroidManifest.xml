@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.qrcode.ScannerActivity"></activity>
+        <activity android:name=".activity.qrcode.ScannerActivity" />
         <activity android:name=".activity.about.license.LicenseActivity" />
         <activity android:name=".activity.about.useragreement.UserAgreementActivity" />
         <activity android:name=".activity.about.AboutActivity" />

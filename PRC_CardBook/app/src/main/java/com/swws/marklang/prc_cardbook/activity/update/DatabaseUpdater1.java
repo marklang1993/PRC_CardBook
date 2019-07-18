@@ -28,14 +28,6 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
     private HashSet<String> IGNORE_PAGES;
 
     // All constant strings
-    /*
-    <string name="database_updater1_url_prefix">https://prichan.jp/season1/items/</string>
-    <string name="database_updater1_resource_prefix">https://prichan.jp</string>
-    <string name="database_updater1_entry_page">1st.html</string>
-    <string name="database_updater1_jp_keyword_category">カテゴリー</string>
-    <string name="database_updater1_jp_keyword_color">カラー</string>
-    */
-
     private final String URL_PREFIX = "https://prichan.jp/season1/items/";
     private final String RESOURCE_PREFIX = "https://prichan.jp";
     private final String ENTRY_PAGE = "1st.html";
