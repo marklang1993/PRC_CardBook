@@ -2,6 +2,7 @@ package com.swws.marklang.prc_cardbook.activity.qrcode.lut;
 
 import android.util.Log;
 
+import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.utility.AssetsFileUtility;
 
 import java.io.BufferedReader;
@@ -92,14 +93,14 @@ public class QRCodeFileUtility extends AssetsFileUtility {
         BufferedReader reader = getReader(fileName);
         if (reader == null) return;
 
-        // Skip the first line
-        readLine(reader, QRCODE_DEBUG_IS_PRINT);
-
         // Read out LUT file
         while (true) {
             // Read one item
             String rawLine = readLine(reader, QRCODE_DEBUG_IS_PRINT);
             if (rawLine == null) break; // reached EOF
+
+            // Check is the line required to be omitted
+            if (rawLine.charAt(0) == Constants.INTERNAL_FILE_LINE_IGNORE_CHAR) continue;
 
             // Get tokens
             String[] tokens = rawLine.split(",");

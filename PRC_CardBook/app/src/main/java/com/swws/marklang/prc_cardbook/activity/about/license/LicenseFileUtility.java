@@ -1,5 +1,6 @@
 package com.swws.marklang.prc_cardbook.activity.about.license;
 
+import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.about.AboutFileUtility;
 
 import java.io.BufferedReader;
@@ -49,14 +50,15 @@ public class LicenseFileUtility extends AboutFileUtility {
         BufferedReader reader = getReader(INDEX_FILE);
         if (reader == null) return null;
 
-        // Skip the first line
-        readLine(reader, LICENSE_DEBUG_IS_PRINT);
-
         // Read the list
         ArrayList<LicenseItem> licenseItems = new ArrayList<>();
         while (true) {
+            // Read one item
             String rawLine = readLine(reader, LICENSE_DEBUG_IS_PRINT);
-            if (rawLine == null) break;
+            if (rawLine == null) break; // reached EOF
+
+            // Check is the line required to be omitted
+            if (rawLine.charAt(0) == Constants.INTERNAL_FILE_LINE_IGNORE_CHAR) continue;
 
             // Check the format
             String[] tokens = rawLine.split(",");

@@ -46,4 +46,7 @@ public class Constants {
 
     // Others
     public static final boolean READ_ALL_METADATA_DEBUG = false;
+
+    // The line in the internal files starting with "#" will be ignored
+    public static final char INTERNAL_FILE_LINE_IGNORE_CHAR = '#';
 }
