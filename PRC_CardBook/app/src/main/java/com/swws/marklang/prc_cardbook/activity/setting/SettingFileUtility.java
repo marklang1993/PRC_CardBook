@@ -84,7 +84,7 @@ public final class SettingFileUtility extends InternalFileUtility {
             // Get count
             String itemCountString = readLine(bufferedReader, SETTING_DEBUG_IS_PRINT);
             int itemCount = Integer.valueOf(itemCountString);
-            if (itemCount > 0) {
+            while (itemCount > 0) {
                 String line = readLine(bufferedReader, SETTING_DEBUG_IS_PRINT);
                 int indexOfSeparator = line.indexOf(',');
                 if (indexOfSeparator > 0 && indexOfSeparator < (line.length() - 1)) {
@@ -94,6 +94,7 @@ public final class SettingFileUtility extends InternalFileUtility {
                     // Put this pair in the dictionary
                     mSettings.put(key, value);
                 }
+                --itemCount;
             }
             close(bufferedReader);
             return true;
