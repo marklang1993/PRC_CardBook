@@ -1,9 +1,11 @@
 package com.swws.marklang.prc_cardbook.activity.update;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,15 +17,21 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class DatabaseUpdateActivity extends AppCompatActivity {
+public class DatabaseUpdateActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     public static final String KEY_START_OPTION = "com.swws.marklang.prc_cardbook.START_OPTION";
+    private final String[] mPermissions = {Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET};
 
     private int mStartOption; // 0: Start by user, 1: Start by app (in the first launching).
     private DatabaseUpdateDownloadTask mDatabaseUpdateDownloadTask = null;
@@ -48,7 +56,74 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         // Initialize UI components
         initUIs();
 
-        // NOTE: The AlertDialog will only be shown after onCreate() finishes
+        // Check network permissions
+        checkNetworkPermissions();
+    }
+
+    /**
+     * Check and request INTERNET & ACCESS_NETWORK_STATE permissions via EasyPermissions
+     */
+    private void checkNetworkPermissions() {
+        if (EasyPermissions.hasPermissions(this, mPermissions)) {
+            // Network permissions have already been grant
+            checkNetworkStatus(); // NOTE: The AlertDialog will only be shown after onCreate() finishes
+
+        } else {
+            // Request network permissions
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.permission_request_rationale_network),
+                    Constants.REQUEST_PERMISSION_NETWORK,
+                    mPermissions
+            );
+        }
+    }
+
+    /**
+     * Get result of requesting permission
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    /**
+     * Network permissions are granted
+     * @param requestCode
+     * @param perms
+     */
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        if (requestCode == Constants.REQUEST_PERMISSION_NETWORK && perms.size() == mPermissions.length) {
+            // NOTE: The AlertDialog will only be shown after onCreate() finishes
+            checkNetworkStatus();
+        }
+    }
+
+    /**
+     * Network permissions request is denied
+     * @param requestCode
+     * @param perms
+     */
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        // Permissions are NOT granted by the user - show an error message
+        Toast.makeText(this, R.string.exception_no_permission_runtime, Toast.LENGTH_LONG)
+                .show();
+
+        // Close this activity
+        finishAndDoNothing();
+    }
+
+    /**
+     * Check network status and give corresponding tips
+     */
+    private void checkNetworkStatus() {
         // Check Network connection
         if (!isNetworkConnected()) {
             // No Network connection
@@ -111,7 +186,7 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         mCheckBoxArrayList.add(checkBoxSeason1);
         mCheckBoxArrayList.add(checkBoxSeason2);
 
-        // Check is started by the app.
+        // Ensure started by user
         if (mStartOption != 1) {
 
             // Show and Configure the "Start" button
@@ -133,7 +208,6 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
                         // No updater is chosen
                         createNoUpdaterAlertDialog().show();
                     }
-
                 }
             });
 
@@ -159,7 +233,6 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
         ProgressBar databaseUpdateProgressBar = (ProgressBar) findViewById(R.id.databaseUpdateProgressBar);
         // Get TextView
         TextView databaseUpdateStatusTextView = (TextView) findViewById(R.id.databaseUpdateStatusTextView);
-
 
         // Create and Start update the database
         mDatabaseUpdateDownloadTask = new DatabaseUpdateDownloadTask(
@@ -359,5 +432,4 @@ public class DatabaseUpdateActivity extends AppCompatActivity {
 
         return builder.create();
     }
-
 }

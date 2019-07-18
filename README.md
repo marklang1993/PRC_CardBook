@@ -34,6 +34,7 @@ This project is aimed to help the players of "Kirato Prichan" to manage their po
 * RichTextView 1.0.4
 * SimpleCropView 1.1.8
 * CircleImageView 3.0.0
+* EasyPermissions 2.0.1
 
 ## Tested Devices
 * OPPO R17

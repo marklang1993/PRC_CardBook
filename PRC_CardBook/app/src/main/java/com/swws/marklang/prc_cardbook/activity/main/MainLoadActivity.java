@@ -50,7 +50,7 @@ public class MainLoadActivity extends AppCompatActivity {
             // Have to start "local database update" activity to download all initial data
             Intent databaseUpdateActivityIntent = new Intent(getApplicationContext(), DatabaseUpdateActivity.class);
             databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 1); // "1" means it is started by app.
-            startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_UPDATE_RESULT_APP);
+            startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_AR_UPDATE_RESULT_APP);
 
         } else {
             // Init. data
@@ -127,7 +127,7 @@ public class MainLoadActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_UPDATE_RESULT_APP) {
+        if (requestCode == Constants.REQUEST_AR_UPDATE_RESULT_APP) {
             // Check is database updating successful
             if (resultCode == RESULT_OK) {
                 // Update succeed - Initialize all data.

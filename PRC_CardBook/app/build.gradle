@@ -51,6 +51,8 @@ dependencies {
     implementation 'com.isseiaoki:simplecropview:1.1.8'
     // CircleImageView
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    // EasyPermissions
+    implementation 'pub.devrel:easypermissions:2.0.1'
 }
 
 configurations.all {

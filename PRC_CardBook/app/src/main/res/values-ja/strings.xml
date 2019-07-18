@@ -113,7 +113,7 @@
     <string name="info_download_error_no_internet">エラー：ネットワーク接続できませんでした！</string>
     <string name="info_download_error_app_update_required">エラー：URLエラー！アプリ更新してください！</string>
     <string name="info_download_error_official_server_malfunction">エラー：サバーエラー！しばらくもう一度試してください！</string>
-    <string name="info_download_error_directory_creation_failed">エラー：ディレクトリ作成できませんでした！権限を確認してください！</string>
+    <string name="info_download_error_directory_creation_failed">エラー：ディレクトリ作成できませんでした！</string>
 
 
     <string name="info_download_progress">進捗：</string>
@@ -123,6 +123,13 @@
     <string name="info_download_coordinate_images">コーデ画像取得中</string>
     <string name="info_download_write_meta_file">データ保存中</string>
     <string name="info_download_complete">更新完了</string>
+
+
+    <string name="permission_request_rationale_camera">権限請求：QRコードを読取りのため、カメラの権限が必要です。</string>
+    <string name="permission_request_rationale_network">権限請求：データベース更新のため、ネットワークの権限が必要です。</string>
+    <string name="permission_request_rationale_read_external_storage_imagecropactivity">権限請求：アイコン生成のため、外部メモリー読取りの権限が必要です。</string>
+    <string name="permission_request_rationale_read_external_storage_systemactivity">権限請求：アイテム数量のデータ入力のため、外部メモリー読取りの権限が必要です。</string>
+    <string name="permission_request_rationale_write_external_storage_systemactivity">権限請求：アイテム数量のデータ出力のため、外部メモリー書込みの権限が必要です。</string>
 
 
     <string name="exception_no_permission_runtime">エラー：必要な権限を取得できません</string>

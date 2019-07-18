@@ -113,7 +113,7 @@
     <string name="info_download_error_no_internet">错误：无法连接到网络。</string>
     <string name="info_download_error_app_update_required">错误：URL异常，请更新本应用。</string>
     <string name="info_download_error_official_server_malfunction">错误：服务器应答异常，请过一会儿再试一次。</string>
-    <string name="info_download_error_directory_creation_failed">错误：无法建立文件夹，请检查应用是否有权限读写内部存储。</string>
+    <string name="info_download_error_directory_creation_failed">错误：无法建立文件夹。</string>
 
 
     <string name="info_download_progress">进度：</string>
@@ -123,6 +123,13 @@
     <string name="info_download_coordinate_images">获取套装图片中</string>
     <string name="info_download_write_meta_file">正在保存数据</string>
     <string name="info_download_complete">更新完成</string>
+
+
+    <string name="permission_request_rationale_camera">请求权限：我们需要使用相机来读取二维码。</string>
+    <string name="permission_request_rationale_network">请求权限：我们需要使用网络来下载套装数据。</string>
+    <string name="permission_request_rationale_read_external_storage_imagecropactivity">请求权限：我们需要读取外部存储来生成头像。</string>
+    <string name="permission_request_rationale_read_external_storage_systemactivity">请求权限：我们需要读取外部存储来导入道具数量的数据。</string>
+    <string name="permission_request_rationale_write_external_storage_systemactivity">请求权限：我们需要写入外部存储来导出道具数量的数据。</string>
 
 
     <string name="exception_no_permission_runtime">错误：未能获取必须的权限。</string>

@@ -1,11 +1,13 @@
 package com.swws.marklang.prc_cardbook.activity.qrcode;
 
+import android.Manifest;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -17,12 +19,17 @@ import com.swws.marklang.prc_cardbook.activity.card.CardDetailActivity;
 
 import java.util.List;
 
-public class ScannerActivity extends AppCompatActivity {
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class ScannerActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+
+    private final String[] mPermissions = {Manifest.permission.CAMERA};
 
     // Internal variables
     private QRCodeDecoder mQRCodeDecoder;
     private DecoratedBarcodeView mDecoratedBarcodeView;
     private TextView mQRCodeStatusTextView;
+    private BarcodeCallback mBarcodeCallback;
 
 
     @Override
@@ -38,7 +45,9 @@ public class ScannerActivity extends AppCompatActivity {
 
         // Init. mDecoratedBarcodeView
         mDecoratedBarcodeView = (DecoratedBarcodeView) findViewById(R.id.scannerDecoratedBarcodeView);
-        mDecoratedBarcodeView.decodeContinuous(new BarcodeCallback() {
+
+        // Init. mBarcodeCallback
+        mBarcodeCallback = new BarcodeCallback() {
             @Override
             public void barcodeResult(BarcodeResult result) {
                 if (result != null) {
@@ -69,7 +78,7 @@ public class ScannerActivity extends AppCompatActivity {
                                     qrCodeDecodeResult.JRColor);
 
                             // Start Activity
-                            startActivityForResult(startCardDetailActivityIntent, Constants.REQUEST_CARD_DETAIL_DISPLAY_DONE);
+                            startActivityForResult(startCardDetailActivityIntent, Constants.REQUEST_AR_CARD_DETAIL_DISPLAY_DONE);
                             break;
 
                         case UNKNOWN:
@@ -89,9 +98,32 @@ public class ScannerActivity extends AppCompatActivity {
 
             @Override
             public void possibleResultPoints(List<ResultPoint> resultPoints) { }
-        });
+        };
 
+        // Set activity title
         setTitle(R.string.qr_scanner_activity_name);
+
+        // Check camera permission
+        checkCameraPermission();
+    }
+
+    /**
+     * Check and request CAMERA permission via EasyPermissions
+     */
+    private void checkCameraPermission() {
+        if (EasyPermissions.hasPermissions(this, mPermissions)) {
+            // Camera permission has already been grant
+            mDecoratedBarcodeView.decodeContinuous(mBarcodeCallback);
+
+        } else {
+            // Request camera permission
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.permission_request_rationale_camera),
+                    Constants.REQUEST_PERMISSION_CAMERA,
+                    mPermissions
+            );
+        }
     }
 
     @Override
@@ -111,9 +143,45 @@ public class ScannerActivity extends AppCompatActivity {
         mDecoratedBarcodeView.resume();
     }
 
+    /**
+     * Get result of requesting permission
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    /**
+     * Camera permission is grant
+     * @param requestCode
+     * @param perms
+     */
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        if (requestCode == Constants.REQUEST_PERMISSION_CAMERA) {
+            // Camera permission is grant
+            mDecoratedBarcodeView.decodeContinuous(mBarcodeCallback);
+        }
+    }
+
+    /**
+     * Camera permission request is denied
+     * @param requestCode
+     * @param perms
+     */
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        // Permission is NOT granted by the user - show an error message
+        Toast.makeText(this, R.string.exception_no_permission_runtime, Toast.LENGTH_LONG)
+                .show();
+
+        // Close this activity
+        finish();
     }
 
     @Override

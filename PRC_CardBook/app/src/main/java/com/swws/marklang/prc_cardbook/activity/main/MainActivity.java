@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.profile_menu_item:
                         // Start "profile setting" activity
                         Intent profileSettingActivityIntent = new Intent(MainActivity.this, ProfileActivity.class);
-                        startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_PROFILE_UPDATE);
+                        startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_AR_PROFILE_UPDATE);
                         break;
 
                     case R.id.statistics_menu_item:
@@ -136,14 +136,14 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.system_menu_item:
                         // Start "system" activity
                         Intent systemActivityIntent = new Intent(MainActivity.this, SystemActivity.class);
-                        startActivityForResult(systemActivityIntent, Constants.REQUEST_SYSTEM_INVENTORY_DATABASE_CHANGE);
+                        startActivityForResult(systemActivityIntent, Constants.REQUEST_AR_SYSTEM_INVENTORY_DATABASE_CHANGE);
                         break;
 
                     case R.id.update_menu_item:
                         // Start the "local database update" activity
                         Intent databaseUpdateActivityIntent = new Intent(MainActivity.this, DatabaseUpdateActivity.class);
                         databaseUpdateActivityIntent.putExtra(DatabaseUpdateActivity.KEY_START_OPTION, 0); // "0" means it is started by user
-                        startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_UPDATE_RESULT_USER);
+                        startActivityForResult(databaseUpdateActivityIntent, Constants.REQUEST_AR_UPDATE_RESULT_USER);
                         break;
 
                     case R.id.about_menu_item:
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start "profile setting" activity
                 Intent profileSettingActivityIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_PROFILE_UPDATE);
+                startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_AR_PROFILE_UPDATE);
             }
         });
     }
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_UPDATE_RESULT_USER) {
+        if (requestCode == Constants.REQUEST_AR_UPDATE_RESULT_USER) {
            // Check is database updating successful
            if (resultCode == RESULT_OK) {
                // Start MainLoadActivity
@@ -226,18 +226,18 @@ public class MainActivity extends AppCompatActivity {
                        getApplicationContext(), MainLoadActivity.class
                );
                startMainLoadActivityIntent.putExtra(MainLoadActivity.KEY_IS_START_BY_MAIN_ACTIVITY, true);
-               startActivityForResult(startMainLoadActivityIntent, Constants.REQUEST_LOAD_RESULT);
+               startActivityForResult(startMainLoadActivityIntent, Constants.REQUEST_AR_LOAD_RESULT);
            }
 
-        } else if (requestCode == Constants.REQUEST_LOAD_RESULT) {
+        } else if (requestCode == Constants.REQUEST_AR_LOAD_RESULT) {
             // Notify "seriesListView" to update
             mSeriesItemAdapter.notifyDataSetChanged(mDatabases);
 
-        } else if (requestCode == Constants.REQUEST_PROFILE_UPDATE) {
+        } else if (requestCode == Constants.REQUEST_AR_PROFILE_UPDATE) {
             // Notify navigation drawer to update
             updateProfile();
 
-        } else if (requestCode == Constants.REQUEST_SYSTEM_INVENTORY_DATABASE_CHANGE) {
+        } else if (requestCode == Constants.REQUEST_AR_SYSTEM_INVENTORY_DATABASE_CHANGE) {
             if (resultCode == RESULT_OK) {
                 // Need to Start MainLoadActivity & update inventory database
                 Intent startMainLoadActivityIntent = new Intent(

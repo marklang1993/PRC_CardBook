@@ -113,7 +113,7 @@
     <string name="info_download_error_no_internet">Error: Cannot connect to network.</string>
     <string name="info_download_error_app_update_required">Error: Incorrect URL. Please update the app.</string>
     <string name="info_download_error_official_server_malfunction">Error: Server error. Please try again later.</string>
-    <string name="info_download_error_directory_creation_failed">Error: Cannot create directory. Please check the permission.</string>
+    <string name="info_download_error_directory_creation_failed">Error: Cannot create directory.</string>
 
 
     <string name="info_download_progress">Progress:</string>
@@ -123,6 +123,13 @@
     <string name="info_download_coordinate_images">Retrieving item images</string>
     <string name="info_download_write_meta_file">Saving data</string>
     <string name="info_download_complete">Finish</string>
+
+
+    <string name="permission_request_rationale_camera">Permission Request: We need to use the camera to read QR code.</string>
+    <string name="permission_request_rationale_network">Permission Request: We need to use Internet to download item data.</string>
+    <string name="permission_request_rationale_read_external_storage_imagecropactivity">Permission Request: We need to read external storage to generate icon.</string>
+    <string name="permission_request_rationale_read_external_storage_systemactivity">Permission Request: We need to read external storage to import inventory data.</string>
+    <string name="permission_request_rationale_write_external_storage_systemactivity">Permission Request: We need to write external storage to export inventory data.</string>
 
 
     <string name="exception_no_permission_runtime">Error: Cannot get the required permission.</string>

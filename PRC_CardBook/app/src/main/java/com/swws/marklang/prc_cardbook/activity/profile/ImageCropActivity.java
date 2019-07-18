@@ -4,13 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +21,13 @@ import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
 
-public class ImageCropActivity extends AppCompatActivity {
+import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class ImageCropActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
+
+    private final String[] mPermissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
 
     // Internal variables
     private CropImageView mCropImageView;
@@ -48,8 +51,80 @@ public class ImageCropActivity extends AppCompatActivity {
         setTitle(R.string.image_crop_activity_name);
         initButtons();
 
-        // Start this activity from picking an image
-        startImagePicker();
+        // Check read external storage permission
+        checkExternalStoragePermission();
+    }
+
+    /**
+     * Check and request READ_EXTERNAL_STORAGE permission via EasyPermissions
+     */
+    private void checkExternalStoragePermission() {
+        if (EasyPermissions.hasPermissions(this, mPermissions)) {
+            // Read external storage permission has already been grant
+            startImagePicker(); // Start this activity from picking an image
+
+        } else {
+            // Request read external storage permission
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.permission_request_rationale_read_external_storage_imagecropactivity),
+                    Constants.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE_IMG_CROP,
+                    mPermissions
+            );
+        }
+    }
+
+    /**
+     * Get result of requesting permission
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    /**
+     * Read external storage permission is granted
+     * @param requestCode
+     * @param perms
+     */
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        if (requestCode == Constants.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE_IMG_CROP) {
+            // Read external storage permission is grant - start the image picker again
+            startImagePicker();
+        }
+    }
+
+    /**
+     * Read external storage permission request is denied
+     * @param requestCode
+     * @param perms
+     */
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        // Permission is NOT granted by the user - show an error message
+        Toast.makeText(this, R.string.exception_no_permission_runtime, Toast.LENGTH_LONG)
+                .show();
+
+        // Close this activity
+        finish();
+    }
+
+    /**
+     * Start file explorer to pick an image
+     */
+    private void startImagePicker() {
+        // The required permission is granted - Start image picker
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        intent.setType("image/*");
+        startActivityForResult(intent, Constants.REQUEST_AR_IMAGE_FILE_SELECTION);
     }
 
     /**
@@ -102,30 +177,6 @@ public class ImageCropActivity extends AppCompatActivity {
     }
 
     /**
-     * Start file explorer to pick an image
-     */
-    private void startImagePicker() {
-        // Check the permission in run-time.
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            // The required permission is granted - Start image picker
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-            intent.setType("image/*");
-            startActivityForResult(intent, Constants.REQUEST_IMAGE_FILE_SELECTION);
-
-        } else {
-            // The required permission is not granted
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    Constants.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
-        }
-    }
-
-    /**
      * Close this activity
      * @return
      */
@@ -145,7 +196,7 @@ public class ImageCropActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_IMAGE_FILE_SELECTION) {
+        if (requestCode == Constants.REQUEST_AR_IMAGE_FILE_SELECTION) {
             if (resultCode == Activity.RESULT_OK) {
                 // Get URI and grant persistable permission
                 Context applicationContext = MainLoadActivity.getCurrentApplicationContext();
@@ -168,31 +219,6 @@ public class ImageCropActivity extends AppCompatActivity {
                                 mSourceUri = null;
                             }
                         });
-            }
-        }
-    }
-
-    /**
-     * Get result of requesting permission
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
-
-        if (requestCode == Constants.REQUEST_PERMISSION_READ_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted by the user - try to start image picker again
-                startImagePicker();
-
-            } else {
-                // Permission is NOT granted by the user - show an error message
-                Toast.makeText(this, R.string.exception_no_permission_runtime, Toast.LENGTH_LONG)
-                        .show();
             }
         }
     }

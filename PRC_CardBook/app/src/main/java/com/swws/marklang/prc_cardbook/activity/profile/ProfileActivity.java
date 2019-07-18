@@ -107,7 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent startImageCropActivityIntent = new Intent(ProfileActivity.this, ImageCropActivity.class);
-                startActivityForResult(startImageCropActivityIntent, Constants.REQUEST_CROP_IMAGE);
+                startActivityForResult(startImageCropActivityIntent, Constants.REQUEST_AR_CROP_IMAGE);
             }
         });
 
@@ -125,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.REQUEST_CROP_IMAGE) {
+        if (requestCode == Constants.REQUEST_AR_CROP_IMAGE) {
             if (resultCode == RESULT_OK) {
                 // Update icon display
                 mIconBitmapCache = mProfileFileUtility.getIcon();

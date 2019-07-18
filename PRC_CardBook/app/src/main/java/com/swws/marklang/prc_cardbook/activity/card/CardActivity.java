@@ -13,7 +13,6 @@ import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
-import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 public class CardActivity extends AppCompatActivity {
 
@@ -65,7 +64,7 @@ public class CardActivity extends AppCompatActivity {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.REQUEST_CARD_INVENTORY_CHANGE) {
+        if (requestCode == Constants.REQUEST_AR_CARD_INVENTORY_CHANGE) {
             if (resultCode == RESULT_OK) {
                 // Update "cardGridView" if the inventory of any item changed
                 mCardItemAdapter.notifyDataSetChanged();
@@ -97,7 +96,7 @@ public class CardActivity extends AppCompatActivity {
                 showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_SEASON_ID, mDatabase.seasonId().toString());
 
                 // Start the CardDetailActivity
-                startActivityForResult(showCardDetailActivity, Constants.REQUEST_CARD_INVENTORY_CHANGE);
+                startActivityForResult(showCardDetailActivity, Constants.REQUEST_AR_CARD_INVENTORY_CHANGE);
             }
         });
 
