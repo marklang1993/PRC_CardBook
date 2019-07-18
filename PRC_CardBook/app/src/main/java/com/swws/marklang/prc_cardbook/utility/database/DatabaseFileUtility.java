@@ -247,7 +247,6 @@ public final class DatabaseFileUtility extends InternalFileUtility {
      * @param relativeUrl
      * @param imageType
      * @param seasonID
-     * @param httpUtility
      * @param isPrint
      */
     public void DownloadImage(
@@ -256,7 +255,6 @@ public final class DatabaseFileUtility extends InternalFileUtility {
             String relativeUrl,
             IMAGE_TYPE imageType,
             SeasonID seasonID,
-            HttpUtility httpUtility,
             Boolean isPrint
     )
             throws HttpUtility.DirCreateException, IOException
@@ -291,7 +289,7 @@ public final class DatabaseFileUtility extends InternalFileUtility {
 
             // Download the image
             String path = getImagePath(imageType, seasonID);
-            httpUtility.Download(urlPrefix, relativeUrl, path, isPrint);
+            HttpUtility.Download(urlPrefix, relativeUrl, path, isPrint);
         }
     }
 }

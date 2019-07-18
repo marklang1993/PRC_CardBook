@@ -21,7 +21,6 @@ public class DatabaseUpdaterBase {
     protected DatabaseUpdateDownloadTask mDownLoadTask;
     protected Context mContext;
 
-    protected HttpUtility mHttpUtility;
     protected DatabaseFileUtility mDatabaseFileUtility;
 
     /**
@@ -43,8 +42,7 @@ public class DatabaseUpdaterBase {
         mDownLoadTask = downloadTask;
         mContext = downloadTask.GetContext();
 
-        // Init. IO Utilities
-        mHttpUtility = new HttpUtility();
+        // Init. DatabaseFileUtility
         mDatabaseFileUtility = DatabaseFileUtility.getInstance();
     }
 
@@ -131,7 +129,6 @@ public class DatabaseUpdaterBase {
                         item.ItemImage,
                         DatabaseFileUtility.IMAGE_TYPE.IMAGE,
                         seasonID,
-                        mHttpUtility,
                         mIsPrintDebug
                 );
                 // Download BrandImage
@@ -141,7 +138,6 @@ public class DatabaseUpdaterBase {
                         item.Brand,
                         DatabaseFileUtility.IMAGE_TYPE.BRAND,
                         seasonID,
-                        mHttpUtility,
                         mIsPrintDebug
                 );
                 // Download TypeImage
@@ -151,7 +147,6 @@ public class DatabaseUpdaterBase {
                         item.Type,
                         DatabaseFileUtility.IMAGE_TYPE.TYPE,
                         seasonID,
-                        mHttpUtility,
                         mIsPrintDebug
                 );
 

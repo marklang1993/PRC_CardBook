@@ -199,7 +199,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
         for (String relativeUrl : urlList) {
             // Get the item page
             String absoluteURL = URL_PREFIX + relativeUrl;
-            String subpageHtmlContent = mHttpUtility.GetHtmlContent(absoluteURL);
+            String subpageHtmlContent = HttpUtility.GetHtmlContent(absoluteURL);
             // Parse
             Document pageDoc = Jsoup.parse(subpageHtmlContent);
 
@@ -309,7 +309,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
 
         // Get the series page
         String absoluteURL = URL_PREFIX + ENTRY_PAGE;
-        String subpageHtmlContent = mHttpUtility.GetHtmlContent(absoluteURL);
+        String subpageHtmlContent = HttpUtility.GetHtmlContent(absoluteURL);
         // Parse
         Document pageDoc = Jsoup.parse(subpageHtmlContent);
 

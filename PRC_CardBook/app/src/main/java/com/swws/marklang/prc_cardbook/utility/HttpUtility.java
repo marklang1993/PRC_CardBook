@@ -43,7 +43,7 @@ public class HttpUtility {
      * @param URLString
      * @return contents; null once Error occurs
      */
-    public String GetHtmlContent(String URLString) throws ServerErrorException, IOException
+    public static String GetHtmlContent(String URLString) throws ServerErrorException, IOException
     {
         try {
             URL URLObject = new URL(URLString);
@@ -75,24 +75,24 @@ public class HttpUtility {
                         URLString,
                         responseCode
                 );
-                Log.e(this.getClass().getSimpleName(), errorMessage);
+                Log.e(HttpUtility.class.getSimpleName(), errorMessage);
                 throw new ServerErrorException(errorMessage);
             }
 
         } catch (MalformedURLException ex) {
             // URL format error
-            Log.e(this.getClass().getSimpleName(), "URL Parse Failed.");
+            Log.e(HttpUtility.class.getSimpleName(), "URL Parse Failed.");
             throw ex;
 
         } catch (IOException ex) {
             // Network error
-            Log.e(this.getClass().getSimpleName(), "Connection Failed.");
+            Log.e(HttpUtility.class.getSimpleName(), "Connection Failed.");
             throw ex;
         }
     }
 
     /**
-     * Download file from given URL to given destination
+     * Download file from the given URL to the given destination
      * @param urlPrefix
      * @param relativeUrl
      * @param directory
@@ -100,7 +100,7 @@ public class HttpUtility {
      * @throws DirCreateException
      * @throws IOException
      */
-    public void Download(
+    public static void Download(
             String urlPrefix, String relativeUrl, String directory, boolean isPrint)
             throws DirCreateException, IOException
     {
@@ -113,16 +113,16 @@ public class HttpUtility {
             File dirFile = new File(directory);
             if (!dirFile.exists()) {
                 // Directory does NOT exist
-                Log.w(this.getClass().getSimpleName(),
+                Log.w(HttpUtility.class.getSimpleName(),
                         String.format("Directory %s does not exist.", dirFile.getName()));
 
                 // Create the directory iteratively by using mkdirs(), NOT mkdir()
                 if (dirFile.mkdirs()) {
-                    Log.w(this.getClass().getSimpleName(),
+                    Log.w(HttpUtility.class.getSimpleName(),
                             String.format("Directory %s created.", dirFile.getName()));
 
                 } else {
-                    Log.e(this.getClass().getSimpleName(),
+                    Log.e(HttpUtility.class.getSimpleName(),
                             String.format("Directory %s cannot be created.", dirFile.getName()));
                     throw new DirCreateException(dirFile.getName());
                 }
@@ -134,7 +134,7 @@ public class HttpUtility {
             if (target.exists()) {
                 // File existed - Skip
                 if (isPrint) {
-                    Log.i(this.getClass().getSimpleName(),
+                    Log.i(HttpUtility.class.getSimpleName(),
                             String.format("File: %s - EXIST", fileName));
                 }
                 return;
@@ -143,17 +143,17 @@ public class HttpUtility {
             // Download
             URL URLObject = new URL(URLLink);
             FileUtils.copyURLToFile(URLObject, target);
-            // File is downloaded
+            // The corresponding file is successfully downloaded
             if (isPrint) {
-                Log.i(this.getClass().getSimpleName(), String.format("File: %s - OK", fileName));
+                Log.i(HttpUtility.class.getSimpleName(), String.format("File: %s - OK", fileName));
             }
 
         } catch (MalformedURLException ex) {
-            Log.e(this.getClass().getSimpleName(), String.format("URL Parse Failed: %s", URLLink));
+            Log.e(HttpUtility.class.getSimpleName(), String.format("URL Parse Failed: %s", URLLink));
             throw ex;
 
         } catch (IOException ex) {
-            Log.e(this.getClass().getSimpleName(), String.format("Connection Failed: %s", URLLink));
+            Log.e(HttpUtility.class.getSimpleName(), String.format("Connection Failed: %s", URLLink));
             throw ex;
         }
     }

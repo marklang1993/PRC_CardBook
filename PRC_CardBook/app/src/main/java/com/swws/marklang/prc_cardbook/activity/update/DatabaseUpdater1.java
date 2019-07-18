@@ -193,7 +193,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
         // NOTE: Key is "link"
         LinkedHashMap<String, String> urlTable = new LinkedHashMap<>();
 
-        String htmlContent = mHttpUtility.GetHtmlContent(URL_PREFIX + ENTRY_PAGE);
+        String htmlContent = HttpUtility.GetHtmlContent(URL_PREFIX + ENTRY_PAGE);
         Document doc = Jsoup.parse(htmlContent);
         // Select the main area
         Elements mainAreaItems = doc.select("nav[class=items-nav]");
@@ -241,7 +241,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
     private LinkedList<String> _getAllItemSubpageUrls(String seriesRelativeUrl) throws HttpUtility.ServerErrorException, IOException
     {
         String urlString = URL_PREFIX + seriesRelativeUrl;
-        String htmlContent = mHttpUtility.GetHtmlContent(urlString);
+        String htmlContent = HttpUtility.GetHtmlContent(urlString);
 
         // Parse
         Document doc = Jsoup.parse(htmlContent);
@@ -286,7 +286,7 @@ public class DatabaseUpdater1 extends DatabaseUpdaterBase implements IDatabaseUp
     {
         // Get "detail page"
         String subpageUrlString = URL_PREFIX + itemSubpageUrl;
-        String subpageHtmlContent = mHttpUtility.GetHtmlContent(subpageUrlString);
+        String subpageHtmlContent = HttpUtility.GetHtmlContent(subpageUrlString);
         // Parse
         Document subpageDoc = Jsoup.parse(subpageHtmlContent);
 
