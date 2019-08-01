@@ -195,6 +195,8 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
 
         // Get each URL
         ArrayList<String> urlList = GetUrlList(database.url());
+        // Create a set to store all processed image id to remove duplicated item.
+        HashSet<String> processedImageID = new HashSet<>();
 
         for (String relativeUrl : urlList) {
             // Get the item page
@@ -203,7 +205,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
             // Parse
             Document pageDoc = Jsoup.parse(subpageHtmlContent);
 
-            // Selete the item area
+            // Select the item area
             Elements itemElements = pageDoc.select("div[class=modalWindow]");
             Elements itemDetailElements = itemElements.select("dl[class=modalDetail]");
 
@@ -288,7 +290,12 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                 }
 
                 // Add this item to the Database
-                database.Insert(item);
+                String currentImageID = item.getImageID();
+                if (!processedImageID.contains(currentImageID)) {
+                    // Current item is not a duplicated item
+                    database.Insert(item);
+                    processedImageID.add(currentImageID);
+                }
             }
         }
     }
