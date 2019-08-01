@@ -33,18 +33,9 @@ public class LicenseActivity extends AppCompatActivity {
         ArrayList<LicenseItem> licenseItems = licenseFileUtility.getList();
 
         // Init. licenseListView
-        final ListView licenseListView = (ListView) findViewById(R.id.licenseListView);
-        final LicenseItemAdapter licenseItemAdapter = new LicenseItemAdapter(getApplicationContext(), licenseItems);
+        ListView licenseListView = (ListView) findViewById(R.id.licenseListView);
+        LicenseItemAdapter licenseItemAdapter = new LicenseItemAdapter(licenseItems);
         licenseListView.setAdapter(licenseItemAdapter);
-        licenseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LicenseItem licenseItem = (LicenseItem) licenseItemAdapter.getItem(position);
-                licenseItem.IsShrinkLicenseContentDisplay = !licenseItem.IsShrinkLicenseContentDisplay;
-                // Update
-                licenseItemAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     /**

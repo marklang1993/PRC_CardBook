@@ -37,6 +37,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    // TODO: try to remove this
+    private static MainActivity mMainActivity;
+
     private static ArrayList<Database> mDatabases;
     private static HashMap<String, Item> mItemIDLUT;
 
@@ -48,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Save MainActivity instance
+        mMainActivity = this;
 
         // Init. UIs
         setTitle(getString(R.string.main_activity_name));
@@ -247,6 +253,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(startMainLoadActivityIntent);
             }
         }
+    }
+
+    /**
+     * Get the current instance of MainActivity
+     * @return
+     */
+    public static MainActivity getMainActivity() {
+        return mMainActivity;
     }
 
     /**

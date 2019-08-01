@@ -14,7 +14,7 @@ import java.util.Locale;
 public class UserAgreementActivity extends AppCompatActivity {
 
     // Constants
-    private final String mRepoLink = "https://github.com/marklang1993/PRC_CardBook";
+    private static final String mRepoLink = "https://github.com/marklang1993/PRC_CardBook";
 
     // Internal variables
     private String mLanguageCode;

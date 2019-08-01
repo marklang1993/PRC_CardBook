@@ -1,6 +1,8 @@
 package com.swws.marklang.prc_cardbook.activity.about.license;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
+import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
+import com.swws.marklang.prc_cardbook.activity.main.MainLoadActivity;
 
 import java.util.ArrayList;
 
@@ -20,8 +24,9 @@ public class LicenseItemAdapter extends BaseAdapter {
     /**
      * Constructor
      */
-    public LicenseItemAdapter(Context context, ArrayList<LicenseItem> licenseItems) {
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public LicenseItemAdapter(ArrayList<LicenseItem> licenseItems) {
+        mInflater = (LayoutInflater) MainLoadActivity.getCurrentApplicationContext().
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mLicenseItems = licenseItems;
     }
 
@@ -49,7 +54,8 @@ public class LicenseItemAdapter extends BaseAdapter {
         TextView licenseContentTextView = (TextView) view.findViewById(R.id.licenseContentTextView);
         TextView licenseExpandTipTextView = (TextView) view.findViewById(R.id.licenseExpandTipTextView);
 
-        LicenseItem licenseItem = (LicenseItem) getItem(position);
+        // Set contents
+        final LicenseItem licenseItem = (LicenseItem) getItem(position);
         licenseLibraryNameTextView.setText(licenseItem.LibraryName);
         licenseCopyrightHolderTextView.setText(licenseItem.CopyrightHolder);
         licenseRepoLinkTextView.setText(licenseItem.RepositoryLink);
@@ -62,6 +68,29 @@ public class LicenseItemAdapter extends BaseAdapter {
         } else {
             licenseExpandTipTextView.setText("ー");
         }
+
+        // Set onClickListeners
+        licenseExpandTipTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Expand/Shrink "licenseContentTextView"
+                licenseItem.IsShrinkLicenseContentDisplay = !licenseItem.IsShrinkLicenseContentDisplay;
+                // Update
+                LicenseItemAdapter.this.notifyDataSetChanged();
+            }
+        });
+
+        licenseRepoLinkTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String repoLink = licenseItem.RepositoryLink;
+                if (repoLink != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(repoLink));
+                    MainActivity.getMainActivity().startActivity(intent);
+                }
+            }
+        });
 
         return view;
     }
