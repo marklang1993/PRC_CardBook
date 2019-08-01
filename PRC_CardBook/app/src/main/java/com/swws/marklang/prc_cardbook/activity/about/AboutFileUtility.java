@@ -1,5 +1,7 @@
 package com.swws.marklang.prc_cardbook.activity.about;
 
+import android.util.Log;
+
 import com.swws.marklang.prc_cardbook.utility.AssetsFileUtility;
 
 import java.io.BufferedReader;
@@ -24,7 +26,7 @@ public abstract class AboutFileUtility extends AssetsFileUtility {
         while (true) {
             String rawLine = readLine(reader, ABOUT_DEBUG_IS_PRINT);
             if (rawLine == null) break;
-            content.append(removeLeadingSpaces(rawLine));
+            content.append(removeRedundantSpaces(rawLine));
             content.append("\n");
         }
 
@@ -33,39 +35,38 @@ public abstract class AboutFileUtility extends AssetsFileUtility {
     }
 
     /**
-     * Remove the leading spaces of the given raw string
+     * Remove leading and trailing spaces of the given raw string
      * @param rawLine
      * @return
      */
-    private String removeLeadingSpaces(String rawLine) {
+    private String removeRedundantSpaces(String rawLine) {
         int rawLineLength = rawLine.length();
-        StringBuilder sb = new StringBuilder(rawLineLength);
-        boolean isTextStart = false;
+        int startPos, endPos;
 
-        for(int i = 0; i < rawLineLength; ++i) {
-            if (isTextStart) {
-                // Copy the rest characters to the target StringBuilder
-                sb.append(rawLine.charAt(i));
+        // Check is this line empty
+        if (rawLineLength == 0) return rawLine;
 
-            } else {
-                if (rawLine.charAt(i) == ' ') {
-                    // This is a leading space
-                    ;
+        // Find the real start position of the string
+        for(startPos = 0; startPos < rawLineLength; ++startPos) {
+            if (rawLine.charAt(startPos) != ' ') break;
+        }
 
-                } else {
-                    // Start copy the characters from here
-                    sb.append(rawLine.charAt(i));
-                    isTextStart = true;
-                }
+        // Check whether this line contains only spaces
+        if (startPos == rawLineLength) return (String) "";
+
+        // Find the real end position of the string
+        for (endPos = rawLineLength - 1; endPos >= 0; --endPos) {
+            if (rawLine.charAt(endPos) != ' ') {
+                ++endPos;
+                break;
             }
         }
 
-        return sb.toString();
+        return rawLine.substring(startPos, endPos);
     }
 
     /**
      * Remove redundant newline within a paragraph
-     * TODO: this could be a coding interview question
      * @param content
      * @return
      */
@@ -75,33 +76,35 @@ public abstract class AboutFileUtility extends AssetsFileUtility {
         StringBuilder sb = new StringBuilder(contentLength);
 
         // This can be considered as a state machine
-        boolean isNewState = false;
+        boolean isLastCharNewLineState = false;
         for (int i = 0; i < contentLength; ++i) {
             char curChar = content.charAt(i);
 
-            if (isNewState) {
+            if (isLastCharNewLineState) {
                 // Last character is newline
                 if (curChar == '\n') {
                     // Output 2 newlines and jump back to the original state
                     sb.append('\n');
                     sb.append('\n');
-                    isNewState = false;
+                    isLastCharNewLineState = false;
 
                 } else {
-                    // Output nothing, just jump back to the original state
-                    isNewState = false;
+                    // Output current character and jump back to the original state
+                    sb.append(curChar);
+                    isLastCharNewLineState = false;
                 }
 
             } else {
                 // Last character is not newline
                 if (curChar == '\n') {
-                    // Output nothing, just change the state
-                    isNewState = true;
+                    // Output a space and change the state
+                    sb.append(' ');
+                    isLastCharNewLineState = true;
 
                 } else {
                     // Output current character
                     sb.append(curChar);
-                    isNewState = false;
+                    isLastCharNewLineState = false;
                 }
             }
         }
