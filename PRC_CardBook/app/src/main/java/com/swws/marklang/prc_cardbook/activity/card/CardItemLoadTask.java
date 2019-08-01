@@ -15,13 +15,15 @@ import android.widget.ImageView;
 import com.androidessence.lib.RichTextView;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.setting.SettingFileUtility;
+import com.swws.marklang.prc_cardbook.utility.concurrent.ConcurrentTask;
+import com.swws.marklang.prc_cardbook.utility.concurrent.ConcurrentTaskControllerCallBack;
 import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 
-public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> {
+public class CardItemLoadTask extends ConcurrentTask<Void, CardItemLoadResult> {
 
     private static final float SIZE_SP = 120.0f; // TODO: size
 
@@ -46,7 +48,10 @@ public class CardItemLoadTask extends AsyncTask<Void, Void, CardItemLoadResult> 
             SeasonID seasonID,
             Item item,
             int[] JRColors,
-            boolean isGreyLevel) {
+            boolean isGreyLevel,
+            ConcurrentTaskControllerCallBack controllerCallBack) {
+        // Init. its super class
+        super(controllerCallBack);
 
         // Init. data
         Context context = view.getContext();

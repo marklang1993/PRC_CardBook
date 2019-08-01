@@ -46,6 +46,14 @@ public class CardActivity extends AppCompatActivity {
         initUI();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Stopping all pending loading tasks
+        mCardItemAdapter.stopLoading();
+    }
+
     /**
      * Close this activity
      * @return

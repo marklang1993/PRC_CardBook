@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.setting.SettingFileUtility;
+import com.swws.marklang.prc_cardbook.utility.concurrent.ConcurrentTaskController;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
@@ -18,10 +19,13 @@ import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 public class CardItemAdapter extends BaseAdapter {
 
+    private static final int MAX_TASK_COUNT = 8;
+
     private LayoutInflater mInflater;
     private Database mDatabase;
     private Resources mRes;
     private boolean mIsGreyLevel;
+    private ConcurrentTaskController mAsyncTaskController;
 
     // All JR colors
     private int[] mJRColors;
@@ -34,6 +38,7 @@ public class CardItemAdapter extends BaseAdapter {
         SettingFileUtility settingFileUtility = SettingFileUtility.getInstance();
         mIsGreyLevel = settingFileUtility.getBooleanValue(
                 settingFileUtility.readItem("card_not_possessed_without_color"));
+        mAsyncTaskController = new ConcurrentTaskController(MAX_TASK_COUNT);
 
         // Init. JR colors
         mJRColors = new int[CardDetailActivity.JR_COLOR_TOTAL_COUNT];
@@ -80,13 +85,20 @@ public class CardItemAdapter extends BaseAdapter {
                 seasonID,
                 item,
                 mJRColors,
-                mIsGreyLevel
+                mIsGreyLevel,
+                mAsyncTaskController
         );
-        loadTask.execute();
+        mAsyncTaskController.executeTask(loadTask);
 
         return view;
     }
 
+    /**
+     * Stopping all pending loading tasks
+     */
+    public void stopLoading() {
+        mAsyncTaskController.removeAllPendingTasks();
+    }
 
 
 }
