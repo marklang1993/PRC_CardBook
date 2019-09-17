@@ -89,20 +89,16 @@ public class DatabaseUpdaterBase {
                 // Get each URL
                 ArrayList<String> urlList = DatabaseUpdater2.GetUrlList(database.url());
                 /*
-                 *  Since all urls in the same Database share the same series prefix,
-                 *  use the 1st element is ok.
+                 *  The last element of the urlList has the series prefix,
+                 *  so we need to retrieve it
                  */
-                String urlElement = urlList.get(0);
-                int firstSlashIndex = urlElement.indexOf('/');
-                String seriesPrefix = urlElement.substring(0, firstSlashIndex + 1);
+                String seriesPrefix = urlList.get(urlList.size() - 1);
                 currentUrlPrefix = urlPrefix + seriesPrefix;
 
             } else {
                 // SEASON_1ST
                 currentUrlPrefix = urlPrefix;
-
             }
-
 
             // Populate all items
             int cursorDataBase = 0;

@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUpdater {
@@ -33,9 +32,8 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
     private HashSet<String> IGNORE_PAGES;
 
     // All constant strings
-    private final String URL_PREFIX = "https://prichan.jp/item/";
-    private final String RESOURCE_PREFIX = "https://prichan.jp/item/";
-    private final String ENTRY_PAGE = "index.html";
+    private final String ROOT_URL_PREFIX = "https://prichan.jp/";
+    private final String ENTRY_PAGE = "item/J03/index.html";
     private final String SERIES_ENTRY_PAGE = "index.html";
     private final String JP_KEYWORD_COLOR = "カラー";
     private final String JP_KEYWORD_BRAND = "ブランド";
@@ -182,7 +180,7 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
     public boolean GetItemImages(LinkedList<Database> databases)
             throws HttpUtility.DirCreateException, IOException {
 
-        return getItemImages(RESOURCE_PREFIX, SeasonID.SEASON_2ND, databases);
+        return getItemImages(ROOT_URL_PREFIX, SeasonID.SEASON_2ND, databases);
     }
 
 
@@ -193,14 +191,17 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
     private void _populateAllItems(Database database)
             throws HttpUtility.ServerErrorException, IOException {
 
-        // Get each URL
+        // Get URL of each subpage, get the series root dir, remove the last element in urlList
         ArrayList<String> urlList = GetUrlList(database.url());
+        String seriesRootDir = urlList.get(urlList.size() - 1);
+        urlList.remove(urlList.size() - 1);
+
         // Create a set to store all processed image id to remove duplicated item.
         HashSet<String> processedImageID = new HashSet<>();
 
         for (String relativeUrl : urlList) {
             // Get the item page
-            String absoluteURL = URL_PREFIX + relativeUrl;
+            String absoluteURL = ROOT_URL_PREFIX + seriesRootDir + relativeUrl;
             String subpageHtmlContent = HttpUtility.GetHtmlContent(absoluteURL);
             // Parse
             Document pageDoc = Jsoup.parse(subpageHtmlContent);
@@ -314,33 +315,50 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
         LinkedHashMap<String, String> urlDict = new LinkedHashMap<>();
         LinkedList<Pair<String, String>> urlQueue = new LinkedList<>();
 
-        // Get the series page
-        String absoluteURL = URL_PREFIX + ENTRY_PAGE;
+        // Download the entry page
+        String absoluteURL = ROOT_URL_PREFIX + ENTRY_PAGE;
         String subpageHtmlContent = HttpUtility.GetHtmlContent(absoluteURL);
         // Parse
         Document pageDoc = Jsoup.parse(subpageHtmlContent);
 
-        // Select the series area
-        Elements seriesArea = pageDoc.select("div[class=section clearfix itemListWrap]");
-        Elements seriesList = seriesArea.select("div[class=itemIndexList]");
+        // Retrieve the link to each series page
+        LinkedList<String> seriesRelativeURLList = new LinkedList<>();
+        Elements seriesListArea = pageDoc.select("div[class=navPulldown]")
+                .select("dl[class=navPulldownInner]")
+                .select("a");
+        for (Element seriesURLElement: seriesListArea) {
+            // Populate each URL
+            String url = seriesURLElement.attr("href");
+            // Remove the leading '/'
+            url = url.substring(1);
+            seriesRelativeURLList.add(url);
+        }
 
-        // Populate each series
-        for (Element seriesElement: seriesList) {
+        // Get the page of each series
+        for (String seriesRootPageRelativeURL : seriesRelativeURLList) {
+            // Download the series root page
+            String seriesRootPageAbsoluteURL = ROOT_URL_PREFIX + seriesRootPageRelativeURL + SERIES_ENTRY_PAGE;
+            String seriesRootPageHtmlContent = HttpUtility.GetHtmlContent(seriesRootPageAbsoluteURL);
+            // Parse
+            Document seriesRootPageDoc = Jsoup.parse(seriesRootPageHtmlContent);
+
+            // Select the area of current series
+            Element currentSeriesArea = seriesRootPageDoc.select("div[class=section clearfix itemListWrap]").first();
             // Get series title as database name
-            String title = seriesElement.select("h3").text();
-
+            String title = currentSeriesArea.select("h3").text();
             // Get corresponding urls
-            Elements urlList = seriesElement.select("a");
+            Elements urlList = currentSeriesArea.select("a");
             StringBuilder urlTableString = new StringBuilder();
             HashSet<String> setToRemoveDuplication = new HashSet<>();
 
-            for (Element urlElement: urlList) {
+            // Populate each subpage in the current series
+            for (Element urlElement : urlList) {
                 // Populate each URL
                 String url = urlElement.attr("href");
 
                 // Check is this URL in the IGNORE_PAGES
                 boolean isIgnore = false;
-                for (String ignoreUrl: IGNORE_PAGES) {
+                for (String ignoreUrl : IGNORE_PAGES) {
                     isIgnore |= url.contains(ignoreUrl);
                 }
                 if (isIgnore) continue;
@@ -366,13 +384,12 @@ public class DatabaseUpdater2 extends DatabaseUpdaterBase implements IDatabaseUp
                     urlTableString.append(mUrlSeparator);
                 }
             }
+            // Append the series root page in the end
+            urlTableString.append(seriesRootPageRelativeURL);
 
             // Save the current <url, name> pair to "urlDict" and "urlQueue"
             String urlTable = urlTableString.toString();
             if (urlTable.length() > 0) {
-                // Remove the trailing mUrlSeparator
-                urlTable = urlTable.substring(0, urlTable.length() - 1);
-
                 // 1. Put the current <url, name> pair to "urlDict"
                 urlDict.put(urlTable, title);
                 // 2. Enqueue the current <url, name> pair
