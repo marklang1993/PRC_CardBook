@@ -61,6 +61,18 @@ public class SettingActivity extends AppCompatActivity {
                         mSettingFileUtility.putBooleanValue(isChecked));
             }
         });
+
+        // Item 3
+        CheckBox displayDetailPageByLongClickCheckBox = (CheckBox) findViewById(R.id.displayDetailPageByLongClickCheckBox);
+        displayDetailPageByLongClickCheckBox.setChecked(mSettingFileUtility.getBooleanValue(
+                mSettingFileUtility.readItem("display_detail_page_by_long_click")));
+        displayDetailPageByLongClickCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettingFileUtility.writeItem("display_detail_page_by_long_click",
+                        mSettingFileUtility.putBooleanValue(isChecked));
+            }
+        });
     }
 
     /**

@@ -11,14 +11,18 @@ import android.widget.GridView;
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
+import com.swws.marklang.prc_cardbook.activity.setting.SettingFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Database;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
+import com.swws.marklang.prc_cardbook.utility.inventory.InventoryUtility;
 
 public class CardActivity extends AppCompatActivity {
 
     public static final String KEY_SERIES_INDEX = "com.swws.marklang.prc_cardbook.SERIES_INDEX";
 
     private static Database mDatabase = null;
+    private boolean mIsLongClickManner = false;
 
     private CardItemAdapter mCardItemAdapter = null;
 
@@ -47,6 +51,11 @@ public class CardActivity extends AppCompatActivity {
         } else {
             mDatabase = MainActivity.getDatabaseByIndex(seriesIndex);
         }
+
+        // Get operation manner option
+        SettingFileUtility settingFileUtility = SettingFileUtility.getInstance();
+        mIsLongClickManner = settingFileUtility.getBooleanValue(
+                settingFileUtility.readItem("display_detail_page_by_long_click"));
 
         // Initialize UI components
         initUI();
@@ -98,21 +107,87 @@ public class CardActivity extends AppCompatActivity {
         mCardItemAdapter = new CardItemAdapter(getApplicationContext(), mDatabase, getResources());
         cardGridView.setAdapter(mCardItemAdapter);
 
-        // Set onItemClickListener
-        cardGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent showCardDetailActivity = new Intent(getApplicationContext(), CardDetailActivity.class);
+        // Set Click Listener
+        if (mIsLongClickManner) {
+            // 1. Long Click Manner (ONLY valid for non-JR items)
 
-                // Passing params
-                showCardDetailActivity.putExtra(CardDetailActivity.KEY_CARD_DETAIL_START_TYPE, CardDetailActivity.StartType.CARD.toString());
-                showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_INDEX, position);
-                showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_SEASON_ID, mDatabase.seasonId().toString());
+            // Set onItemClickListener
+            cardGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    SeasonID seasonID = mDatabase.seasonId();
+                    int cardItemIndex = position;
+                    Item cardItem = CardActivity.getItemByIndex(cardItemIndex);
 
-                // Start the CardDetailActivity
-                startActivityForResult(showCardDetailActivity, Constants.REQUEST_AR_CARD_INVENTORY_CHANGE);
-            }
-        });
+                    if (!cardItem.Rarity.equals("JR")) {
+                        // (1). Non-JR item
+
+                        // Get the current count of this card in inventory
+                        int inventoryCount = InventoryUtility.getInventoryCount(seasonID, cardItem);
+                        // Increase inventory
+                        ++inventoryCount;
+                        // Update inventory count in the Database
+                        InventoryUtility.updateInventoryItem(
+                                cardItem.getImageID(),
+                                inventoryCount,
+                                seasonID
+                        );
+
+                        // Update displayed inventory value
+                        mCardItemAdapter.notifyDataSetChanged();
+
+                    } else {
+                        // (2). JR item
+                        Intent showCardDetailActivity = new Intent(getApplicationContext(), CardDetailActivity.class);
+
+                        // Passing params
+                        showCardDetailActivity.putExtra(CardDetailActivity.KEY_CARD_DETAIL_START_TYPE, CardDetailActivity.StartType.CARD.toString());
+                        showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_INDEX, position);
+                        showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_SEASON_ID, mDatabase.seasonId().toString());
+
+                        // Start the CardDetailActivity
+                        startActivityForResult(showCardDetailActivity, Constants.REQUEST_AR_CARD_INVENTORY_CHANGE);
+                    }
+                }
+            });
+
+            // Set onItemLongClickListener
+            cardGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent showCardDetailActivity = new Intent(getApplicationContext(), CardDetailActivity.class);
+
+                    // Passing params
+                    showCardDetailActivity.putExtra(CardDetailActivity.KEY_CARD_DETAIL_START_TYPE, CardDetailActivity.StartType.CARD.toString());
+                    showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_INDEX, position);
+                    showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_SEASON_ID, mDatabase.seasonId().toString());
+
+                    // Start the CardDetailActivity
+                    startActivityForResult(showCardDetailActivity, Constants.REQUEST_AR_CARD_INVENTORY_CHANGE);
+
+                    return true;
+                }
+            });
+
+        } else {
+            // 2. Normal Click Manner
+
+            // Set onItemClickListener
+            cardGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent showCardDetailActivity = new Intent(getApplicationContext(), CardDetailActivity.class);
+
+                    // Passing params
+                    showCardDetailActivity.putExtra(CardDetailActivity.KEY_CARD_DETAIL_START_TYPE, CardDetailActivity.StartType.CARD.toString());
+                    showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_INDEX, position);
+                    showCardDetailActivity.putExtra(CardDetailActivity.KEY_ITEM_SEASON_ID, mDatabase.seasonId().toString());
+
+                    // Start the CardDetailActivity
+                    startActivityForResult(showCardDetailActivity, Constants.REQUEST_AR_CARD_INVENTORY_CHANGE);
+                }
+            });
+        }
 
         // Display Back Button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

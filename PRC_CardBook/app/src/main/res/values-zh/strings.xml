@@ -30,6 +30,7 @@
 
     <string name="setting_item_1">以黑白色显示未获得的道具图片</string>
     <string name="setting_item_2">以数字形式显示JR等级套装的获得状态</string>
+    <string name="setting_item_3">长按显示道具详细界面\n短按增加获得的道具数量</string>
 
 
     <string name="system_export_inventory_database">向外部存储导出道具数量的数据</string>

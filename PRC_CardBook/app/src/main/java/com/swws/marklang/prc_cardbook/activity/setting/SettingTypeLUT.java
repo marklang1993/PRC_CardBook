@@ -8,7 +8,8 @@ public class SettingTypeLUT {
     public enum Type {
         STRING,
         INTEGER,
-        BOOLEAN
+        BOOLEAN,
+        UNKNOWN
     }
 
     private static HashMap<String, Type> mLUT;
@@ -22,6 +23,7 @@ public class SettingTypeLUT {
         // Modify this LUT once the items in setting are changed
         mLUT.put("card_not_possessed_without_color", Type.BOOLEAN);
         mLUT.put("jr_card_display_by_number", Type.BOOLEAN);
+        mLUT.put("display_detail_page_by_long_click", Type.BOOLEAN);
     }
 
     private static Type getType(String key) {
@@ -31,7 +33,7 @@ public class SettingTypeLUT {
             initialize();
         }
 
-        if (!mLUT.containsKey(key)) return Type.STRING;
+        if (!mLUT.containsKey(key)) return Type.UNKNOWN;
 
         return mLUT.get(key);
     }
