@@ -40,6 +40,9 @@
     <string name="system_clear_item_database">アイテムデータを削除する</string>
     <string name="system_clear_item_inventory_database">アイテム数量のデータを削除する</string>
 
+    <string name="system_double_confirmation_title">二度確認</string>
+    <string name="system_double_confirmation_message">続けても宜しいですか？</string>
+
     <string name="system_export_inventory_database_done">出力が完成しました</string>
     <string name="system_export_inventory_database_fail">出力が失敗しました</string>
     <string name="system_import_inventory_database_done">入力が完成しました</string>

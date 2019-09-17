@@ -40,6 +40,9 @@
     <string name="system_clear_item_database">删除道具数据库</string>
     <string name="system_clear_item_inventory_database">删除道具数量的数据</string>
 
+    <string name="system_double_confirmation_title">二次确认</string>
+    <string name="system_double_confirmation_message">是否要继续执行操作？</string>
+
     <string name="system_export_inventory_database_done">导出完成</string>
     <string name="system_export_inventory_database_fail">导出失败</string>
     <string name="system_import_inventory_database_done">导入完成</string>

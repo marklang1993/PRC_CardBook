@@ -1,8 +1,10 @@
 package com.swws.marklang.prc_cardbook.activity.system;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -43,18 +45,18 @@ public class SystemActivity extends AppCompatActivity implements EasyPermissions
      * @param permissionRequestCode Request Code for getting permission
      */
     private void checkPermission(
-            int systemTaskIndex,
-            int resultRequestCode,
+            final int systemTaskIndex,
+            final int resultRequestCode,
             String permission,
             String requestPermissionRationale,
             int permissionRequestCode) {
 
         if (EasyPermissions.hasPermissions(this, permission)) {
-            // The corresponding permission has already been grant - start the corresponding task
-            startTask(systemTaskIndex, resultRequestCode);
+            // 1. The corresponding permission has already been grant
+            doubleConfirmationAndStartTask(systemTaskIndex, resultRequestCode);
 
         } else {
-            // Request read external storage permission
+            // 2. Request read external storage permission
             EasyPermissions.requestPermissions(
                     this,
                     requestPermissionRationale,
@@ -63,6 +65,42 @@ public class SystemActivity extends AppCompatActivity implements EasyPermissions
             );
         }
 
+    }
+
+    /**
+     * Double Confirmation & Start Task
+     * @param systemTaskIndex System Task Index
+     * @param resultRequestCode Request Code for getting activity result
+     */
+    private void doubleConfirmationAndStartTask(
+            final int systemTaskIndex,
+            final int resultRequestCode
+    ) {
+        // Build alert dialog for double confirmation
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.system_double_confirmation_message)
+                .setTitle(R.string.system_double_confirmation_title);
+
+        // Add buttons
+        builder.setPositiveButton(R.string.button_yes_text, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                startTask(systemTaskIndex, resultRequestCode);
+            }
+        });
+        builder.setNegativeButton(R.string.button_no_text, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                ;
+            }
+        });
+
+        // Create this dialog
+        AlertDialog doubleConfirmAlertDialog = builder.create();
+        // Set this dialog cannot be cancelled.
+        doubleConfirmAlertDialog.setCanceledOnTouchOutside(false);
+        doubleConfirmAlertDialog.setCancelable(false);
+
+        // Ask user again to make sure whether the corresponding operation can be proceed or not
+        doubleConfirmAlertDialog.show();
     }
 
     /**
@@ -152,7 +190,10 @@ public class SystemActivity extends AppCompatActivity implements EasyPermissions
             @Override
             public void onClick(View v) {
                 // Clear inventory database does not need extra permission
-                startTask(SYSTEM_TASK_CLEAR_INVENTORY_DATABASE, Constants.REQUEST_AR_SYSTEM_PROGRESS_INVENTORY_DB_CLEAR);
+                doubleConfirmationAndStartTask(
+                        SYSTEM_TASK_CLEAR_INVENTORY_DATABASE,
+                        Constants.REQUEST_AR_SYSTEM_PROGRESS_INVENTORY_DB_CLEAR
+                );
             }
         });
 
