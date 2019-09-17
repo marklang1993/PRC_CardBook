@@ -56,6 +56,9 @@
     <string name="qr_scanner_info_update_local_database">データベースを更新してください</string>
 
 
+    <string name="database_name_lack_item_2018">所持しない2018アイテム</string>
+
+
     <string name="card_detail_category">カテゴリー</string>
     <string name="card_detail_color">カラー</string>
     <string name="card_detail_brand">ブランド</string>

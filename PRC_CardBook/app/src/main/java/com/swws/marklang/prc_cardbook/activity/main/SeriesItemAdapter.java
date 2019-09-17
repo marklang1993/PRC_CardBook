@@ -16,10 +16,17 @@ public class SeriesItemAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private ArrayList<String> mSeriesNames;
+    private String mLack2018SeriesName;
 
 
-    public SeriesItemAdapter(Context context, ArrayList<Database> databases)
+    public SeriesItemAdapter(
+            Context context,
+            ArrayList<Database> databases,
+            String lack2018SeriesName
+    )
     {
+        mLack2018SeriesName = lack2018SeriesName;
+
         initSeriesNames(databases);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -67,10 +74,11 @@ public class SeriesItemAdapter extends BaseAdapter {
     private void initSeriesNames(ArrayList<Database> databases) {
         // Init. seriesNames
         if (databases != null) {
-            mSeriesNames = new ArrayList<>(databases.size());
-            for (Database d : databases)
+            mSeriesNames = new ArrayList<>(databases.size() + 1);
+            mSeriesNames.add(mLack2018SeriesName);
+            for (Database database : databases)
             {
-                mSeriesNames.add(d.name());
+                mSeriesNames.add(database.name());
             }
 
         } else {

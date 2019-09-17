@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static ArrayList<Database> mDatabases;
     private static HashMap<String, Item> mItemIDLUT;
+    private static Database mLackItem2018;
 
     private SeriesItemAdapter mSeriesItemAdapter;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -71,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
         ListView seriesListView = (ListView) findViewById(R.id.seriesListView);
         mSeriesItemAdapter = new SeriesItemAdapter(
                 getApplicationContext(),
-                mDatabases
+                mDatabases,
+                mLackItem2018.name()
         );
         seriesListView.setAdapter(mSeriesItemAdapter);
         seriesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent showCardActivity = new Intent(getApplicationContext(), CardActivity.class);
                 // Pass params to "CardActivity"
-                showCardActivity.putExtra(CardActivity.KEY_SERIES_INDEX, position);
+                showCardActivity.putExtra(CardActivity.KEY_SERIES_INDEX, position - 1);
                 // Start
                 startActivity(showCardActivity);
             }
@@ -300,4 +302,18 @@ public class MainActivity extends AppCompatActivity {
     public static void setItemIDLUT(HashMap<String, Item> lut) {
         mItemIDLUT = lut;
     }
+
+    /**
+     * Set all lack items of 2018
+     * @param newDatabase
+     */
+    public static void setLackItem2018(Database newDatabase) { mLackItem2018 = newDatabase; }
+
+    /**
+     * Get all lack items of 2018
+     * @@return
+     */
+    public static Database getLackItem2018() { return mLackItem2018; }
+
+
 }

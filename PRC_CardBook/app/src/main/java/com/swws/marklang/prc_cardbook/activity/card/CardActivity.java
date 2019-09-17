@@ -39,8 +39,14 @@ public class CardActivity extends AppCompatActivity {
             finish();
             return;
         }
+
         // Get corresponding database
-        mDatabase = MainActivity.getDatabaseByIndex(seriesIndex);
+        if (seriesIndex < 0) {
+            mDatabase = MainActivity.getLackItem2018();
+
+        } else {
+            mDatabase = MainActivity.getDatabaseByIndex(seriesIndex);
+        }
 
         // Initialize UI components
         initUI();

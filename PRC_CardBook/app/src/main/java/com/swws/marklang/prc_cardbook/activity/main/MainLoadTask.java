@@ -3,6 +3,7 @@ package com.swws.marklang.prc_cardbook.activity.main;
 import android.os.AsyncTask;
 import android.widget.ProgressBar;
 
+import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.Constants;
 import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.MathUtility;
@@ -23,10 +24,10 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
 
     private DatabaseFileUtility mDatabaseFileUtility;
 
-    // Data variables
+    // Internal database variables
     private static ArrayList<Database> mDatabases;
     private static HashMap<String, Item> mItemIDLUT;
-
+    private static Database mLackItem2018;
 
     /**
      * Index: ProgressValue
@@ -130,6 +131,25 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
         // Update progress value
         publishProgress(mProgressValues[4]);
 
+        // 5. Query all 2018 items
+        mLackItem2018 = new Database(
+                MainLoadActivity.getCurrentApplicationContext().getString(R.string.database_name_lack_item_2018),
+                "localhost",
+                SeasonID.SEASON_1ST
+        );
+        for (Database database: mDatabases) {
+            if ((database.seasonId() == SeasonID.SEASON_1ST) &&
+                database.name().contains("弾")){
+                for (Item item: database) {
+                    // Check whether the user possesses this item
+                    int inventoryCount = InventoryUtility.getInventoryCount(SeasonID.SEASON_1ST, item);
+                    if (inventoryCount <= 0) {
+                        // Does not possess
+                        mLackItem2018.Insert(item);
+                    }
+                }
+            }
+        }
         return true;
     }
 
@@ -142,10 +162,12 @@ public class MainLoadTask extends AsyncTask<Void, Integer, Boolean> {
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
 
-        // If initialization is successful, update "Databases" and "ItemIDLUT" in MainActivity.
+        // If initialization is successful, update
+        // "Databases", "ItemIDLUT" and "LackItem2018" in MainActivity.
         if (aBoolean) {
             MainActivity.setAllDatabases(mDatabases);
             MainActivity.setItemIDLUT(mItemIDLUT);
+            MainActivity.setLackItem2018(mLackItem2018);
         }
 
         // Notify the parent activity

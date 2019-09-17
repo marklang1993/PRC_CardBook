@@ -56,6 +56,9 @@
     <string name="qr_scanner_info_update_local_database">请更新数据</string>
 
 
+    <string name="database_name_lack_item_2018">未取得的2018年道具</string>
+
+
     <string name="card_detail_category">种类</string>
     <string name="card_detail_color">颜色</string>
     <string name="card_detail_brand">品牌</string>

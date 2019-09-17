@@ -56,6 +56,9 @@
     <string name="qr_scanner_info_update_local_database">Please Update Database</string>
 
 
+    <string name="database_name_lack_item_2018">All Lack Items in 2018</string>
+
+
     <string name="card_detail_category">Category</string>
     <string name="card_detail_color">Color</string>
     <string name="card_detail_brand">Brand</string>
