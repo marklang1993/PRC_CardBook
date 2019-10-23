@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.activity.main.MainActivity;
+import com.swws.marklang.prc_cardbook.activity.search.SearchActivity;
 import com.swws.marklang.prc_cardbook.utility.database.DatabaseFileUtility;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
@@ -26,10 +27,13 @@ import java.util.Map;
 
 public class CardDetailActivity extends AppCompatActivity {
 
-    // Constants
+    // Constants for Start Options
+    // 1. All StartType
     public static final String KEY_CARD_DETAIL_START_TYPE = "com.swws.marklang.prc_cardbook.CARD_DETAIL_START_TYPE";
     public static final String KEY_ITEM_SEASON_ID = "com.swws.marklang.prc_cardbook.ITEM_SEASON_ID";
+    // 2. StartType: CARD, SEARCH
     public static final String KEY_ITEM_INDEX = "com.swws.marklang.prc_cardbook.ITEM_INDEX";
+    // 3. StartType: SCANNER
     public static final String KEY_ITEM_IMAGE_ID = "com.swws.marklang.prc_cardbook.ITEM_IMAGE_ID";
     public static final String KEY_ITEM_INDICATED_JR_COLOR = "com.swws.marklang.prc_cardbook.ITEM_INDICATED_JR_COLOR";
 
@@ -61,7 +65,7 @@ public class CardDetailActivity extends AppCompatActivity {
 
     // Activity start type
     public enum StartType {
-        CARD, SCANNER
+        CARD, SEARCH, SCANNER
     }
 
     // JR color enum
@@ -89,6 +93,7 @@ public class CardDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_detail);
 
+        // Get Intent for getting extras
         Intent intent = getIntent();
 
         // Get mStartType
@@ -118,38 +123,63 @@ public class CardDetailActivity extends AppCompatActivity {
         JRColor indicatedJRColor = JRColor.UNKNOWN;
 
         // Based on startType to initialize
-        switch (startType) {
-            // Started by CardActivity
-            case CARD:
-                // Get item index
-                int cardItemIndex;
-                if (intent.hasExtra(KEY_ITEM_INDEX)) {
-                    cardItemIndex = intent.getExtras().getInt(KEY_ITEM_INDEX);
+        if (startType == StartType.CARD || startType == StartType.SEARCH) {
+            // 1. Started by CardActivity OR SearchResultActivity
 
-                } else {
-                    Log.e(this.getClass().getName(), KEY_ITEM_INDEX + " NOT FOUND!");
-                    finish();
-                    return;
-                }
+            // Get item index
+            int cardItemIndex;
+            if (intent.hasExtra(KEY_ITEM_INDEX)) {
+                cardItemIndex = intent.getExtras().getInt(KEY_ITEM_INDEX);
 
-                // Get card item
+            } else {
+                Log.e(this.getClass().getName(), KEY_ITEM_INDEX + " NOT FOUND!");
+                finish();
+                return;
+            }
+
+            // Get card item
+            if (startType == StartType.CARD) {
                 mCardItem = CardActivity.getItemByIndex(cardItemIndex);
-                if (!mCardItem.Rarity.equals("JR")) {
-                    // Not a JR item
-                    mJRColor = JRColor.NOT_JR;
+            } else {
 
-                } else {
-                    // Configure the JR color since it is a JR item
-                    configureJRColor();
-                }
-                break;
+                mCardItem = SearchActivity.getSearchResult().get(cardItemIndex);
+            }
 
-            // Started by ScannerActivity
-            case SCANNER:
-                // Get item image id
-                String cardItemImageID;
+            if (!mCardItem.Rarity.equals("JR")) {
+                // Not a JR item
+                mJRColor = JRColor.NOT_JR;
+
+            } else {
+                // Configure the JR color since it is a JR item
+                configureJRColor();
+            }
+
+        } else if (startType == StartType.SCANNER) {
+            // 2. Started by ScannerActivity
+
+            // Get item image id
+            String cardItemImageID;
+            if (intent.hasExtra(KEY_ITEM_IMAGE_ID)) {
+                cardItemImageID = intent.getExtras().getString(KEY_ITEM_IMAGE_ID);
+
+            } else {
+                Log.e(this.getClass().getName(), KEY_ITEM_IMAGE_ID + " NOT FOUND!");
+                finish();
+                return;
+            }
+
+            // Get card item
+            HashMap<String, Item> itemIDLUT = MainActivity.getItemIDLUT();
+            mCardItem = itemIDLUT.get(cardItemImageID);
+            if (!mCardItem.Rarity.equals("JR")) {
+                // Not a JR item
+                mJRColor = JRColor.NOT_JR;
+
+            } else {
+                // This is a JR item - get indicated color of JR item
                 if (intent.hasExtra(KEY_ITEM_IMAGE_ID)) {
-                    cardItemImageID = intent.getExtras().getString(KEY_ITEM_IMAGE_ID);
+                    indicatedJRColor = JRColor.valueOf(
+                            intent.getExtras().getString(KEY_ITEM_INDICATED_JR_COLOR));
 
                 } else {
                     Log.e(this.getClass().getName(), KEY_ITEM_IMAGE_ID + " NOT FOUND!");
@@ -157,29 +187,9 @@ public class CardDetailActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Get card item
-                HashMap<String, Item> itemIDLUT = MainActivity.getItemIDLUT();
-                mCardItem = itemIDLUT.get(cardItemImageID);
-                if (!mCardItem.Rarity.equals("JR")) {
-                    // Not a JR item
-                    mJRColor = JRColor.NOT_JR;
-
-                } else {
-                    // This is a JR item - get indicated color of JR item
-                    if (intent.hasExtra(KEY_ITEM_IMAGE_ID)) {
-                        indicatedJRColor = JRColor.valueOf(
-                                intent.getExtras().getString(KEY_ITEM_INDICATED_JR_COLOR));
-
-                    } else {
-                        Log.e(this.getClass().getName(), KEY_ITEM_IMAGE_ID + " NOT FOUND!");
-                        finish();
-                        return;
-                    }
-
-                    // Configure the ORIGINAL JR color of this item
-                    configureJRColor();
-                }
-                break;
+                // Configure the ORIGINAL JR color of this item
+                configureJRColor();
+            }
         }
 
         // Get the current count of this card in inventory

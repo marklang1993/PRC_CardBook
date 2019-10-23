@@ -11,6 +11,7 @@
     <string name="first_database_update_activity_name">下载初始数据</string>
     <string name="main_load_activity_name">读取数据</string>
     <string name="profile_activity_name">个人档案</string>
+    <string name="search_activity_name">搜索</string>
     <string name="image_crop_activity_name">制作头像</string>
     <string name="statistics_activity_name">统计</string>
     <string name="setting_activity_name">设定</string>
@@ -26,6 +27,14 @@
     <string name="exception_profile_name_too_long">错误：名字不能长于%d个文字。</string>
     <string name="exception_profile_save_fail">错误：无法保存新的个人档案。</string>
     <string name="exception_profile_crop_icon_fail">错误：无法制作新的个人头像。</string>
+
+
+    <string name="search_item_name_input_1">套装名1：</string>
+    <string name="search_item_name_input_2">套装名2：</string>
+    <string name="search_item_name_input_3">套装名3：</string>
+    <string name="search_item_name_input_4">套装名4：</string>
+    <string name="search_button_search">搜索！</string>
+    <string name="search_result_database_name">搜索结果</string>
 
 
     <string name="setting_item_1">以黑白色显示未获得的道具图片</string>
@@ -84,6 +93,7 @@
 
 
     <string name="navigation_menu_item_name_profile">个人档案</string>
+    <string name="navigation_menu_item_name_search">搜索</string>
     <string name="navigation_menu_item_name_statistics">统计</string>
     <string name="navigation_menu_item_name_qrcode">二维码</string>
     <string name="navigation_menu_item_name_generate">生成图鉴</string>

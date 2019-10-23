@@ -15,8 +15,7 @@
 
     <uses-feature
         android:name="android.hardware.telephony"
-        android:required="false" >
-    </uses-feature>
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -28,6 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activity.search.SearchResultActivity"></activity>
+        <activity android:name=".activity.search.SearchActivity" />
         <activity android:name=".activity.qrcode.ScannerActivity" />
         <activity android:name=".activity.about.license.LicenseActivity" />
         <activity android:name=".activity.about.useragreement.UserAgreementActivity" />

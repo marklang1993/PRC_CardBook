@@ -21,6 +21,7 @@ import com.swws.marklang.prc_cardbook.activity.about.AboutActivity;
 import com.swws.marklang.prc_cardbook.activity.card.CardActivity;
 import com.swws.marklang.prc_cardbook.activity.profile.ProfileActivity;
 import com.swws.marklang.prc_cardbook.activity.qrcode.ScannerActivity;
+import com.swws.marklang.prc_cardbook.activity.search.SearchActivity;
 import com.swws.marklang.prc_cardbook.activity.setting.SettingActivity;
 import com.swws.marklang.prc_cardbook.activity.statistics.StatisticsActivity;
 import com.swws.marklang.prc_cardbook.activity.system.SystemActivity;
@@ -122,6 +123,12 @@ public class MainActivity extends AppCompatActivity {
                         // Start "profile setting" activity
                         Intent profileSettingActivityIntent = new Intent(MainActivity.this, ProfileActivity.class);
                         startActivityForResult(profileSettingActivityIntent, Constants.REQUEST_AR_PROFILE_UPDATE);
+                        break;
+
+                    case R.id.search_menu_item:
+                        // Start "item search activity"
+                        Intent itemSearchActivityIntent = new Intent(MainActivity.this, SearchActivity.class);
+                        startActivity(itemSearchActivityIntent);
                         break;
 
                     case R.id.statistics_menu_item:

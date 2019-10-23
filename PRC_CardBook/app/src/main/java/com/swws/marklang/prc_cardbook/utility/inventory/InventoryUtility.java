@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.swws.marklang.prc_cardbook.R;
 import com.swws.marklang.prc_cardbook.utility.database.Item;
+import com.swws.marklang.prc_cardbook.utility.database.ItemEx;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 public class InventoryUtility {
@@ -77,6 +78,43 @@ public class InventoryUtility {
                     String.format("DAO Query Failed with ImageID: %s, SeasonID: %s",
                             imageID,
                             seasonID.toString())
+            );
+        }
+
+        return countCardInventory;
+    }
+
+    /**
+     * Get the count of given card inventory
+     * @param cardItem Card Item
+     * @return item count if existed, -1 if not found
+     */
+    public static int getInventoryCount(ItemEx cardItem) {
+        String imageID = cardItem.getImageID();
+
+        // Execute query
+        Inventory[] cardInventory;
+        if (mInventoryDB != null) {
+            cardInventory = mInventoryDB.inventoryDAO().
+                    queryInventoryByItemID(cardItem.mSeasonID.ordinal(), imageID);
+        } else {
+            // mInventoryDB is not initialized.
+            return -1;
+        }
+
+        // Get count
+        int countCardInventory;
+        if (cardInventory.length != 0) {
+            // Item found
+            countCardInventory = cardInventory[0].mInventoryItemCount;
+
+        } else {
+            // No such item is found
+            countCardInventory = -1;
+            Log.w("InventoryUtility",
+                    String.format("DAO Query Failed with ImageID: %s, SeasonID: %s",
+                            imageID,
+                            cardItem.mSeasonID.toString())
             );
         }
 

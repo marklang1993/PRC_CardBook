@@ -11,6 +11,7 @@
     <string name="first_database_update_activity_name">最初データのダウンロード</string>
     <string name="main_load_activity_name">読込み中</string>
     <string name="profile_activity_name">プロフィール</string>
+    <string name="search_activity_name">検索</string>
     <string name="image_crop_activity_name">アイコン作る</string>
     <string name="statistics_activity_name">統計</string>
     <string name="setting_activity_name">設定</string>
@@ -26,6 +27,14 @@
     <string name="exception_profile_name_too_long">エラー：名前は%d文字以上に設定できません。</string>
     <string name="exception_profile_save_fail">エラー：新しいプロフィールを保存できません。</string>
     <string name="exception_profile_crop_icon_fail">エラー：新しいアイコンを作ることができません。</string>
+
+
+    <string name="search_item_name_input_1">アイテム名 １：</string>
+    <string name="search_item_name_input_2">アイテム名 ２：</string>
+    <string name="search_item_name_input_3">アイテム名 ３：</string>
+    <string name="search_item_name_input_4">アイテム名 ４：</string>
+    <string name="search_button_search">検索！</string>
+    <string name="search_result_database_name">検索結果</string>
 
 
     <string name="setting_item_1">持っていないアイテム画像を色なしで表示する</string>
@@ -84,6 +93,7 @@
 
 
     <string name="navigation_menu_item_name_profile">プロフィール</string>
+    <string name="navigation_menu_item_name_search">検索</string>
     <string name="navigation_menu_item_name_statistics">統計</string>
     <string name="navigation_menu_item_name_qrcode">QRコード</string>
     <string name="navigation_menu_item_name_generate">図鑑生成</string>

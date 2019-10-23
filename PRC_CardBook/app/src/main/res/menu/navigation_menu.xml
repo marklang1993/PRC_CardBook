@@ -10,6 +10,12 @@
             android:title="@string/navigation_menu_item_name_profile" />
 
         <item
+            android:id="@+id/search_menu_item"
+            android:icon="@drawable/ic_function_search"
+            android:title="@string/navigation_menu_item_name_search" />
+
+
+        <item
             android:id="@+id/statistics_menu_item"
             android:icon="@drawable/ic_function_statistics"
             android:title="@string/navigation_menu_item_name_statistics" />
