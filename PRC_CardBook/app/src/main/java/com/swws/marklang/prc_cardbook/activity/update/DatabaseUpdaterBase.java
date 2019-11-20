@@ -118,33 +118,60 @@ public class DatabaseUpdaterBase {
                         )
                 );
 
-                // Download ItemImage
-                mDatabaseFileUtility.DownloadImage(
-                        allImageNames,
-                        currentUrlPrefix,
-                        item.ItemImage,
-                        DatabaseFileUtility.IMAGE_TYPE.IMAGE,
-                        seasonID,
-                        mIsPrintDebug
-                );
-                // Download BrandImage
-                mDatabaseFileUtility.DownloadImage(
-                        null,
-                        currentUrlPrefix,
-                        item.Brand,
-                        DatabaseFileUtility.IMAGE_TYPE.BRAND,
-                        seasonID,
-                        mIsPrintDebug
-                );
-                // Download TypeImage
-                mDatabaseFileUtility.DownloadImage(
-                        null,
-                        currentUrlPrefix,
-                        item.Type,
-                        DatabaseFileUtility.IMAGE_TYPE.TYPE,
-                        seasonID,
-                        mIsPrintDebug
-                );
+                // Download Item Image
+                try {
+                    mDatabaseFileUtility.DownloadImage(
+                            allImageNames,
+                            currentUrlPrefix,
+                            item.ItemImage,
+                            DatabaseFileUtility.IMAGE_TYPE.IMAGE,
+                            seasonID,
+                            mIsPrintDebug
+                    );
+
+                } catch (IOException ex) {
+                    // It is ok to skip a failure of downloading a item image
+                    if (mIsPrintDebug) {
+                        Log.e(HttpUtility.class.getSimpleName(),
+                                String.format("Download Item Image Failed: %s", item.ItemImage));
+                    }
+                }
+
+                // Download Brand Image
+                try {
+                    mDatabaseFileUtility.DownloadImage(
+                            null,
+                            currentUrlPrefix,
+                            item.Brand,
+                            DatabaseFileUtility.IMAGE_TYPE.BRAND,
+                            seasonID,
+                            mIsPrintDebug
+                    );
+                } catch (IOException ex) {
+                    // It is ok to skip a failure of downloading a brand image
+                    if (mIsPrintDebug) {
+                        Log.e(HttpUtility.class.getSimpleName(),
+                                String.format("Download Brand Image Failed: %s", item.Brand));
+                    }
+                }
+
+                // Download Type Image
+                try {
+                    mDatabaseFileUtility.DownloadImage(
+                            null,
+                            currentUrlPrefix,
+                            item.Type,
+                            DatabaseFileUtility.IMAGE_TYPE.TYPE,
+                            seasonID,
+                            mIsPrintDebug
+                    );
+                } catch (IOException ex) {
+                    // It is ok to skip a failure of downloading a type image
+                    if (mIsPrintDebug) {
+                        Log.e(HttpUtility.class.getSimpleName(),
+                                String.format("Download Type Image Failed: %s", item.Type));
+                    }
+                }
 
                 // Print current progress
                 if (mIsPrintDebug)
