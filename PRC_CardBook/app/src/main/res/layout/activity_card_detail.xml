@@ -343,6 +343,19 @@
                     android:textAllCaps="false" />
             </TableRow>
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
+                <Button
+                    android:id="@+id/inventoryJRColorWhiteButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/card_detail_JR_color_white"
+                    android:textColor="@color/JR_white"
+                    android:textAllCaps="false" />
+            </TableRow>
+
         </TableLayout>
     </ScrollView>
 

@@ -61,6 +61,7 @@ public class CardDetailActivity extends AppCompatActivity {
     private Button mInventoryJRColorPurpleButton;
     private Button mInventoryJRColorBlackButton;
     private Button mInventoryJRColorGoldButton;
+    private Button mInventoryJRColorWhiteButton;
 
 
     // Activity start type
@@ -70,22 +71,24 @@ public class CardDetailActivity extends AppCompatActivity {
 
     // JR color enum
     private enum JRColor {
-        PINK, YELLOW, BLUE, RED, GREEN, PURPLE, BLACK, GOLD,
+        PINK, YELLOW, BLUE, RED, GREEN, PURPLE, BLACK, GOLD, WHITE,
         UNKNOWN, NOT_JR
     }
 
     // JR color string look-up table
     private static final String[] JR_STRING_LUT = {
-            "ピンク", "イエロー", "ブルー", "レッド", "グリーン", "パープル", "ブラック", "ゴールド",
+            "ピンク", "イエロー", "ブルー", "レッド", "グリーン", "パープル", "ブラック", "ゴールド", "ホワイト",
             "UNKNOWN", "NOT_JR"
     };
 
     // Item color string look-up table
     private static final String[] ITEM_STRING_LUT = {
-            "ピンク", "黄", "青", "赤", "緑", "紫", "黒", "ゴールド",
+            "ピンク", "黄", "青", "赤", "緑", "紫", "黒", "ゴールド", "白",
             "UNKNOWN", "NOT_JR"
     };
-    public static final int JR_COLOR_TOTAL_COUNT = 8;
+
+    // Maximum count of JR color
+    public static final int JR_COLOR_TOTAL_COUNT = 9;
 
 
     @Override
@@ -338,6 +341,7 @@ public class CardDetailActivity extends AppCompatActivity {
             mInventoryJRColorPurpleButton = (Button) findViewById(R.id.inventoryJRColorPurpleButton);
             mInventoryJRColorBlackButton = (Button) findViewById(R.id.inventoryJRColorBlackButton);
             mInventoryJRColorGoldButton = (Button) findViewById(R.id.inventoryJRColorGoldButton);
+            mInventoryJRColorWhiteButton = (Button) findViewById(R.id.inventoryJRColorWhiteButton);
 
             mInventoryJRColorPinkButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -395,6 +399,13 @@ public class CardDetailActivity extends AppCompatActivity {
                 }
             });
 
+            mInventoryJRColorWhiteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateUIAfterSelectingJRColor(JRColor.WHITE);
+                }
+            });
+
             // Update JR color selection button states
             updateJRColorSelectButtons();
         }
@@ -444,6 +455,7 @@ public class CardDetailActivity extends AppCompatActivity {
         mInventoryJRColorPurpleButton.setVisibility(mJRColor == JRColor.PURPLE ? View.INVISIBLE : View.VISIBLE);
         mInventoryJRColorBlackButton.setVisibility(mJRColor == JRColor.BLACK ? View.INVISIBLE : View.VISIBLE);
         mInventoryJRColorGoldButton.setVisibility(mJRColor == JRColor.GOLD ? View.INVISIBLE : View.VISIBLE);
+        mInventoryJRColorWhiteButton.setVisibility(mJRColor == JRColor.WHITE ? View.INVISIBLE : View.VISIBLE);
     }
 
     /**

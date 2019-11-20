@@ -36,9 +36,9 @@ public class CalculateTask extends AsyncTask<Void, Void, Void> {
             // Check is this a JR item
             if (item.Rarity.equals("JR")) {
                 // 1. JR item
-                size += 8; // All JR item contains variations with 8 different colors
+                size += CardDetailActivity.JR_COLOR_TOTAL_COUNT; // All JR item contains variations with JR_COLOR_TOTAL_COUNT different colors
                 // Iterate the inventory count of all variations
-                for (int i = 0; i < 8; ++i) {
+                for (int i = 0; i < CardDetailActivity.JR_COLOR_TOTAL_COUNT; ++i) {
                     int shiftBits = 3 * i;
                     int currentCount = (inventoryOfCurrentItem >>> shiftBits) & CardDetailActivity.MAX_JR_INVENTORY_COUNT;
                     if (currentCount > 0) {

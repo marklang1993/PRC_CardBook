@@ -88,6 +88,7 @@
     <string name="card_detail_JR_color_purple">パープル</string>
     <string name="card_detail_JR_color_black">ブラック</string>
     <string name="card_detail_JR_color_gold">ゴールド</string>
+    <string name="card_detail_JR_color_white">ホワイト</string>
 
     <string name="card_detail_item_name_copied">コーデの名前をコピーしました</string>
 

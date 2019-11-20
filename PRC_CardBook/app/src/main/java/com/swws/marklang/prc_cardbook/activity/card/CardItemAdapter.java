@@ -50,6 +50,7 @@ public class CardItemAdapter extends BaseAdapter {
         mJRColors[5] = ContextCompat.getColor(context, R.color.JR_purple);
         mJRColors[6] = ContextCompat.getColor(context, R.color.JR_black);
         mJRColors[7] = ContextCompat.getColor(context, R.color.JR_gold);
+        mJRColors[8] = ContextCompat.getColor(context, R.color.JR_white);
     }
 
     @Override

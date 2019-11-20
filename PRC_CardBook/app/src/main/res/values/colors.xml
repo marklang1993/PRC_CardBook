@@ -23,5 +23,6 @@
     <color name="JR_purple">#9932CC</color>
     <color name="JR_black">#000000</color>
     <color name="JR_gold">#FFD700</color>
+    <color name="JR_white">#BEFAFF</color>
 
 </resources>

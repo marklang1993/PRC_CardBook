@@ -88,6 +88,7 @@
     <string name="card_detail_JR_color_purple">Purple</string>
     <string name="card_detail_JR_color_black">Black</string>
     <string name="card_detail_JR_color_gold">Gold</string>
+    <string name="card_detail_JR_color_white">White</string>
 
     <string name="card_detail_item_name_copied">Item name is copied to clipboard</string>
 
