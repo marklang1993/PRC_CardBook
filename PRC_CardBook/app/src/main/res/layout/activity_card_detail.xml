@@ -354,6 +354,15 @@
                     android:text="@string/card_detail_JR_color_white"
                     android:textColor="@color/JR_white"
                     android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/inventoryJRColorRainbowButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/card_detail_JR_color_rainbow"
+                    android:textColor="@color/JR_rainbow"
+                    android:textAllCaps="false" />
+
             </TableRow>
 
         </TableLayout>

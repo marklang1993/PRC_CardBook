@@ -24,5 +24,7 @@
     <color name="JR_black">#000000</color>
     <color name="JR_gold">#FFD700</color>
     <color name="JR_white">#BEFAFF</color>
+    <color name="JR_rainbow">#FFEAFF</color>
+
 
 </resources>

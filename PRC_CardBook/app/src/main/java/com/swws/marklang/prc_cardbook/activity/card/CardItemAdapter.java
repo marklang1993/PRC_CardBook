@@ -19,7 +19,7 @@ import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 public class CardItemAdapter extends BaseAdapter {
 
-    private static final int MAX_TASK_COUNT = 8;
+    private static final int MAX_TASK_COUNT = 8;  // Maximum count of concurrent loading tasks
 
     private LayoutInflater mInflater;
     private Database mDatabase;
@@ -51,6 +51,7 @@ public class CardItemAdapter extends BaseAdapter {
         mJRColors[6] = ContextCompat.getColor(context, R.color.JR_black);
         mJRColors[7] = ContextCompat.getColor(context, R.color.JR_gold);
         mJRColors[8] = ContextCompat.getColor(context, R.color.JR_white);
+        mJRColors[9] = ContextCompat.getColor(context, R.color.JR_rainbow);
     }
 
     @Override

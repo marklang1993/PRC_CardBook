@@ -89,6 +89,7 @@
     <string name="card_detail_JR_color_black">黑</string>
     <string name="card_detail_JR_color_gold">金</string>
     <string name="card_detail_JR_color_white">白</string>
+    <string name="card_detail_JR_color_rainbow">虹</string>
 
     <string name="card_detail_item_name_copied">套装名称已复制到剪贴板</string>
 
