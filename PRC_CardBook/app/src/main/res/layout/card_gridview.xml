@@ -8,8 +8,7 @@
         android:id="@+id/cardImageView"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="10dp"
-        app:srcCompat="@color/colorPrimary" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/cardIdTextView"
@@ -18,7 +17,7 @@
         android:layout_below="@+id/cardImageView"
         android:layout_alignParentStart="true"
         android:gravity="center"
-        android:text="@string/lable_loading_text"
+        android:text="@string/label_loading_text"
         android:textColor="@color/black" />
 
     <com.androidessence.lib.RichTextView
@@ -31,7 +30,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="3dp"
         android:layout_marginEnd="0dp"
-        android:text="@string/lable_loading_text"
+        android:text="@string/label_loading_text"
         android:textAlignment="textEnd"
         android:textSize="14sp"
         android:textStyle="bold" />

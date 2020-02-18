@@ -11,6 +11,7 @@ import com.swws.marklang.prc_cardbook.utility.database.ItemEx;
 import com.swws.marklang.prc_cardbook.utility.database.SeasonID;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class SearchTask extends AsyncTask<Void, Integer, Boolean> {
@@ -39,7 +40,10 @@ public class SearchTask extends AsyncTask<Void, Integer, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
+        // Get all Databases
         ArrayList<Database> allDatabases = MainActivity.getAllDatabases();
+        // Init. a HashSet to filter out repeated items
+        HashSet<String> addedItemID = new HashSet<>();
 
         int currentIndex = 0;
         int countDatabase = allDatabases.size();
@@ -57,12 +61,19 @@ public class SearchTask extends AsyncTask<Void, Integer, Boolean> {
 
             // Iterate the current database
             SeasonID currentSeasonId = database.seasonId();
+            String currentSeriesName = database.name();
             for (Item item : database) {
                 for (String targetItemName : mTargetItemNames) {
                     if (item.ItemName.contains(targetItemName)) {
-                        // A match is found
-                        ItemEx itemEx = new ItemEx(item, currentSeasonId);
-                        mResult.add(itemEx);
+                        // A match is found, check has it already added
+                        String imageName = getImageName(item.ItemImage);
+                        if (!addedItemID.contains(imageName)) {
+                            // This is a new found item
+                            ItemEx itemEx = new ItemEx(item, currentSeasonId, currentSeriesName);
+                            mResult.add(itemEx);
+                            // Insert this item image name to the HashSet
+                            addedItemID.add(imageName);
+                        }
                         break;
                     }
                 }
@@ -102,5 +113,13 @@ public class SearchTask extends AsyncTask<Void, Integer, Boolean> {
     protected void onCancelled() {
         super.onCancelled();
         mIsCancelled = true;
+    }
+
+    /**
+     * Get image name by remove the directory part
+     * @return
+     */
+    private String getImageName(String imagePath) {
+        return imagePath.substring(6);
     }
 }

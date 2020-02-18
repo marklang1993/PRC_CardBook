@@ -31,8 +31,7 @@
 
     <string name="search_item_name_input_1">套装名1：</string>
     <string name="search_item_name_input_2">套装名2：</string>
-    <string name="search_item_name_input_3">套装名3：</string>
-    <string name="search_item_name_input_4">套装名4：</string>
+    <string name="search_button_clear">清除</string>
     <string name="search_button_search">搜索！</string>
     <string name="search_result_database_name">搜索结果</string>
 
@@ -113,8 +112,8 @@
     <string name="button_save_text">保存</string>
     <string name="button_cancel_text">取消</string>
 
-    <string name="lable_loading_text">读取中．．．</string>
-    <string name="lable_calculating_text">计算中．．．</string>
+    <string name="label_loading_text">读取中．．．</string>
+    <string name="label_calculating_text">计算中．．．</string>
 
 
     <string name="database_update_checkbox_season1">第一季</string>

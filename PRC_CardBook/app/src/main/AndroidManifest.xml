@@ -27,7 +27,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.search.SearchResultActivity"></activity>
+
+        <activity android:name=".activity.search.SearchResultImageActivity" />
+        <activity android:name=".activity.search.SearchResultActivity" />
         <activity android:name=".activity.search.SearchActivity" />
         <activity android:name=".activity.qrcode.ScannerActivity" />
         <activity android:name=".activity.about.license.LicenseActivity" />

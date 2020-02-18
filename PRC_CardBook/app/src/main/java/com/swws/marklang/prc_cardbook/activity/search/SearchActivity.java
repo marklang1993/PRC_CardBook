@@ -45,8 +45,12 @@ public class SearchActivity extends AppCompatActivity {
 
         // Display search result
         if (result.size() > 0) {
-            Intent startSearchResultActivityIntent = new Intent(SearchActivity.this, SearchResultActivity.class);
-            startActivity(startSearchResultActivityIntent);
+            // TODO: remove this and related activity layout
+//            Intent startSearchResultActivityIntent = new Intent(SearchActivity.this, SearchResultActivity.class);
+//            startActivity(startSearchResultActivityIntent);
+
+            Intent startSearchResultImageActivityIntent = new Intent(SearchActivity.this, SearchResultImageActivity.class);
+            startActivity(startSearchResultImageActivityIntent);
         }
     }
 
@@ -84,6 +88,19 @@ public class SearchActivity extends AppCompatActivity {
         // Back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Display this button: Enable
 
+        // Clear button
+        Button clearButton = (Button) findViewById(R.id.clearButton);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText itemName1EditText = (EditText) findViewById(R.id.itemName1EditText);
+                EditText itemName2EditText = (EditText) findViewById(R.id.itemName2EditText);
+
+                itemName1EditText.setText("");
+                itemName2EditText.setText("");
+            }
+        });
+
         // Search button
         final Button searchButton = (Button) findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -92,12 +109,8 @@ public class SearchActivity extends AppCompatActivity {
                 // Get input items' name
                 EditText itemName1EditText = (EditText) findViewById(R.id.itemName1EditText);
                 EditText itemName2EditText = (EditText) findViewById(R.id.itemName2EditText);
-                EditText itemName3EditText = (EditText) findViewById(R.id.itemName3EditText);
-                EditText itemName4EditText = (EditText) findViewById(R.id.itemName4EditText);
                 String inputItemName1 = itemName1EditText.getText().toString();
                 String inputItemName2 = itemName2EditText.getText().toString();
-                String inputItemName3 = itemName3EditText.getText().toString();
-                String inputItemName4 = itemName4EditText.getText().toString();
 
                 LinkedList<String> inputItemNames = new LinkedList<>();
                 if (!inputItemName1.equals("")) {
@@ -105,12 +118,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
                 if (!inputItemName2.equals("")) {
                     inputItemNames.add(inputItemName2);
-                }
-                if (!inputItemName3.equals("")) {
-                    inputItemNames.add(inputItemName3);
-                }
-                if (!inputItemName4.equals("")) {
-                    inputItemNames.add(inputItemName4);
                 }
 
                 // inputItemNames should not be empty
@@ -121,6 +128,54 @@ public class SearchActivity extends AppCompatActivity {
                     mSearchTask.execute();
 
                 }
+            }
+        });
+
+        // Special character input buttons
+        Button characterEmptyStarButton = (Button) findViewById(R.id.characterEmptyStarButton);
+        Button characterCrossButton = (Button) findViewById(R.id.characterCrossButton);
+        Button characterAmpersandButton = (Button) findViewById(R.id.characterAmpersandButton);
+        Button characterExclamationButton = (Button) findViewById(R.id.characterExclamationButton);
+        Button characterEmptyHeartButton = (Button) findViewById(R.id.characterEmptyHeartButton);
+        Button characterFilledHeartButton = (Button) findViewById(R.id.characterFilledHeartButton);
+
+        registerOnClickCharInputButton(characterEmptyStarButton);
+        registerOnClickCharInputButton(characterCrossButton);
+        registerOnClickCharInputButton(characterAmpersandButton);
+        registerOnClickCharInputButton(characterExclamationButton);
+        registerOnClickCharInputButton(characterEmptyHeartButton);
+        registerOnClickCharInputButton(characterFilledHeartButton);
+    }
+
+    /**
+     * Register OnClickListener for Special Character Input Button
+     * @param CharInputButton
+     */
+    private void registerOnClickCharInputButton(final Button CharInputButton) {
+        CharInputButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Get focused EditText
+                EditText itemName1EditText = (EditText) findViewById(R.id.itemName1EditText);
+                EditText itemName2EditText = (EditText) findViewById(R.id.itemName2EditText);
+                EditText targetEditText = null;
+
+                if (itemName1EditText.hasFocus()) {
+                    targetEditText = itemName1EditText;
+                } else if (itemName2EditText.hasFocus()) {
+                    targetEditText = itemName2EditText;
+                }
+
+                if (targetEditText == null) return;
+
+                // Append the special character to the target EditText
+                String specialCharacter = CharInputButton.getText().toString();
+                StringBuilder inputContent = new StringBuilder(targetEditText.getText().toString());
+                inputContent.append(specialCharacter);
+                targetEditText.setText(inputContent.toString());
+
+                // Forward the cursor position
+                targetEditText.setSelection(inputContent.length());
             }
         });
     }

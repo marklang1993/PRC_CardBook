@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -170,12 +171,12 @@ public class DatabaseUpdateActivity extends AppCompatActivity implements EasyPer
         // Configure CheckBox
         CheckBox checkBoxSeason1 = new CheckBox(getApplicationContext());
         checkBoxSeason1.setText(R.string.database_update_checkbox_season1);
-        checkBoxSeason1.setTextColor(getResources().getColor(R.color.black));
+        checkBoxSeason1.setTextColor(ContextCompat.getColor(this, R.color.black));
         checkBoxSeason1.setChecked(false);
 
         CheckBox checkBoxSeason2 = new CheckBox(getApplicationContext());
         checkBoxSeason2.setText(R.string.database_update_checkbox_season2);
-        checkBoxSeason2.setTextColor(getResources().getColor(R.color.black));
+        checkBoxSeason2.setTextColor(ContextCompat.getColor(this, R.color.black));
         checkBoxSeason2.setChecked(true);
 
         updaterSelectLinearLayout.addView(checkBoxSeason1);

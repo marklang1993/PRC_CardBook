@@ -38,30 +38,6 @@
             android:text="@string/search_item_name_input_2"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/nameInput3TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nameInput2TextView"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="32dp"
-            android:lineSpacingExtra="14sp"
-            android:text="@string/search_item_name_input_3"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/nameInput4TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/nameInput3TextView"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="32dp"
-            android:lineSpacingExtra="14sp"
-            android:text="@string/search_item_name_input_4"
-            android:textSize="18sp" />
-
         <EditText
             android:id="@+id/itemName1EditText"
             android:layout_width="wrap_content"
@@ -82,47 +58,109 @@
             android:layout_toEndOf="@+id/nameInput2TextView"
             android:ems="10" />
 
-        <EditText
-            android:id="@+id/itemName3EditText"
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:id="@+id/characterButtonTableLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/itemName2EditText"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="12dp"
-            android:layout_toEndOf="@+id/nameInput2TextView"
-            android:ems="10" />
+            android:layout_below="@id/itemName2EditText"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:stretchColumns="*" >
 
-        <EditText
-            android:id="@+id/itemName4EditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/itemName3EditText"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="12dp"
-            android:layout_toEndOf="@+id/nameInput2TextView"
-            android:ems="10" />
+            <!--Row 1-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <Button
+                    android:id="@+id/characterEmptyStarButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="☆"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/characterCrossButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="×"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/characterAmpersandButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="＆"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/characterExclamationButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="！"
+                    android:textAllCaps="false" />
+            </TableRow>
+
+            <!--Row 2-->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <Button
+                    android:id="@+id/characterEmptyHeartButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="♡"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/characterFilledHeartButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="♥"
+                    android:textAllCaps="false" />
+
+            </TableRow>
+
+        </TableLayout>
+
 
         <ProgressBar
             android:id="@+id/searchProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="299dp"
             android:layout_height="36dp"
+            android:layout_below="@id/characterButtonTableLayout"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="270dp"
-            android:layout_marginEnd="50dp" />
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="47dp" />
+
+        <Button
+            android:id="@+id/clearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/searchProgressBar"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="30dp"
+            android:text="@string/search_button_clear" />
 
         <Button
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/searchProgressBar"
+            android:layout_below="@id/searchProgressBar"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="30dp"
             android:text="@string/search_button_search" />
+
     </RelativeLayout>
 
 

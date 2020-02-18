@@ -1,6 +1,7 @@
 package com.swws.marklang.prc_cardbook.activity.search;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +58,10 @@ public class SearchResultItemAdapter extends BaseAdapter {
         searchResultItemNameTextView.setText(item.ItemName);
         searchResultItemInventoryTextView.setText(String.valueOf(inventoryCount));
         if (inventoryCount == 0) {
-            searchResultItemNameTextView.setTextColor(resultItemView.getResources().getColor(R.color.red));
-            searchResultItemInventoryTextView.setTextColor(resultItemView.getResources().getColor(R.color.red));
+            searchResultItemNameTextView.setTextColor(
+                    ContextCompat.getColor(resultItemView.getContext(), R.color.red));
+            searchResultItemInventoryTextView.setTextColor(
+                    ContextCompat.getColor(resultItemView.getContext(), R.color.red));
         }
 
         return resultItemView;

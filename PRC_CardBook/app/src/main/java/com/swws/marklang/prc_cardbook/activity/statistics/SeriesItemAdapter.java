@@ -99,7 +99,7 @@ public class SeriesItemAdapter extends BaseAdapter {
                 mSeriesNames.add(d.name());
                 mSeriesCounts.add(
                         MainLoadActivity.getCurrentApplicationContext().
-                                getString(R.string.lable_calculating_text)
+                                getString(R.string.label_calculating_text)
                 );
 
                 // Do calculation in background thread

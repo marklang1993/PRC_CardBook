@@ -7,18 +7,22 @@ package com.swws.marklang.prc_cardbook.utility.database;
 public class ItemEx extends Item {
 
     public SeasonID mSeasonID;
+    public String mSeriesName;
 
     public ItemEx() {
         mSeasonID = null;
+        mSeriesName = null;
     }
 
     /**
      * Construct an ItemEx object from Item object
      * @param item
      * @param seasonID
+     * @param seriesName
      */
-    public ItemEx(Item item, SeasonID seasonID){
+    public ItemEx(Item item, SeasonID seasonID, String seriesName){
         mSeasonID = seasonID;
+        mSeriesName = seriesName;
 
         ItemImage = item.ItemImage;
         InternalID = item.InternalID;
@@ -32,3 +36,4 @@ public class ItemEx extends Item {
         Remarks = item.Remarks;
     }
 }
+
